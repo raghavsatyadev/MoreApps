@@ -14,8 +14,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,6 +30,7 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import okhttp3.ConnectionSpec;
@@ -167,7 +166,7 @@ public class MoreAppsDialog {
     private void prepareView(@NonNull Context context, Dialog view, MoreAppsDialogListener listener) {
         TextView txtMoreAppsTitle = view.findViewById(R.id.txt_more_apps_title);
         RecyclerView listMoreApps = view.findViewById(R.id.list_more_apps);
-        FloatingActionButton closeButton = view.findViewById(R.id.btn_more_apps_close);
+        View closeButton = view.findViewById(R.id.btn_more_apps_close);
         View viewTitleSeparator = view.findViewById(R.id.view_title_separator);
 
         Typeface fontFace = null;
@@ -218,10 +217,10 @@ public class MoreAppsDialog {
             viewTitleSeparator.setBackgroundColor(themeColor);
     }
 
-    private void setCloseButton(FloatingActionButton closeButton, MoreAppsDialogListener listener) {
+    private void setCloseButton(View closeButton, MoreAppsDialogListener listener) {
         if (closeButton != null) {
             if (themeColor != 0) {
-                closeButton.setBackgroundTintList(ColorStateList.valueOf(themeColor));
+                ViewCompat.setBackgroundTintList(closeButton, ColorStateList.valueOf(themeColor));
             }
             closeButton.setOnClickListener(v -> {
                 dialog.dismiss();
