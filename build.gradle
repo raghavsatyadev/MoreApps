@@ -1,0 +1,32 @@
+buildscript {
+    repositories {
+        google()
+        jcenter()
+
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.2.1'
+
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+
+    }
+}
+ext {
+    sdk = 28
+    minSdk = 19
+    libraryVersion = "1.0.0"
+    versionCode = 1
+    retrofit = '2.5.0'
+    glide = '4.8.0'
+}
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
