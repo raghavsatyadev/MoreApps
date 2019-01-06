@@ -4,13 +4,22 @@ With More Apps library you can showcase your other apps in a beautiful way.
 **Current version:**  <a href='https://bintray.com/raghavsatyadev/Maven/MoreApps/_latestVersion'><img src='https://api.bintray.com/packages/raghavsatyadev/Maven/MoreApps/images/download.svg'></a>
 
 # Setup
-To use this library your minSdkVersion must be >= 19. It uses AndroidX components
+To use this library your minSdkVersion must be >= 19. Library is made of AndroidX components,so you have to upgrade your project to AndroidX currently.
 
 In the build.gradle of your app module add:
 
 ```gradle
 dependencies {
     implementation 'com.rocky.moreapps:moreapps:x.x.x'
+}
+```
+
+You also have to give Java 8 support for this library
+
+```gradle
+compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
 }
 ```
 
