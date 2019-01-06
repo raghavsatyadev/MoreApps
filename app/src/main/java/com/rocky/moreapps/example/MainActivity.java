@@ -4,6 +4,9 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.rocky.moreapps.BuildConfig;
 import com.rocky.moreapps.MoreAppsDialog;
 import com.rocky.moreapps.MoreAppsDialogListener;
@@ -11,9 +14,6 @@ import com.rocky.moreapps.MoreAppsDownloadListener;
 import com.rocky.moreapps.MoreAppsModel;
 
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,6 +37,18 @@ public class MainActivity extends AppCompatActivity {
                 .themeColor(Color.parseColor("#AAF44336")) // custom theme color, read more in javadoc
                 .rowTitleColor(Color.parseColor("#000000")) // custom list item title color
                 .rowDescriptionColor(Color.parseColor("#888888")) // custom list item description color
+                .enableSoftUpdate("dialog message",
+                        "positive button dialog",
+                        "negative button dialog")
+                .enableHardUpdate("dialog message",
+                        "positive button dialog",
+                        "negative button dialog")
+                .enableRedirectToApp(false,
+                        "app name",
+                        "package name",
+                        "dialog message",
+                        "positive button dialog",
+                        "negative button dialog")
                 .buildAndShow(new MoreAppsDialogListener() {
                     @Override
                     public void onClose() {

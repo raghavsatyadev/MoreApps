@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
@@ -11,8 +12,20 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.transition.TransitionManager;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.annotation.AttrRes;
+import androidx.annotation.ColorInt;
+import androidx.annotation.FontRes;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.security.KeyStore;
 import java.util.ArrayList;
@@ -24,15 +37,6 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
-import androidx.annotation.ColorInt;
-import androidx.annotation.FontRes;
-import androidx.annotation.LayoutRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.core.view.ViewCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import okhttp3.ConnectionSpec;
 import okhttp3.OkHttpClient;
 import okhttp3.TlsVersion;
@@ -50,7 +54,7 @@ public class MoreAppsDialog {
     private final int dialogRowLayout;
     private final String dialogTitle;
     private final String currentPackageName;
-    private final int themeColor;
+    private int themeColor;
     private final int font;
     private final int rowTitleColor;
     private final int rowDescriptionColor;
@@ -163,6 +167,18 @@ public class MoreAppsDialog {
         dialog.show();
     }
 
+    public static String getThemeColorInHex(@NonNull Context context, @NonNull String colorName, @AttrRes int attribute) {
+        TypedValue outValue = new TypedValue();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            context.getTheme().resolveAttribute(attribute, outValue, true);
+        } else {
+            // get color defined for AppCompat
+            int appCompatAttribute = context.getResources().getIdentifier(colorName, "attr", context.getPackageName());
+            context.getTheme().resolveAttribute(appCompatAttribute, outValue, true);
+        }
+        return String.format("#%06X", (0xFFFFFF & outValue.data));
+    }
+
     private void prepareView(@NonNull Context context, Dialog view, MoreAppsDialogListener listener) {
         TextView txtMoreAppsTitle = view.findViewById(R.id.txt_more_apps_title);
         RecyclerView listMoreApps = view.findViewById(R.id.list_more_apps);
@@ -172,6 +188,10 @@ public class MoreAppsDialog {
         Typeface fontFace = null;
         if (font != 0) {
             fontFace = ResourcesCompat.getFont(context, this.font);
+        }
+
+        if (themeColor == 0) {
+            themeColor = Color.parseColor(getThemeColorInHex(context, "colorPrimary", R.attr.colorPrimary));
         }
 
         setCloseButton(closeButton, listener);
@@ -392,6 +412,30 @@ public class MoreAppsDialog {
         public Builder rowDescriptionColor(int rowDescriptionColor) {
             this.rowDescriptionColor = rowDescriptionColor;
             return this;
+        }
+
+        public Builder enableSoftUpdate() {
+            return enableSoftUpdate("", "", "");
+        }
+
+        public Builder enableSoftUpdate(String dialogMessage, String positiveButtonDialog, String negativeButtonDialog) {
+            return this;
+        }
+
+        public Builder enableHardUpdate() {
+            return enableHardUpdate("", "", "");
+        }
+
+        public Builder enableHardUpdate(String dialogMessage, String positiveButtonDialog, String negativeButtonDialog) {
+            return this;
+        }
+
+        public Builder enableRedirectToApp(boolean hardRedirect, String appName, String packageName) {
+            return enableRedirectToApp(hardRedirect, appName, packageName, "", "", "");
+        }
+
+        public Builder enableRedirectToApp(boolean hardRedirect, String appName, String packageName, String dialogMessage, String positiveButtonDialog, String negativeButtonDialog) {
+            return null;
         }
 
         public void buildAndShow(MoreAppsDialogListener listener) {
