@@ -1,12 +1,20 @@
 package com.rocky.moreapps.example;
 
 import android.app.Application;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.rocky.moreapps.BuildConfig;
 import com.rocky.moreapps.MoreAppsDialog;
+import com.rocky.moreapps.MoreAppsDownloadListener;
+import com.rocky.moreapps.MoreAppsModel;
+
+import java.util.List;
 
 public class CoreApp extends Application {
     public static final String JSON_FILE_URL = "https://raghavsatyadev.github.io/more_apps.json";
+    private static final String TAG = CoreApp.class.getSimpleName();
     private static CoreApp mInstance;
     private MoreAppsDialog moreAppsDialog;
 
@@ -32,6 +40,16 @@ public class CoreApp extends Application {
         moreAppsDialog = new MoreAppsDialog.Builder(this, JSON_FILE_URL)
                 .removeCurrentApplication(BuildConfig.APPLICATION_ID)
                 .dialogTitle("More Apps")
-                .build();
+                .build(new MoreAppsDownloadListener() {
+                    @Override
+                    public void onSuccess(MoreAppsDialog moreAppsDialog, @NonNull List<MoreAppsModel> moreAppsModels) {
+
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Throwable t) {
+                        Log.e(TAG, "onFailure: ", t);
+                    }
+                });
     }
 }

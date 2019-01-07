@@ -45,6 +45,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.GET;
+import retrofit2.http.Url;
+
 
 public class MoreAppsDialog {
     private static final String TAG = MoreAppsDialog.class.getSimpleName();
@@ -99,7 +102,7 @@ public class MoreAppsDialog {
                 }
                 X509TrustManager trustManager = (X509TrustManager) trustManagers[0];
 
-                client.sslSocketFactory(new Tls12SocketFactory(sc.getSocketFactory()), trustManager);
+                client.sslSocketFactory(new Tls12SocketFactory(), trustManager);
 
                 ConnectionSpec cs = new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
                         .tlsVersions(TlsVersion.TLS_1_2)
@@ -262,6 +265,7 @@ public class MoreAppsDialog {
         String lastPathSegment = uri.getLastPathSegment();
         if (lastPathSegment != null) {
             new Retrofit.Builder()
+//                        .client(new OkHttpClient.Builder().socketFactory(new Tls12SocketFactory()).build())
                     .client(enableTls12OnPreLollipop(new OkHttpClient.Builder()).build())
                     .baseUrl(url.substring(0, url.length() - lastPathSegment.length()))
                     .addConverterFactory(GsonConverterFactory.create())
@@ -274,7 +278,8 @@ public class MoreAppsDialog {
                             List<MoreAppsModel> body = response.body();
                             if (body != null) {
                                 SharedPrefsUtil.setMoreApps(context, body);
-                                if (listener != null) listener.onSuccess(MoreAppsDialog.this, body);
+                                if (listener != null)
+                                    listener.onSuccess(MoreAppsDialog.this, body);
                             }
                         }
 
@@ -284,6 +289,11 @@ public class MoreAppsDialog {
                         }
                     });
         }
+    }
+
+    public interface MoreAppsApi {
+        @GET
+        Call<List<MoreAppsModel>> getAppModel(@Url String url);
     }
 
     public static class Builder {
@@ -435,7 +445,7 @@ public class MoreAppsDialog {
         }
 
         public Builder enableRedirectToApp(boolean hardRedirect, String appName, String packageName, String dialogMessage, String positiveButtonDialog, String negativeButtonDialog) {
-            return null;
+            return this;
         }
 
         public void buildAndShow(MoreAppsDialogListener listener) {
