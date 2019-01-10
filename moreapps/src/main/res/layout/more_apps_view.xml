@@ -11,7 +11,7 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <androidx.cardview.widget.CardView
+    <android.support.design.card.MaterialCardView
         android:layout_width="320dp"
         android:layout_height="0dp"
         android:layout_margin="15dp"
@@ -21,7 +21,7 @@
         app:cardCornerRadius="5dp"
         app:cardElevation="5dp">
 
-        <androidx.core.widget.NestedScrollView
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -55,10 +55,10 @@
                     android:clipToPadding="false"
                     tools:listitem="@layout/row_more_apps" />
             </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
-    </androidx.cardview.widget.CardView>
+        </android.support.v4.widget.NestedScrollView>
+    </android.support.design.card.MaterialCardView>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/btn_more_apps_close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

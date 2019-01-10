@@ -1,12 +1,11 @@
 package com.rocky.moreapps;
 
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 public abstract class GenRecyclerAdapter
         <ViewHolder extends RecyclerView.ViewHolder, Model>

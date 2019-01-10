@@ -2,6 +2,8 @@ package com.rocky.moreapps.example;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.rocky.moreapps.BuildConfig;
@@ -11,9 +13,6 @@ import com.rocky.moreapps.MoreAppsDownloadListener;
 import com.rocky.moreapps.MoreAppsModel;
 
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public void option1(View view) {
         new MoreAppsDialog.Builder(this, CoreApp.JSON_FILE_URL)
-                .removeApplicationFromList("com.appdroidtechnologies.whatscut") // to remove current application from the list give package name here
+                .removeApplicationFromList("com.appdroidtechnologies.whatscut") // to remove an application from the list, give package name here
                 .dialogTitle(R.string.more_apps) // custom dialog title
                 .dialogLayout(R.layout.more_apps_view) // custom dialog layout, read more instructions in it's javadoc
                 .dialogRowLayout(R.layout.row_more_apps) // custom list item layout, read more instructions in it's javadoc

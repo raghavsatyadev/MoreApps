@@ -10,8 +10,6 @@ import com.rocky.moreapps.MoreAppsModel;
 
 import java.util.List;
 
-import androidx.annotation.NonNull;
-
 public class CoreApp extends Application {
     public static final String JSON_FILE_URL = "https://raghavsatyadev.github.io/more_apps.json";
     private static final String TAG = CoreApp.class.getSimpleName();
@@ -42,12 +40,12 @@ public class CoreApp extends Application {
                 .dialogTitle("More Apps")
                 .build(new MoreAppsDownloadListener() {
                     @Override
-                    public void onSuccess(MoreAppsDialog moreAppsDialog, @NonNull List<MoreAppsModel> moreAppsModels) {
+                    public void onSuccess(MoreAppsDialog moreAppsDialog, List<MoreAppsModel> moreAppsModels) {
 
                     }
 
                     @Override
-                    public void onFailure(@NonNull Throwable t) {
+                    public void onFailure(Throwable t) {
                         Log.e(TAG, "onFailure: ", t);
                     }
                 });

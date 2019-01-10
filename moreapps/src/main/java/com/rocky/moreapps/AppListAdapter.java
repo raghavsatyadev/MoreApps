@@ -1,6 +1,9 @@
 package com.rocky.moreapps;
 
 import android.graphics.Typeface;
+import android.support.annotation.ColorInt;
+import android.support.annotation.LayoutRes;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,10 +14,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
-
-import androidx.annotation.ColorInt;
-import androidx.annotation.LayoutRes;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class AppListAdapter extends GenRecyclerAdapter<AppListAdapter.DataObjectHolder, MoreAppsModel> {
 

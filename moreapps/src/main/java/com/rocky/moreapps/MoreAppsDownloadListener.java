@@ -1,8 +1,8 @@
 package com.rocky.moreapps;
 
-import java.util.List;
+import android.support.annotation.NonNull;
 
-import androidx.annotation.NonNull;
+import java.util.List;
 
 public interface MoreAppsDownloadListener {
     void onSuccess(MoreAppsDialog moreAppsDialog, @NonNull List<MoreAppsModel> moreAppsModels);

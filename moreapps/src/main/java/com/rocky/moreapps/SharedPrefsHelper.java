@@ -2,11 +2,10 @@ package com.rocky.moreapps;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 
 import java.util.Set;
 import java.util.TreeSet;
-
-import androidx.annotation.NonNull;
 
 public class SharedPrefsHelper {
     private static final String SHARED_PREFS_NAME = "MORE_APPS";

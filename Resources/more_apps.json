@@ -5,7 +5,29 @@
     "rating": 4.2,
     "play_store_link": "https://play.google.com/store/apps/details?id=com.appdroidtechnologies.whatscut",
     "package_name": "com.appdroidtechnologies.whatscut",
-    "description": "Easily cut and share large videos on WhatsApp."
+    "description": "Easily cut and share large videos on WhatsApp.",
+    "min_version": 5,
+    "current_version": 6,
+    "redirect_details": {
+      "enable": true,
+      "hard_redirect": false,
+      "dialog_message": "Redirect Notice",
+      "positive_button": "Redirect",
+      "negative_button": "Cancel",
+      "play_store_link": "https://play.google.com/store/apps/details?id=com.appdroidtechnologies.whatscut"
+    },
+    "soft_update_details": {
+      "enable": true,
+      "dialog_message": "Soft Update is required",
+      "positive_button": "Update",
+      "negative_button": "Cancel"
+    },
+    "hard_update_details": {
+      "enable": true,
+      "dialog_message": "Hard Update is required",
+      "positive_button": "Update",
+      "negative_button": "Cancel"
+    }
   },
   {
     "image_link": "https://lh3.googleusercontent.com/EpDjP8egmkfhnGHoo4kII_-GInJRUE11kBg8iWAzvz5NNa_1p0VALeQbh307wFalZaDl=s180-rw",
@@ -13,6 +35,28 @@
     "rating": 5,
     "play_store_link": "https://play.google.com/store/apps/details?id=com.appdroidtechno.tools.tictoc",
     "package_name": "com.appdroidtechno.tools.tictoc",
-    "description": "Every tool/feature you need to manage TikTok (formally Known as Musically) app."
+    "description": "Every tool/feature you need to manage TikTok (formally Known as Musically) app.",
+    "min_version": 5,
+    "current_version": 6,
+    "redirect_details": {
+      "enable": true,
+      "hard_redirect": true,
+      "dialog_message": "Redirect Notice",
+      "positive_button": "Redirect",
+      "negative_button": "Cancel",
+      "play_store_link": "https://play.google.com/store/apps/details?id=com.appdroidtechno.tools.tictoc"
+    },
+    "soft_update_details": {
+      "enable": true,
+      "dialog_message": "Soft Update is required",
+      "positive_button": "Update",
+      "negative_button": "Cancel"
+    },
+    "hard_update_details": {
+      "enable": true,
+      "dialog_message": "Hard Update is required",
+      "positive_button": "Update",
+      "negative_button": "Cancel"
+    }
   }
 ]

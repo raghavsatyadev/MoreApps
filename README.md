@@ -4,7 +4,7 @@ With More Apps library you can showcase your other apps in a beautiful way.
 **Current version:**  <a href='https://bintray.com/raghavsatyadev/Maven/MoreApps/_latestVersion'><img src='https://api.bintray.com/packages/raghavsatyadev/Maven/MoreApps/images/download.svg'></a>
 
 # Setup
-To use this library your minSdkVersion must be >= 19. Library is made of AndroidX components,so you have to upgrade your project to AndroidX currently.
+To use this library your minSdkVersion must be >= 19.This library supports **AndroidX**.
 
 In the build.gradle of your app module add:
 
@@ -14,81 +14,86 @@ dependencies {
 }
 ```
 
-You also have to give Java 8 support for this library
-
-```gradle
-compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
-}
-```
-
 # Example
 
 **Java**
 
 ```java
-new MoreAppsDialog.Builder(this, CoreApp.JSON_FILE_URL)
-        .buildAndShow(new MoreAppsDialogListener() {
-            @Override
-            public void onClose() {
-                // on dialog close
-            }
+    new MoreAppsDialog.Builder(this, CoreApp.JSON_FILE_URL)
+            .buildAndShow(new MoreAppsDialogListener() {
+                @Override
+                public void onClose() {
+                    // on dialog close
+                }
 
-            @Override
-            public void onAppClicked(MoreAppsModel appsModel) {
-                // on item click
-            }
-        });
+                @Override
+                public void onAppClicked(MoreAppsModel appsModel) {
+                    // on item click
+                }
+            });
 ```
 
 **Customization**
 
 ```java
 
-new MoreAppsDialog.Builder(this, CoreApp.JSON_FILE_URL)
-       .removeCurrentApplication("com.appdroidtechnologies.whatscut") // to remove current application from the list give package name here
-       .dialogTitle("More Apps") // custom dialog title
-       .dialogLayout(R.layout.more_apps_view) // custom dialog layout, read more instructions in it's javadoc
-       .dialogRowLayout(R.layout.row_more_apps) // custom list item layout, read more instructions in it's javadoc
-       .openAppsInPlayStore(true) // on clicking the item, should it open in the play store
-       .font(R.font.sans_bold) // custom font
-       .themeColor(Color.parseColor("#AAF44336")) // custom theme color, read more in javadoc
-       .rowTitleColor(Color.parseColor("#000000")) // custom list item title color
-       .rowDescriptionColor(Color.parseColor("#888888")) // custom list item description color
-       .buildAndShow(new MoreAppsDialogListener() {
-           @Override
-           public void onClose() {
-               // on dialog close
-           }
+    new MoreAppsDialog.Builder(this, CoreApp.JSON_FILE_URL)
+            .removeApplicationFromList("com.appdroidtechnologies.whatscut") // to remove an application from the list, give package name here
+            .dialogTitle(R.string.more_apps) // custom dialog title
+            .dialogLayout(R.layout.more_apps_view) // custom dialog layout, read more instructions in it's javadoc
+            .dialogRowLayout(R.layout.row_more_apps) // custom list item layout, read more instructions in it's javadoc
+            .openAppsInPlayStore(true) // on clicking the item, should it open in the play store
+            .font(R.font.sans_bold) // custom font
+            .themeColor(Color.parseColor("#AAF44336")) // custom theme color, read more in javadoc default primary color
+            .rowTitleColor(Color.parseColor("#000000")) // custom list item title color
+            .rowDescriptionColor(Color.parseColor("#888888")) // custom list item description color
+            .buildAndShow(new MoreAppsDialogListener() {
+                @Override
+                public void onClose() {
+                    // on dialog close
+                }
 
-           @Override
-           public void onAppClicked(MoreAppsModel appsModel) {
-               // on item click
-           }
-       });
+                @Override
+                public void onAppClicked(MoreAppsModel appsModel) {
+                    // on item click
+                }
+            });
 
 ```
 
 **Json File Format**
 ```json
 [
-  {
-    "image_link": "image link",
-    "name": "app name",
-    "rating": 4.2,
-    "play_store_link": "play store link",
-    "package_name": "package name",
-    "description": "description"
-  },
-  {
-    "image_link": "https://lh3.googleusercontent.com/EpDjP8egmkfhnGHoo4kII_-GInJRUE11kBg8iWAzvz5NNa_1p0VALeQbh307wFalZaDl=s180-rw",
-    "name": "Useful Tools For TikTok",
-    "rating": 5,
-    "play_store_link": "https://play.google.com/store/apps/details?id=com.appdroidtechno.tools.tictoc",
-    "package_name": "com.appdroidtechno.tools.tictoc",
-    "description": "Every tool/feature you need to manage TikTok (formally Known as Musically) app."
-  }
+    {
+      "image_link": "https://lh3.googleusercontent.com/EpDjP8egmkfhnGHoo4kII_-GInJRUE11kBg8iWAzvz5NNa_1p0VALeQbh307wFalZaDl=s180-rw",
+      "name": "Useful Tools For TikTok",
+      "rating": 5,
+      "play_store_link": "https://play.google.com/store/apps/details?id=com.appdroidtechno.tools.tictoc",
+      "package_name": "com.appdroidtechno.tools.tictoc",
+      "description": "Every tool/feature you need to manage TikTok (formally Known as Musically) app.",
+      "min_version": 5,
+      "current_version": 6,
+      "redirect_details": {
+        "enable": true,
+        "hard_redirect": true,
+        "dialog_message": "Redirect Notice",
+        "positive_button": "Redirect",
+        "negative_button": "Cancel",
+        "play_store_link": "https://play.google.com/store/apps/details?id=com.appdroidtechno.tools.tictoc"
+      },
+      "soft_update_details": {
+        "enable": true,
+        "dialog_message": "Soft Update is required",
+        "positive_button": "Update",
+        "negative_button": "Cancel"
+      },
+      "hard_update_details": {
+        "enable": true,
+        "dialog_message": "Hard Update is required",
+        "positive_button": "Update",
+        "negative_button": "Cancel"
+      }
+    }
 ]
 ```
 
