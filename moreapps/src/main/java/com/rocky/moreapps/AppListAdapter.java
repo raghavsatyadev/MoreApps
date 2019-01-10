@@ -29,7 +29,7 @@ public class AppListAdapter extends GenRecyclerAdapter<AppListAdapter.DataObject
     private Typeface fontFace;
 
     AppListAdapter(@LayoutRes int rowLayout, @ColorInt int themeColor, Typeface fontFace, @ColorInt int rowTitleColor, @ColorInt int rowDescriptionColor) {
-        super(new ArrayList<>());
+        super(new ArrayList<MoreAppsModel>());
         this.rowLayout = rowLayout;
         this.themeColor = themeColor;
         this.fontFace = fontFace;

@@ -2,6 +2,7 @@ package com.rocky.moreapps;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -10,7 +11,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.transition.TransitionManager;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
@@ -125,7 +125,7 @@ public class MoreAppsDialog {
      * @param context  context
      * @param listener {@link MoreAppsDownloadListener} to listen for dialog events
      */
-    public void show(final Context context, MoreAppsDialogListener listener) {
+    public void show(final Context context, final MoreAppsDialogListener listener) {
         ArrayList<MoreAppsModel> moreApps = SharedPrefsUtil.getMoreApps(context);
         if (!moreApps.isEmpty()) {
             create(context, listener, moreApps);
@@ -156,25 +156,30 @@ public class MoreAppsDialog {
         return String.format("#%06X", (0xFFFFFF & outValue.data));
     }
 
-    private void create(Context context, MoreAppsDialogListener listener, ArrayList<MoreAppsModel> moreAppsModels) {
+    private void create(Context context, final MoreAppsDialogListener listener, final ArrayList<MoreAppsModel> moreAppsModels) {
         dialog = new Dialog(context, R.style.Theme_Transparent);
         dialog.setContentView(dialogLayout);
         dialog.setCancelable(true);
         dialog.setCanceledOnTouchOutside(true);
-        dialog.setOnDismissListener(dialog -> {
-            if (listener != null) listener.onClose();
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                if (listener != null) listener.onClose();
+            }
         });
         prepareView(context, dialog, listener);
-        new Handler().post(() -> {
-            adapter.deleteAll();
-            if (!TextUtils.isEmpty(removePackageName)) {
-                for (int i = moreAppsModels.size() - 1; i >= 0; i--) {
-                    if (moreAppsModels.get(i).packageName.equals(removePackageName))
-                        moreAppsModels.remove(i);
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                adapter.deleteAll();
+                if (!TextUtils.isEmpty(removePackageName)) {
+                    for (int i = moreAppsModels.size() - 1; i >= 0; i--) {
+                        if (moreAppsModels.get(i).packageName.equals(removePackageName))
+                            moreAppsModels.remove(i);
+                    }
                 }
+                adapter.addAll(moreAppsModels);
             }
-            adapter.addAll(moreAppsModels);
-            TransitionManager.beginDelayedTransition(dialog.findViewById(android.R.id.content));
         });
         dialog.show();
     }
@@ -203,18 +208,21 @@ public class MoreAppsDialog {
         setList(context, listMoreApps, fontFace, listener);
     }
 
-    private void setList(Context context, RecyclerView listMoreApps, Typeface fontFace, MoreAppsDialogListener listener) {
+    private void setList(final Context context, RecyclerView listMoreApps, Typeface fontFace, final MoreAppsDialogListener listener) {
         if (listMoreApps != null) {
             listMoreApps.setLayoutManager(new LinearLayoutManager(context));
 
             listMoreApps.setNestedScrollingEnabled(true);
             adapter = new AppListAdapter(dialogRowLayout, themeColor, fontFace, rowTitleColor, rowDescriptionColor);
-            adapter.setOnItemClickListener((position, v) -> {
-                MoreAppsModel appsModel = adapter.getItem(position);
-                if (shouldOpenInPlayStore) {
-                    context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(appsModel.playStoreLink)));
+            adapter.setOnItemClickListener(new GenRecyclerAdapter.MyClickListener() {
+                @Override
+                public void onItemClick(int position, View v) {
+                    MoreAppsModel appsModel = adapter.getItem(position);
+                    if (shouldOpenInPlayStore) {
+                        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(appsModel.playStoreLink)));
+                    }
+                    if (listener != null) listener.onAppClicked(appsModel);
                 }
-                if (listener != null) listener.onAppClicked(appsModel);
             });
             listMoreApps.setAdapter(adapter);
         }
@@ -237,14 +245,17 @@ public class MoreAppsDialog {
             viewTitleSeparator.setBackgroundColor(themeColor);
     }
 
-    private void setCloseButton(View closeButton, MoreAppsDialogListener listener) {
+    private void setCloseButton(View closeButton, final MoreAppsDialogListener listener) {
         if (closeButton != null) {
             if (themeColor != 0) {
                 ViewCompat.setBackgroundTintList(closeButton, ColorStateList.valueOf(themeColor));
             }
-            closeButton.setOnClickListener(v -> {
-                dialog.dismiss();
-                if (listener != null) listener.onClose();
+            closeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    if (listener != null) listener.onClose();
+                }
             });
         }
     }
