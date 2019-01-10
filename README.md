@@ -19,45 +19,45 @@ dependencies {
 **Java**
 
 ```java
-    new MoreAppsDialog.Builder(this, CoreApp.JSON_FILE_URL)
-            .buildAndShow(new MoreAppsDialogListener() {
-                @Override
-                public void onClose() {
-                    // on dialog close
-                }
+new MoreAppsDialog.Builder(this, CoreApp.JSON_FILE_URL)
+        .buildAndShow(new MoreAppsDialogListener() {
+            @Override
+            public void onClose() {
+                // on dialog close
+            }
 
-                @Override
-                public void onAppClicked(MoreAppsModel appsModel) {
-                    // on item click
-                }
-            });
+            @Override
+            public void onAppClicked(MoreAppsModel appsModel) {
+                // on item click
+            }
+        });
 ```
 
 **Customization**
 
 ```java
 
-    new MoreAppsDialog.Builder(this, CoreApp.JSON_FILE_URL)
-            .removeApplicationFromList("com.appdroidtechnologies.whatscut") // to remove an application from the list, give package name here
-            .dialogTitle(R.string.more_apps) // custom dialog title
-            .dialogLayout(R.layout.more_apps_view) // custom dialog layout, read more instructions in it's javadoc
-            .dialogRowLayout(R.layout.row_more_apps) // custom list item layout, read more instructions in it's javadoc
-            .openAppsInPlayStore(true) // on clicking the item, should it open in the play store
-            .font(R.font.sans_bold) // custom font
-            .themeColor(Color.parseColor("#AAF44336")) // custom theme color, read more in javadoc default primary color
-            .rowTitleColor(Color.parseColor("#000000")) // custom list item title color
-            .rowDescriptionColor(Color.parseColor("#888888")) // custom list item description color
-            .buildAndShow(new MoreAppsDialogListener() {
-                @Override
-                public void onClose() {
-                    // on dialog close
-                }
+new MoreAppsDialog.Builder(this, CoreApp.JSON_FILE_URL)
+        .removeApplicationFromList("com.appdroidtechnologies.whatscut") // to remove an application from the list, give package name here
+        .dialogTitle(R.string.more_apps) // custom dialog title
+        .dialogLayout(R.layout.more_apps_view) // custom dialog layout, read more instructions in it's javadoc
+        .dialogRowLayout(R.layout.row_more_apps) // custom list item layout, read more instructions in it's javadoc
+        .openAppsInPlayStore(true) // on clicking the item, should it open in the play store
+        .font(R.font.sans_bold) // custom font
+        .themeColor(Color.parseColor("#AAF44336")) // custom theme color, read more in javadoc default primary color
+        .rowTitleColor(Color.parseColor("#000000")) // custom list item title color
+        .rowDescriptionColor(Color.parseColor("#888888")) // custom list item description color
+        .buildAndShow(new MoreAppsDialogListener() {
+            @Override
+            public void onClose() {
+                // on dialog close
+            }
 
-                @Override
-                public void onAppClicked(MoreAppsModel appsModel) {
-                    // on item click
-                }
-            });
+            @Override
+            public void onAppClicked(MoreAppsModel appsModel) {
+                // on item click
+            }
+        });
 
 ```
 
