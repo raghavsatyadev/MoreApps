@@ -1,48 +1,66 @@
 package com.rocky.moreapps;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import com.google.gson.annotations.SerializedName;
 
-public class MoreAppsModel implements Parcelable {
-    public static final String TAG = MoreAppsModel.class.getSimpleName();
-    public static final Parcelable.Creator<MoreAppsModel> CREATOR = new Parcelable.Creator<MoreAppsModel>() {
-        @Override
-        public MoreAppsModel createFromParcel(Parcel source) {
-            return new MoreAppsModel(source);
-        }
+public class MoreAppsModel {
 
-        @Override
-        public MoreAppsModel[] newArray(int size) {
-            return new MoreAppsModel[size];
-        }
-    };
+    @SerializedName("image_link")
+    public String imageLink;
+    @SerializedName("name")
+    public String name;
+    @SerializedName("rating")
     public double rating;
-    public String image_link, name, play_store_link, description, package_name;
+    @SerializedName("play_store_link")
+    public String playStoreLink;
+    @SerializedName("package_name")
+    public String packageName;
+    @SerializedName("description")
+    public String description;
+    @SerializedName("min_version")
+    public int minVersion;
+    @SerializedName("current_version")
+    public int currentVersion;
+    @SerializedName("redirect_details")
+    public RedirectDetails redirectDetails;
+    @SerializedName("soft_update_details")
+    public SoftUpdateDetails softUpdateDetails;
+    @SerializedName("hard_update_details")
+    public HardUpdateDetails hardUpdateDetails;
 
-    public MoreAppsModel() {
+    public static class RedirectDetails {
+        @SerializedName("enable")
+        public boolean enable;
+        @SerializedName("hard_redirect")
+        public boolean hardRedirect;
+        @SerializedName("dialog_message")
+        public String dialogMessage;
+        @SerializedName("positive_button")
+        public String positiveButton;
+        @SerializedName("negative_button")
+        public String negativeButton;
+        @SerializedName("play_store_link")
+        public String playStoreLink;
     }
 
-    protected MoreAppsModel(Parcel in) {
-        this.rating = in.readDouble();
-        this.image_link = in.readString();
-        this.name = in.readString();
-        this.play_store_link = in.readString();
-        this.description = in.readString();
-        this.package_name = in.readString();
+    public static class SoftUpdateDetails {
+        @SerializedName("enable")
+        public boolean enable;
+        @SerializedName("dialog_message")
+        public String dialogMessage;
+        @SerializedName("positive_button")
+        public String positiveButton;
+        @SerializedName("negative_button")
+        public String negativeButton;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeDouble(this.rating);
-        dest.writeString(this.image_link);
-        dest.writeString(this.name);
-        dest.writeString(this.play_store_link);
-        dest.writeString(this.description);
-        dest.writeString(this.package_name);
+    public static class HardUpdateDetails {
+        @SerializedName("enable")
+        public boolean enable;
+        @SerializedName("dialog_message")
+        public String dialogMessage;
+        @SerializedName("positive_button")
+        public String positiveButton;
+        @SerializedName("negative_button")
+        public String negativeButton;
     }
 }

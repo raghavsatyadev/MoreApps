@@ -48,7 +48,7 @@ public class AppListAdapter extends GenRecyclerAdapter<AppListAdapter.DataObject
         MoreAppsModel appModel = getItem(position);
         if (appModel != null) {
             if (holder.imgMoreApps != null)
-                Glide.with(holder.imgMoreApps.getContext()).load(appModel.image_link).into(holder.imgMoreApps);
+                Glide.with(holder.imgMoreApps.getContext()).load(appModel.imageLink).into(holder.imgMoreApps);
 
             if (holder.txtMoreAppsName != null)
                 holder.txtMoreAppsName.setText(appModel.name);

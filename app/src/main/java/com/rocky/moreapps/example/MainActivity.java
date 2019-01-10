@@ -4,9 +4,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.rocky.moreapps.BuildConfig;
 import com.rocky.moreapps.MoreAppsDialog;
 import com.rocky.moreapps.MoreAppsDialogListener;
@@ -14,6 +11,9 @@ import com.rocky.moreapps.MoreAppsDownloadListener;
 import com.rocky.moreapps.MoreAppsModel;
 
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,27 +28,15 @@ public class MainActivity extends AppCompatActivity {
      */
     public void option1(View view) {
         new MoreAppsDialog.Builder(this, CoreApp.JSON_FILE_URL)
-                .removeCurrentApplication("com.appdroidtechnologies.whatscut") // to remove current application from the list give package name here
-                .dialogTitle("More Apps") // custom dialog title
+                .removeApplicationFromList("com.appdroidtechnologies.whatscut") // to remove current application from the list give package name here
+                .dialogTitle(R.string.more_apps) // custom dialog title
                 .dialogLayout(R.layout.more_apps_view) // custom dialog layout, read more instructions in it's javadoc
                 .dialogRowLayout(R.layout.row_more_apps) // custom list item layout, read more instructions in it's javadoc
                 .openAppsInPlayStore(true) // on clicking the item, should it open in the play store
                 .font(R.font.sans_bold) // custom font
-                .themeColor(Color.parseColor("#AAF44336")) // custom theme color, read more in javadoc
+                .themeColor(Color.parseColor("#AAF44336")) // custom theme color, read more in javadoc default primary color
                 .rowTitleColor(Color.parseColor("#000000")) // custom list item title color
                 .rowDescriptionColor(Color.parseColor("#888888")) // custom list item description color
-                .enableSoftUpdate("dialog message",
-                        "positive button dialog",
-                        "negative button dialog")
-                .enableHardUpdate("dialog message",
-                        "positive button dialog",
-                        "negative button dialog")
-                .enableRedirectToApp(false,
-                        "app name",
-                        "package name",
-                        "dialog message",
-                        "positive button dialog",
-                        "negative button dialog")
                 .buildAndShow(new MoreAppsDialogListener() {
                     @Override
                     public void onClose() {
@@ -78,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void option3(View view) {
         new MoreAppsDialog.Builder(this, CoreApp.JSON_FILE_URL)
-                .removeCurrentApplication(BuildConfig.APPLICATION_ID)
+                .removeApplicationFromList(BuildConfig.APPLICATION_ID)
                 .dialogTitle("More Apps")
                 .build(new MoreAppsDownloadListener() {
                     @Override

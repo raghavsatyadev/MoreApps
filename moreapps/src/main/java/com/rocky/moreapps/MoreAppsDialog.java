@@ -16,17 +16,6 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.annotation.AttrRes;
-import androidx.annotation.ColorInt;
-import androidx.annotation.FontRes;
-import androidx.annotation.LayoutRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.core.view.ViewCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,6 +26,15 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
+import androidx.annotation.ColorInt;
+import androidx.annotation.FontRes;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import okhttp3.ConnectionSpec;
 import okhttp3.OkHttpClient;
 import okhttp3.TlsVersion;
@@ -48,7 +46,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Url;
 
-
 public class MoreAppsDialog {
     private static final String TAG = MoreAppsDialog.class.getSimpleName();
     private final String url;
@@ -56,7 +53,7 @@ public class MoreAppsDialog {
     private final int dialogLayout;
     private final int dialogRowLayout;
     private final String dialogTitle;
-    private final String currentPackageName;
+    private final String removePackageName;
     private int themeColor;
     private final int font;
     private final int rowTitleColor;
@@ -69,7 +66,7 @@ public class MoreAppsDialog {
                            @LayoutRes int dialogLayout,
                            @LayoutRes int dialogRowLayout,
                            String dialogTitle,
-                           String currentPackageName,
+                           String removePackageName,
                            @ColorInt int themeColor,
                            @FontRes int font,
                            @ColorInt int rowTitleColor,
@@ -79,7 +76,7 @@ public class MoreAppsDialog {
         this.dialogLayout = dialogLayout;
         this.dialogRowLayout = dialogRowLayout;
         this.dialogTitle = dialogTitle;
-        this.currentPackageName = currentPackageName;
+        this.removePackageName = removePackageName;
         this.themeColor = themeColor;
         this.font = font;
         this.rowTitleColor = rowTitleColor;
@@ -147,6 +144,18 @@ public class MoreAppsDialog {
         }
     }
 
+    private static String getThemeColorInHex(@NonNull Context context) {
+        TypedValue outValue = new TypedValue();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            context.getTheme().resolveAttribute(R.attr.colorPrimary, outValue, true);
+        } else {
+            // get color defined for AppCompat
+            int appCompatAttribute = context.getResources().getIdentifier("colorPrimary", "attr", context.getPackageName());
+            context.getTheme().resolveAttribute(appCompatAttribute, outValue, true);
+        }
+        return String.format("#%06X", (0xFFFFFF & outValue.data));
+    }
+
     private void create(Context context, MoreAppsDialogListener listener, ArrayList<MoreAppsModel> moreAppsModels) {
         dialog = new Dialog(context, R.style.Theme_Transparent);
         dialog.setContentView(dialogLayout);
@@ -158,9 +167,9 @@ public class MoreAppsDialog {
         prepareView(context, dialog, listener);
         new Handler().post(() -> {
             adapter.deleteAll();
-            if (!TextUtils.isEmpty(currentPackageName)) {
+            if (!TextUtils.isEmpty(removePackageName)) {
                 for (int i = moreAppsModels.size() - 1; i >= 0; i--) {
-                    if (moreAppsModels.get(i).package_name.equals(currentPackageName))
+                    if (moreAppsModels.get(i).packageName.equals(removePackageName))
                         moreAppsModels.remove(i);
                 }
             }
@@ -168,18 +177,6 @@ public class MoreAppsDialog {
             TransitionManager.beginDelayedTransition(dialog.findViewById(android.R.id.content));
         });
         dialog.show();
-    }
-
-    public static String getThemeColorInHex(@NonNull Context context, @NonNull String colorName, @AttrRes int attribute) {
-        TypedValue outValue = new TypedValue();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            context.getTheme().resolveAttribute(attribute, outValue, true);
-        } else {
-            // get color defined for AppCompat
-            int appCompatAttribute = context.getResources().getIdentifier(colorName, "attr", context.getPackageName());
-            context.getTheme().resolveAttribute(appCompatAttribute, outValue, true);
-        }
-        return String.format("#%06X", (0xFFFFFF & outValue.data));
     }
 
     private void prepareView(@NonNull Context context, Dialog view, MoreAppsDialogListener listener) {
@@ -194,7 +191,7 @@ public class MoreAppsDialog {
         }
 
         if (themeColor == 0) {
-            themeColor = Color.parseColor(getThemeColorInHex(context, "colorPrimary", R.attr.colorPrimary));
+            themeColor = Color.parseColor(getThemeColorInHex(context));
         }
 
         setCloseButton(closeButton, listener);
@@ -215,7 +212,7 @@ public class MoreAppsDialog {
             adapter.setOnItemClickListener((position, v) -> {
                 MoreAppsModel appsModel = adapter.getItem(position);
                 if (shouldOpenInPlayStore) {
-                    context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(appsModel.play_store_link)));
+                    context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(appsModel.playStoreLink)));
                 }
                 if (listener != null) listener.onAppClicked(appsModel);
             });
@@ -260,12 +257,11 @@ public class MoreAppsDialog {
      * @param context  Context of anything
      * @param listener {@link MoreAppsDownloadListener} to listen for API call
      */
-    public void updateApps(@NonNull final Context context, final MoreAppsDownloadListener listener) {
+    private void updateApps(@NonNull final Context context, final MoreAppsDownloadListener listener) {
         Uri uri = Uri.parse(url);
         String lastPathSegment = uri.getLastPathSegment();
         if (lastPathSegment != null) {
             new Retrofit.Builder()
-//                        .client(new OkHttpClient.Builder().socketFactory(new Tls12SocketFactory()).build())
                     .client(enableTls12OnPreLollipop(new OkHttpClient.Builder()).build())
                     .baseUrl(url.substring(0, url.length() - lastPathSegment.length()))
                     .addConverterFactory(GsonConverterFactory.create())
@@ -303,7 +299,7 @@ public class MoreAppsDialog {
         private int dialogLayout = R.layout.more_apps_view;
         private int dialogRowLayout = R.layout.row_more_apps;
         private String dialogTitle = "";
-        private String currentPackageName = "";
+        private String removePackageName = "";
         private int themeColor = 0;
         private int font;
         private int rowTitleColor;
@@ -328,13 +324,13 @@ public class MoreAppsDialog {
         }
 
         /**
-         * to remove current application from the list
+         * to remove application from the list
          *
-         * @param currentPackageName Package name of current application
+         * @param packageName Package name of application
          * @return {@link Builder}
          */
-        public Builder removeCurrentApplication(String currentPackageName) {
-            this.currentPackageName = currentPackageName;
+        public Builder removeApplicationFromList(String packageName) {
+            this.removePackageName = packageName;
             return this;
         }
 
@@ -424,44 +420,26 @@ public class MoreAppsDialog {
             return this;
         }
 
-        public Builder enableSoftUpdate() {
-            return enableSoftUpdate("", "", "");
-        }
-
-        public Builder enableSoftUpdate(String dialogMessage, String positiveButtonDialog, String negativeButtonDialog) {
-            return this;
-        }
-
-        public Builder enableHardUpdate() {
-            return enableHardUpdate("", "", "");
-        }
-
-        public Builder enableHardUpdate(String dialogMessage, String positiveButtonDialog, String negativeButtonDialog) {
-            return this;
-        }
-
-        public Builder enableRedirectToApp(boolean hardRedirect, String appName, String packageName) {
-            return enableRedirectToApp(hardRedirect, appName, packageName, "", "", "");
-        }
-
-        public Builder enableRedirectToApp(boolean hardRedirect, String appName, String packageName, String dialogMessage, String positiveButtonDialog, String negativeButtonDialog) {
-            return this;
-        }
-
         public void buildAndShow(MoreAppsDialogListener listener) {
+            build(true, null, listener);
+        }
+
+        private MoreAppsDialog build(boolean shouldShow, MoreAppsDownloadListener listener, MoreAppsDialogListener dialogListener) {
             MoreAppsDialog moreAppsDialog = new MoreAppsDialog(
                     url,
                     shouldOpenInPlayStore,
                     dialogLayout,
                     dialogRowLayout,
                     dialogTitle,
-                    currentPackageName,
+                    removePackageName,
                     themeColor,
                     font,
                     rowTitleColor,
                     rowDescriptionColor);
 
-            moreAppsDialog.show(context, listener);
+            if (shouldShow) moreAppsDialog.show(context, dialogListener);
+            else moreAppsDialog.updateApps(context, listener);
+            return moreAppsDialog;
         }
 
         public MoreAppsDialog build() {
@@ -469,21 +447,7 @@ public class MoreAppsDialog {
         }
 
         public MoreAppsDialog build(MoreAppsDownloadListener listener) {
-            MoreAppsDialog moreAppsDialog = new MoreAppsDialog(
-                    url,
-                    shouldOpenInPlayStore,
-                    dialogLayout,
-                    dialogRowLayout,
-                    dialogTitle,
-                    currentPackageName,
-                    themeColor,
-                    font,
-                    rowTitleColor,
-                    rowDescriptionColor);
-
-            moreAppsDialog.updateApps(context, listener);
-
-            return moreAppsDialog;
+            return build(false, listener, null);
         }
     }
 }
