@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">MoreAppsLibrary</string>
     <string name="more_apps">More Apps</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="tab_text_1">More Apps</string>
+    <string name="tab_text_2">Updater</string>
 </resources>

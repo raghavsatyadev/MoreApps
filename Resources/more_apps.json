@@ -7,29 +7,7 @@
     "package_name": "com.appdroidtechnologies.whatscut",
     "description": "Easily cut and share large videos on WhatsApp.",
     "min_version": 5,
-    "current_version": 6,
-    "redirect_details": {
-      "enable": true,
-      "hard_redirect": false,
-      "dialog_title": "Redirect Notice",
-      "dialog_message": "We have uploaded our app to new location",
-      "positive_button": "Redirect",
-      "negative_button": "Cancel",
-      "app_link": "https://play.google.com/store/apps/details?id=com.appdroidtechnologies.whatscut"
-    },
-    "soft_update_details": {
-      "enable": true,
-      "dialog_title": "Update Required!",
-      "dialog_message": "Soft Update is required",
-      "positive_button": "Update",
-      "negative_button": "Cancel"
-    },
-    "hard_update_details": {
-      "enable": true,
-      "dialog_title": "Update Required!",
-      "dialog_message": "Hard Update is required",
-      "positive_button": "Update"
-    }
+    "current_version": 6
   },
   {
     "image_link": "https://lh3.googleusercontent.com/EpDjP8egmkfhnGHoo4kII_-GInJRUE11kBg8iWAzvz5NNa_1p0VALeQbh307wFalZaDl=s180-rw",
@@ -39,7 +17,17 @@
     "package_name": "com.appdroidtechno.tools.tictoc",
     "description": "Every tool/feature you need to manage TikTok (formally Known as Musically) app.",
     "min_version": 5,
-    "current_version": 6,
+    "current_version": 6
+  },
+  {
+    "image_link": "https://lh3.googleusercontent.com/EpDjP8egmkfhnGHoo4kII_-GInJRUE11kBg8iWAzvz5NNa_1p0VALeQbh307wFalZaDl=s180-rw",
+    "name": "Useful Tools For TikTok",
+    "rating": 5,
+    "app_link": "https://play.google.com/store/apps/details?id=com.appdroidtechno.tools.tictoc",
+    "package_name": "com.rocky.moreapps.example",
+    "description": "Every tool/feature you need to manage TikTok (formally Known as Musically) app.",
+    "min_version": 2,
+    "current_version": 5,
     "redirect_details": {
       "enable": true,
       "hard_redirect": false,

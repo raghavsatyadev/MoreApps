@@ -14,55 +14,76 @@ dependencies {
 }
 ```
 
-# Example
+# Example (More Apps Dialog)
 
-**Java**
+**Basic**
 
 ```java
 new MoreAppsDialog.Builder(this, CoreApp.JSON_FILE_URL)
-        .buildAndShow(new MoreAppsDialogListener() {
-            @Override
-            public void onClose() {
-                // on dialog close
-            }
+    .buildAndShow(new MoreAppsDialogListener() {
+        @Override
+        public void onClose() {
+            // on dialog close
+        }
 
-            @Override
-            public void onAppClicked(MoreAppsModel appsModel) {
-                // on item click
-            }
-        });
+        @Override
+        public void onAppClicked(MoreAppsModel appsModel) {
+            // on item click
+        }
+    });
 ```
 
 **Customization**
 
 ```java
-
 new MoreAppsDialog.Builder(this, CoreApp.JSON_FILE_URL)
-        .customOkHttpClient(okHttpClient) // provide custom OkHttpClient
-        .removeApplicationFromList("com.appdroidtechnologies.whatscut") // to remove an application from the list, give package name here
-        .dialogTitle(R.string.more_apps) // custom dialog title
-        .dialogLayout(R.layout.more_apps_view) // custom dialog layout, read more instructions in it's javadoc
-        .dialogRowLayout(R.layout.row_more_apps) // custom list item layout, read more instructions in it's javadoc
-        .openAppsInPlayStore(true) // on clicking the item, should it open in the play store
-        .font(R.font.sans_bold) // custom font
-        .themeColor(Color.parseColor("#AAF44336")) // custom theme color, read more in javadoc default primary color
-        .rowTitleColor(Color.parseColor("#000000")) // custom list item title color
-        .rowDescriptionColor(Color.parseColor("#888888")) // custom list item description color
-        .buildAndShow(new MoreAppsDialogListener() {
-            @Override
-            public void onClose() {
-                // on dialog close
-            }
+    .customOkHttpClient(okHttpClient) // provide custom OkHttpClient
+    .removeApplicationFromList("com.appdroidtechnologies.whatscut") // to remove an application from the list, give package name here
+    .dialogTitle(R.string.more_apps) // custom dialog title
+    .dialogLayout(R.layout.more_apps_view) // custom dialog layout, read more instructions in it's javadoc
+    .dialogRowLayout(R.layout.row_more_apps) // custom list item layout, read more instructions in it's javadoc
+    .openAppsInPlayStore(true) // on clicking the item, should it open in the play store
+    .font(R.font.sans_bold) // custom font
+    .themeColor(Color.parseColor("#AAF44336")) // custom theme color, read more in javadoc default primary color
+    .rowTitleColor(Color.parseColor("#000000")) // custom list item title color
+    .rowDescriptionColor(Color.parseColor("#888888")) // custom list item description color
+    .buildAndShow(new MoreAppsDialogListener() {
+        @Override
+        public void onClose() {
+            // on dialog close
+        }
 
-            @Override
-            public void onAppClicked(MoreAppsModel appsModel) {
-                // on item click
-            }
-        });
+        @Override
+        public void onAppClicked(MoreAppsModel appsModel) {
+            // on item click
+        }
+    });
 
 ```
 
+# Example (Force Updater)
+
+**Application Class**
+
+```java
+MoreAppsDialog moreAppsDialog = new MoreAppsDialog.Builder(this, JSON_FILE_URL).build(); //calling this method in application class would be recommended
+```
+
+**Launcher Activity**
+
+```java
+if (moreAppsDialog.shouldShowUpdateDialogs(getContext()))
+    moreAppsDialog.showUpdateDialogs(getContext(), new UpdateDialogListener() {
+        @Override
+        public void onClose() {
+        }
+    });
+```
+
 **Json File Format**
+
+***NOTE*** : redirect_details, soft_update_details, hard_update_details are only required for Force Updater.
+
 ```json
 [
   {

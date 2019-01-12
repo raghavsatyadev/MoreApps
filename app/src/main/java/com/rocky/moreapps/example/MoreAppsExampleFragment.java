@@ -3,8 +3,10 @@ package com.rocky.moreapps.example;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.rocky.moreapps.BuildConfig;
 import com.rocky.moreapps.MoreAppsDialog;
@@ -14,19 +16,46 @@ import com.rocky.moreapps.MoreAppsModel;
 
 import java.util.List;
 
-public class MoreAppsDialogActivity extends AppCompatActivity {
+public class MoreAppsExampleFragment extends Fragment implements View.OnClickListener {
+
+    public static MoreAppsExampleFragment getInstance() {
+        MoreAppsExampleFragment fragment = new MoreAppsExampleFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_more_apps_dialog);
+    public View onCreateView(
+            @NonNull LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_more_apps_example, container, false);
+        view.findViewById(R.id.btn_1).setOnClickListener(this);
+        view.findViewById(R.id.btn_2).setOnClickListener(this);
+        view.findViewById(R.id.btn_3).setOnClickListener(this);
+        return view;
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btn_1:
+                option1();
+                break;
+            case R.id.btn_2:
+                option2();
+                break;
+            case R.id.btn_3:
+                option3();
+                break;
+        }
     }
 
     /**
      * This method shows almost all the options available
      */
-    public void option1(View view) {
-        new MoreAppsDialog.Builder(this, CoreApp.JSON_FILE_URL)
+    public void option1() {
+        new MoreAppsDialog.Builder(this.getContext(), CoreApp.JSON_FILE_URL)
                 .removeApplicationFromList("com.appdroidtechnologies.whatscut") // to remove an application from the list, give package name here
                 .dialogTitle(R.string.more_apps) // custom dialog title
                 .dialogLayout(R.layout.more_apps_view) // custom dialog layout, read more instructions in it's javadoc
@@ -52,8 +81,8 @@ public class MoreAppsDialogActivity extends AppCompatActivity {
     /**
      * call {@link MoreAppsDialog.Builder#build()} first
      */
-    public void option2(View view) {
-        CoreApp.getInstance().getMoreAppsDialog().show(MoreAppsDialogActivity.this, new MoreAppsDialogListener() {
+    public void option2() {
+        CoreApp.getInstance().getMoreAppsDialog().show(this.getContext(), new MoreAppsDialogListener() {
             @Override
             public void onClose() {
 
@@ -66,14 +95,14 @@ public class MoreAppsDialogActivity extends AppCompatActivity {
         });
     }
 
-    public void option3(View view) {
-        new MoreAppsDialog.Builder(this, CoreApp.JSON_FILE_URL)
+    public void option3() {
+        new MoreAppsDialog.Builder(this.getContext(), CoreApp.JSON_FILE_URL)
                 .removeApplicationFromList(BuildConfig.APPLICATION_ID)
                 .dialogTitle("More Apps")
                 .build(new MoreAppsDownloadListener() {
                     @Override
                     public void onSuccess(MoreAppsDialog moreAppsDialog, @NonNull List<MoreAppsModel> moreAppsModels) {
-                        moreAppsDialog.show(MoreAppsDialogActivity.this, new MoreAppsDialogListener() {
+                        moreAppsDialog.show(getContext(), new MoreAppsDialogListener() {
                             @Override
                             public void onClose() {
 

@@ -4,13 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MoreAppsDialogActivity">
+    tools:context=".MoreAppsExampleFragment">
 
     <Button
         android:id="@+id/btn_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="option1"
         android:text="Option 1"
         app:layout_constraintBottom_toTopOf="@+id/btn_2"
         app:layout_constraintEnd_toEndOf="parent"
@@ -22,7 +21,6 @@
         android:id="@+id/btn_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="option2"
         android:text="Option 2"
         app:layout_constraintBottom_toTopOf="@+id/btn_3"
         app:layout_constraintEnd_toEndOf="parent"
@@ -34,7 +32,6 @@
         android:id="@+id/btn_3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="option3"
         android:text="Option 3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

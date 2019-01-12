@@ -1,14 +1,8 @@
 package com.rocky.moreapps.example;
 
 import android.app.Application;
-import android.util.Log;
 
-import com.rocky.moreapps.BuildConfig;
 import com.rocky.moreapps.MoreAppsDialog;
-import com.rocky.moreapps.MoreAppsDownloadListener;
-import com.rocky.moreapps.MoreAppsModel;
-
-import java.util.List;
 
 public class CoreApp extends Application {
     public static final String JSON_FILE_URL = "https://raghavsatyadev.github.io/more_apps.json";
@@ -35,19 +29,6 @@ public class CoreApp extends Application {
     }
 
     private void createMoreAppDialog() {
-        moreAppsDialog = new MoreAppsDialog.Builder(this, JSON_FILE_URL)
-                .removeApplicationFromList(BuildConfig.APPLICATION_ID)
-                .dialogTitle("More Apps")
-                .build(new MoreAppsDownloadListener() {
-                    @Override
-                    public void onSuccess(MoreAppsDialog moreAppsDialog, List<MoreAppsModel> moreAppsModels) {
-
-                    }
-
-                    @Override
-                    public void onFailure(Throwable t) {
-                        Log.e(TAG, "onFailure: ", t);
-                    }
-                });
+        moreAppsDialog = new MoreAppsDialog.Builder(this, JSON_FILE_URL).build();
     }
 }
