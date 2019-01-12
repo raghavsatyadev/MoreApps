@@ -4,7 +4,7 @@ With More Apps library you can showcase your other apps in a beautiful way.
 **Current version:**  <a href='https://bintray.com/raghavsatyadev/Maven/MoreApps/_latestVersion'><img src='https://api.bintray.com/packages/raghavsatyadev/Maven/MoreApps/images/download.svg'></a>
 
 # Setup
-To use this library your minSdkVersion must be >= 19.This library supports **AndroidX**.
+To use this library your **minSdkVersion** must be >= 19.This library supports **AndroidX**.
 
 In the build.gradle of your app module add:
 
@@ -38,6 +38,7 @@ new MoreAppsDialog.Builder(this, CoreApp.JSON_FILE_URL)
 ```java
 
 new MoreAppsDialog.Builder(this, CoreApp.JSON_FILE_URL)
+        .customOkHttpClient(okHttpClient) // provide custom OkHttpClient
         .removeApplicationFromList("com.appdroidtechnologies.whatscut") // to remove an application from the list, give package name here
         .dialogTitle(R.string.more_apps) // custom dialog title
         .dialogLayout(R.layout.more_apps_view) // custom dialog layout, read more instructions in it's javadoc
@@ -64,36 +65,38 @@ new MoreAppsDialog.Builder(this, CoreApp.JSON_FILE_URL)
 **Json File Format**
 ```json
 [
-    {
-      "image_link": "https://lh3.googleusercontent.com/EpDjP8egmkfhnGHoo4kII_-GInJRUE11kBg8iWAzvz5NNa_1p0VALeQbh307wFalZaDl=s180-rw",
-      "name": "Useful Tools For TikTok",
-      "rating": 5,
-      "play_store_link": "https://play.google.com/store/apps/details?id=com.appdroidtechno.tools.tictoc",
-      "package_name": "com.appdroidtechno.tools.tictoc",
-      "description": "Every tool/feature you need to manage TikTok (formally Known as Musically) app.",
-      "min_version": 5,
-      "current_version": 6,
-      "redirect_details": {
-        "enable": true,
-        "hard_redirect": true,
-        "dialog_message": "Redirect Notice",
-        "positive_button": "Redirect",
-        "negative_button": "Cancel",
-        "play_store_link": "https://play.google.com/store/apps/details?id=com.appdroidtechno.tools.tictoc"
-      },
-      "soft_update_details": {
-        "enable": true,
-        "dialog_message": "Soft Update is required",
-        "positive_button": "Update",
-        "negative_button": "Cancel"
-      },
-      "hard_update_details": {
-        "enable": true,
-        "dialog_message": "Hard Update is required",
-        "positive_button": "Update",
-        "negative_button": "Cancel"
-      }
+  {
+    "image_link": "https://lh3.googleusercontent.com/e9P4W-uQW8kdMw6yMX6NSHiy9KL7gvMPUugh4r2lOSYECTFuvZhl_rqKAlma43qA4uM8=s180-rw",
+    "name": "WhatsCut - Best Video Cut & Share App for WhatsApp",
+    "rating": 4.2,
+    "app_link": "https://play.google.com/store/apps/details?id=com.appdroidtechnologies.whatscut",
+    "package_name": "com.appdroidtechnologies.whatscut",
+    "description": "Easily cut and share large videos on WhatsApp.",
+    "min_version": 5,
+    "current_version": 6,
+    "redirect_details": {
+      "enable": true,
+      "hard_redirect": false,
+      "dialog_title": "Redirect Notice",
+      "dialog_message": "We have uploaded our app to new location",
+      "positive_button": "Redirect",
+      "negative_button": "Cancel",
+      "app_link": "https://play.google.com/store/apps/details?id=com.appdroidtechnologies.whatscut"
+    },
+    "soft_update_details": {
+      "enable": true,
+      "dialog_title": "Update Required!",
+      "dialog_message": "Soft Update is required",
+      "positive_button": "Update",
+      "negative_button": "Cancel"
+    },
+    "hard_update_details": {
+      "enable": true,
+      "dialog_title": "Update Required!",
+      "dialog_message": "Hard Update is required",
+      "positive_button": "Update"
     }
+  }
 ]
 ```
 

@@ -14,12 +14,12 @@ import com.rocky.moreapps.MoreAppsModel;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MoreAppsDialogActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_more_apps_dialog);
     }
 
     /**
@@ -49,8 +49,11 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * call {@link MoreAppsDialog.Builder#build()} first
+     */
     public void option2(View view) {
-        CoreApp.getInstance().getMoreAppsDialog().show(MainActivity.this, new MoreAppsDialogListener() {
+        CoreApp.getInstance().getMoreAppsDialog().show(MoreAppsDialogActivity.this, new MoreAppsDialogListener() {
             @Override
             public void onClose() {
 
@@ -70,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                 .build(new MoreAppsDownloadListener() {
                     @Override
                     public void onSuccess(MoreAppsDialog moreAppsDialog, @NonNull List<MoreAppsModel> moreAppsModels) {
-                        moreAppsDialog.show(MainActivity.this, new MoreAppsDialogListener() {
+                        moreAppsDialog.show(MoreAppsDialogActivity.this, new MoreAppsDialogListener() {
                             @Override
                             public void onClose() {
 

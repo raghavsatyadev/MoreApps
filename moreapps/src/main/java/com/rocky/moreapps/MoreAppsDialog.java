@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -17,6 +18,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -58,8 +60,10 @@ public class MoreAppsDialog {
     private final int font;
     private final int rowTitleColor;
     private final int rowDescriptionColor;
-    private AppListAdapter adapter;
+    private OkHttpClient okHttpClient;
+    private MoreAppsListAdapter adapter;
     private Dialog dialog;
+    private UpdateListener updateListener;
 
     private MoreAppsDialog(@NonNull String url,
                            boolean shouldOpenInPlayStore,
@@ -70,7 +74,8 @@ public class MoreAppsDialog {
                            @ColorInt int themeColor,
                            @FontRes int font,
                            @ColorInt int rowTitleColor,
-                           @ColorInt int rowDescriptionColor) {
+                           @ColorInt int rowDescriptionColor,
+                           OkHttpClient okHttpClient) {
         this.url = url;
         this.shouldOpenInPlayStore = shouldOpenInPlayStore;
         this.dialogLayout = dialogLayout;
@@ -81,9 +86,10 @@ public class MoreAppsDialog {
         this.font = font;
         this.rowTitleColor = rowTitleColor;
         this.rowDescriptionColor = rowDescriptionColor;
+        this.okHttpClient = okHttpClient;
     }
 
-    private static OkHttpClient.Builder enableTls12OnPreLollipop(OkHttpClient.Builder client) {
+    public static OkHttpClient.Builder enableTls12OnPreLollipop(OkHttpClient.Builder builder) {
         if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 22) {
             try {
                 SSLContext sc = SSLContext.getInstance("TLSv1.2");
@@ -99,7 +105,7 @@ public class MoreAppsDialog {
                 }
                 X509TrustManager trustManager = (X509TrustManager) trustManagers[0];
 
-                client.sslSocketFactory(new Tls12SocketFactory(), trustManager);
+                builder.sslSocketFactory(new Tls12SocketFactory(), trustManager);
 
                 ConnectionSpec cs = new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
                         .tlsVersions(TlsVersion.TLS_1_2)
@@ -110,19 +116,207 @@ public class MoreAppsDialog {
                 specs.add(ConnectionSpec.COMPATIBLE_TLS);
                 specs.add(ConnectionSpec.CLEARTEXT);
 
-                client.connectionSpecs(specs);
+                builder.connectionSpecs(specs);
             } catch (Exception exc) {
                 Log.e("OkHttpTLSCompat", "Error while setting TLS 1.2", exc);
             }
         }
 
-        return client;
+        return builder;
+    }
+
+    private static String getPrimaryColorInHex(@NonNull Context context) {
+        TypedValue outValue = new TypedValue();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            context.getTheme().resolveAttribute(R.attr.colorPrimary, outValue, true);
+        } else {
+            // get color defined for AppCompat
+            int appCompatAttribute = context.getResources().getIdentifier("colorPrimary", "attr", context.getPackageName());
+            context.getTheme().resolveAttribute(appCompatAttribute, outValue, true);
+        }
+        return String.format("#%06X", (0xFFFFFF & outValue.data));
+    }
+
+    /**
+     * call this method only to wait for API call to finish
+     *
+     * @param updateListener {@link UpdateDialogListener}
+     */
+    public void addUpdateListener(UpdateListener updateListener) {
+        this.updateListener = updateListener;
+    }
+
+    public void removeUpdateListener() {
+        this.updateListener = null;
+    }
+
+    /**
+     * This method will check {@link android.content.SharedPreferences} for the already stored data
+     * <p>
+     * NOTE : call {@link Builder#build()} first to load the data in {@link android.content.SharedPreferences}
+     *
+     * @param context              {@link Context of Activity or Fragment}
+     * @param autoShowDialogs      true to show dialogs automatically
+     * @param updateDialogListener to listen for dialog close events
+     */
+    public boolean shouldShowUpdateDialogs(Context context, boolean autoShowDialogs, UpdateDialogListener updateDialogListener) throws PackageManager.NameNotFoundException {
+        int versionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_ACTIVITIES).versionCode;
+
+        MoreAppsModel moreAppsModel = getCurrentAppModel(context);
+        if (moreAppsModel != null) {
+            if (moreAppsModel.redirectDetails != null && moreAppsModel.redirectDetails.enable) {
+                if (autoShowDialogs)
+                    showRedirect(context, moreAppsModel.redirectDetails, updateDialogListener);
+                return true;
+            } else if (moreAppsModel.minVersion > versionCode) {
+                if (autoShowDialogs)
+                    showHardUpdateDialog(context, moreAppsModel.hardUpdateDetails);
+                return true;
+            } else if (moreAppsModel.currentVersion > versionCode) {
+                if (autoShowDialogs)
+                    showSoftUpdateDialog(context, moreAppsModel.softUpdateDetails, updateDialogListener);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * to know which type of dialog is need to show
+     *
+     * @param moreAppsModel {@link MoreAppsModel} of current app, get this by calling {@link MoreAppsDialog#getCurrentAppModel}
+     * @return {@link UpdateDialogType}
+     */
+    public UpdateDialogType dialogToShow(Context context, MoreAppsModel moreAppsModel) throws PackageManager.NameNotFoundException {
+        int versionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_ACTIVITIES).versionCode;
+
+        if (moreAppsModel.redirectDetails != null && moreAppsModel.redirectDetails.enable) {
+            return moreAppsModel.redirectDetails.hardRedirect ? UpdateDialogType.HARD_REDIRECT : UpdateDialogType.SOFT_REDIRECT;
+        } else if (moreAppsModel.minVersion > versionCode) {
+            return UpdateDialogType.HARD_UPDATE;
+        } else if (moreAppsModel.currentVersion > versionCode) {
+            return UpdateDialogType.SOFT_UPDATE;
+        }
+        return UpdateDialogType.NONE;
+    }
+
+    /**
+     * NOTE : call {@link Builder#build()} first to load the data in {@link android.content.SharedPreferences}
+     *
+     * @return {@link MoreAppsModel} of current app if present
+     */
+    public MoreAppsModel getCurrentAppModel(Context context) {
+        ArrayList<MoreAppsModel> moreApps = SharedPrefsUtil.getMoreApps(context);
+        if (moreApps != null && !moreApps.isEmpty()) {
+            String currentPackageName = context.getPackageName();
+            for (int i = 0; i < moreApps.size(); i++) {
+                MoreAppsModel moreAppsModel = moreApps.get(i);
+                if (moreAppsModel.packageName.equals(currentPackageName)) {
+                    return moreAppsModel;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param context           {@link Context of Activity or Fragment}
+     * @param softUpdateDetails {@link SoftUpdateDetails}
+     * @param listener          {@link UpdateDialogListener} to know when dialog is closed
+     */
+    public void showSoftUpdateDialog(final Context context, SoftUpdateDetails softUpdateDetails, final UpdateDialogListener listener) {
+        if (softUpdateDetails != null) {
+            new AlertDialog.Builder(context)
+                    .setTitle(softUpdateDetails.dialogTitle)
+                    .setMessage(softUpdateDetails.dialogMessage)
+                    .setPositiveButton(softUpdateDetails.positiveButton, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            openCurrentAppInPlayStore(context);
+                        }
+                    })
+                    .setNegativeButton(softUpdateDetails.negativeButton, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            if (listener != null) listener.onClose();
+                        }
+                    })
+                    .setCancelable(true)
+                    .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            if (listener != null) listener.onClose();
+                        }
+                    })
+                    .create()
+                    .show();
+        }
+    }
+
+    /**
+     * @param context           {@link Context of Activity or Fragment}
+     * @param hardUpdateDetails {@link HardUpdateDetails}
+     */
+    public void showHardUpdateDialog(final Context context, HardUpdateDetails hardUpdateDetails) {
+        if (hardUpdateDetails != null) {
+            new AlertDialog.Builder(context)
+                    .setTitle(hardUpdateDetails.dialogTitle)
+                    .setMessage(hardUpdateDetails.dialogMessage)
+                    .setPositiveButton(hardUpdateDetails.positiveButton, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            openCurrentAppInPlayStore(context);
+                        }
+                    })
+                    .setCancelable(false)
+                    .create()
+                    .show();
+        }
+    }
+
+    /**
+     * @param context         {@link Context of Activity or Fragment}
+     * @param redirectDetails {@link RedirectDetails}
+     * @param listener        {@link UpdateDialogListener} to know when dialog is closed
+     */
+    public void showRedirect(final Context context, final RedirectDetails redirectDetails, final UpdateDialogListener listener) {
+        if (redirectDetails != null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(context)
+                    .setTitle(redirectDetails.dialogTitle)
+                    .setMessage(redirectDetails.dialogMessage)
+                    .setPositiveButton(redirectDetails.positiveButton, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            openBrowser(context, redirectDetails.appLink);
+                        }
+                    });
+            if (!redirectDetails.hardRedirect) {
+                builder
+                        .setNegativeButton(redirectDetails.negativeButton, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (listener != null) listener.onClose();
+                            }
+                        })
+                        .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                if (listener != null) listener.onClose();
+                            }
+                        })
+                        .setCancelable(true);
+            } else {
+                builder.setCancelable(false);
+            }
+            builder.create().show();
+        }
     }
 
     /**
      * to show the More Apps dialog
      *
-     * @param context  context
+     * @param context  {@link Context of Activity or Fragment}
      * @param listener {@link MoreAppsDownloadListener} to listen for dialog events
      */
     public void show(final Context context, final MoreAppsDialogListener listener) {
@@ -144,16 +338,29 @@ public class MoreAppsDialog {
         }
     }
 
-    private static String getThemeColorInHex(@NonNull Context context) {
-        TypedValue outValue = new TypedValue();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            context.getTheme().resolveAttribute(R.attr.colorPrimary, outValue, true);
-        } else {
-            // get color defined for AppCompat
-            int appCompatAttribute = context.getResources().getIdentifier("colorPrimary", "attr", context.getPackageName());
-            context.getTheme().resolveAttribute(appCompatAttribute, outValue, true);
+    private void prepareView(@NonNull Context context, Dialog view, MoreAppsDialogListener listener) {
+        TextView txtMoreAppsTitle = view.findViewById(R.id.txt_more_apps_title);
+        RecyclerView listMoreApps = view.findViewById(R.id.list_more_apps);
+        View closeButton = view.findViewById(R.id.btn_more_apps_close);
+        View viewTitleSeparator = view.findViewById(R.id.view_title_separator);
+
+        Typeface fontFace = null;
+
+        if (font != 0) {
+            fontFace = ResourcesCompat.getFont(context, this.font);
         }
-        return String.format("#%06X", (0xFFFFFF & outValue.data));
+
+        if (themeColor == 0) {
+            themeColor = Color.parseColor(getPrimaryColorInHex(context));
+        }
+
+        setCloseButton(closeButton, listener);
+
+        setSeparator(viewTitleSeparator);
+
+        setDialogTitle(txtMoreAppsTitle, fontFace);
+
+        setList(context, listMoreApps, fontFace, listener);
     }
 
     private void create(Context context, final MoreAppsDialogListener listener, final ArrayList<MoreAppsModel> moreAppsModels) {
@@ -184,42 +391,18 @@ public class MoreAppsDialog {
         dialog.show();
     }
 
-    private void prepareView(@NonNull Context context, Dialog view, MoreAppsDialogListener listener) {
-        TextView txtMoreAppsTitle = view.findViewById(R.id.txt_more_apps_title);
-        RecyclerView listMoreApps = view.findViewById(R.id.list_more_apps);
-        View closeButton = view.findViewById(R.id.btn_more_apps_close);
-        View viewTitleSeparator = view.findViewById(R.id.view_title_separator);
-
-        Typeface fontFace = null;
-        if (font != 0) {
-            fontFace = ResourcesCompat.getFont(context, this.font);
-        }
-
-        if (themeColor == 0) {
-            themeColor = Color.parseColor(getThemeColorInHex(context));
-        }
-
-        setCloseButton(closeButton, listener);
-
-        setSeparator(viewTitleSeparator);
-
-        setDialogTitle(txtMoreAppsTitle, fontFace);
-
-        setList(context, listMoreApps, fontFace, listener);
-    }
-
     private void setList(final Context context, RecyclerView listMoreApps, Typeface fontFace, final MoreAppsDialogListener listener) {
         if (listMoreApps != null) {
             listMoreApps.setLayoutManager(new LinearLayoutManager(context));
 
             listMoreApps.setNestedScrollingEnabled(true);
-            adapter = new AppListAdapter(dialogRowLayout, themeColor, fontFace, rowTitleColor, rowDescriptionColor);
+            adapter = new MoreAppsListAdapter(dialogRowLayout, themeColor, fontFace, rowTitleColor, rowDescriptionColor);
             adapter.setOnItemClickListener(new GenRecyclerAdapter.MyClickListener() {
                 @Override
                 public void onItemClick(int position, View v) {
                     MoreAppsModel appsModel = adapter.getItem(position);
                     if (shouldOpenInPlayStore) {
-                        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(appsModel.playStoreLink)));
+                        openBrowser(context, appsModel.appLink);
                     }
                     if (listener != null) listener.onAppClicked(appsModel);
                 }
@@ -228,9 +411,17 @@ public class MoreAppsDialog {
         }
     }
 
+    private void openBrowser(Context context, String link) {
+        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link)));
+    }
+
+    private void openCurrentAppInPlayStore(Context context) {
+        openBrowser(context, "https://play.google.com/store/apps/details?id=" + context.getPackageName());
+    }
+
     private void setDialogTitle(TextView txtMoreAppsTitle, Typeface fontFace) {
         if (txtMoreAppsTitle != null) {
-            if (themeColor != 0) txtMoreAppsTitle.setTextColor(themeColor);
+            txtMoreAppsTitle.setTextColor(themeColor);
 
             if (fontFace != null) txtMoreAppsTitle.setTypeface(fontFace);
 
@@ -241,15 +432,13 @@ public class MoreAppsDialog {
     }
 
     private void setSeparator(View viewTitleSeparator) {
-        if (viewTitleSeparator != null && themeColor != 0)
+        if (viewTitleSeparator != null)
             viewTitleSeparator.setBackgroundColor(themeColor);
     }
 
     private void setCloseButton(View closeButton, final MoreAppsDialogListener listener) {
         if (closeButton != null) {
-            if (themeColor != 0) {
-                ViewCompat.setBackgroundTintList(closeButton, ColorStateList.valueOf(themeColor));
-            }
+            ViewCompat.setBackgroundTintList(closeButton, ColorStateList.valueOf(themeColor));
             closeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -272,8 +461,10 @@ public class MoreAppsDialog {
         Uri uri = Uri.parse(url);
         String lastPathSegment = uri.getLastPathSegment();
         if (lastPathSegment != null) {
+            if (updateListener != null)
+                updateListener.onEvent(UpdateListener.UpdateStatus.PROCESSING);
             new Retrofit.Builder()
-                    .client(enableTls12OnPreLollipop(new OkHttpClient.Builder()).build())
+                    .client(okHttpClient != null ? okHttpClient : enableTls12OnPreLollipop(new OkHttpClient.Builder()).build())
                     .baseUrl(url.substring(0, url.length() - lastPathSegment.length()))
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
@@ -282,9 +473,12 @@ public class MoreAppsDialog {
                     .enqueue(new Callback<List<MoreAppsModel>>() {
                         @Override
                         public void onResponse(@NonNull Call<List<MoreAppsModel>> call, @NonNull Response<List<MoreAppsModel>> response) {
+
                             List<MoreAppsModel> body = response.body();
                             if (body != null) {
                                 SharedPrefsUtil.setMoreApps(context, body);
+                                if (updateListener != null)
+                                    updateListener.onEvent(UpdateListener.UpdateStatus.COMPLETE);
                                 if (listener != null)
                                     listener.onSuccess(MoreAppsDialog.this, body);
                             }
@@ -292,10 +486,18 @@ public class MoreAppsDialog {
 
                         @Override
                         public void onFailure(@NonNull Call<List<MoreAppsModel>> call, @NonNull Throwable t) {
+                            if (updateListener != null) {
+                                updateListener.onEvent(UpdateListener.UpdateStatus.FAILURE);
+                                updateListener.onFailure(t);
+                            }
                             if (listener != null) listener.onFailure(t);
                         }
                     });
         }
+    }
+
+    public enum UpdateDialogType {
+        NONE, SOFT_UPDATE, HARD_UPDATE, SOFT_REDIRECT, HARD_REDIRECT
     }
 
     public interface MoreAppsApi {
@@ -315,6 +517,7 @@ public class MoreAppsDialog {
         private int font;
         private int rowTitleColor;
         private int rowDescriptionColor;
+        private OkHttpClient okHttpClient;
 
         /**
          * @param context context
@@ -421,13 +624,31 @@ public class MoreAppsDialog {
             return this;
         }
 
-        public Builder rowTitleColor(int rowTitleColor) {
+        /**
+         * @param rowTitleColor {@link ColorInt} color app title in list
+         */
+        public Builder rowTitleColor(@ColorInt int rowTitleColor) {
             this.rowTitleColor = rowTitleColor;
             return this;
         }
 
-        public Builder rowDescriptionColor(int rowDescriptionColor) {
+        /**
+         * @param rowDescriptionColor {@link ColorInt} color app description in list
+         * @return
+         */
+        public Builder rowDescriptionColor(@ColorInt int rowDescriptionColor) {
             this.rowDescriptionColor = rowDescriptionColor;
+            return this;
+        }
+
+        /**
+         * custom OkHTTPClient for advance usage like network logging, private key access, etc.
+         * default client has support of TLS 1.2 for accessing JSON file through Github
+         *
+         * @param okHttpClient {@link OkHttpClient}
+         */
+        public Builder customOkHttpClient(OkHttpClient okHttpClient) {
+            this.okHttpClient = okHttpClient;
             return this;
         }
 
@@ -446,7 +667,8 @@ public class MoreAppsDialog {
                     themeColor,
                     font,
                     rowTitleColor,
-                    rowDescriptionColor);
+                    rowDescriptionColor,
+                    okHttpClient);
 
             if (shouldShow) moreAppsDialog.show(context, dialogListener);
             else moreAppsDialog.updateApps(context, listener);

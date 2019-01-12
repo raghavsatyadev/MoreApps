@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
-public class AppListAdapter extends GenRecyclerAdapter<AppListAdapter.DataObjectHolder, MoreAppsModel> {
+public class MoreAppsListAdapter extends GenRecyclerAdapter<MoreAppsListAdapter.DataObjectHolder, MoreAppsModel> {
 
     @ColorInt
     private final int rowTitleColor;
@@ -27,7 +27,7 @@ public class AppListAdapter extends GenRecyclerAdapter<AppListAdapter.DataObject
     private int themeColor;
     private Typeface fontFace;
 
-    AppListAdapter(@LayoutRes int rowLayout, @ColorInt int themeColor, Typeface fontFace, @ColorInt int rowTitleColor, @ColorInt int rowDescriptionColor) {
+    MoreAppsListAdapter(@LayoutRes int rowLayout, @ColorInt int themeColor, Typeface fontFace, @ColorInt int rowTitleColor, @ColorInt int rowDescriptionColor) {
         super(new ArrayList<MoreAppsModel>());
         this.rowLayout = rowLayout;
         this.themeColor = themeColor;

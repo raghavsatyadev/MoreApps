@@ -32,7 +32,7 @@
                 android:orientation="vertical"
                 android:padding="7dp">
 
-                <androidx.appcompat.widget.AppCompatTextView
+                <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/txt_more_apps_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
                     android:layout_marginBottom="5dp"
                     android:background="@color/more_apps_dialog_theme_color" />
 
-                <androidx.recyclerview.widget.RecyclerView
+                <android.support.v7.widget.RecyclerView
                     android:id="@+id/list_more_apps"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
