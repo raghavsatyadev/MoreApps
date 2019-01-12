@@ -201,7 +201,7 @@ public class MoreAppsDialog {
     }
 
     /**
-     * to know which type of dialog is need to show
+     * to know which type of dialog is needed to show
      *
      * @param moreAppsModel {@link MoreAppsModel} of current app, get this by calling {@link MoreAppsDialog#getCurrentAppModel}
      * @return {@link UpdateDialogType}
@@ -681,7 +681,7 @@ public class MoreAppsDialog {
         }
 
         /**
-         * @param rowTitleColor {@link ColorInt} color app title in list
+         * @param rowTitleColor color app title in list
          */
         public Builder rowTitleColor(@ColorInt int rowTitleColor) {
             this.rowTitleColor = rowTitleColor;
@@ -689,8 +689,7 @@ public class MoreAppsDialog {
         }
 
         /**
-         * @param rowDescriptionColor {@link ColorInt} color app description in list
-         * @return
+         * @param rowDescriptionColor color app description in list
          */
         public Builder rowDescriptionColor(@ColorInt int rowDescriptionColor) {
             this.rowDescriptionColor = rowDescriptionColor;

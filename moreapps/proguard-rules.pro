@@ -12,13 +12,10 @@
 }
 
 #GSON
--keep class com.google.gson.** { *; }
 -keep class com.google.inject.** { *; }
 -keep class org.apache.http.** { *; }
 -keep class javax.inject.** { *; }
 -keep class retrofit.** { *; }
--keep class sun.misc.Unsafe { *; }
--keep class com.google.gson.stream.** { *; }
 -keepclassmembernames interface * {
     @retrofit.http.* <methods>;
 }
@@ -62,9 +59,6 @@
 -keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
   **[] $VALUES;
   public *;
-}
--keep class com.bumptech.glide.GeneratedAppGlideModuleImpl {
-*;
 }
 #RXJava
 -dontwarn io.reactivex.**
