@@ -2,10 +2,9 @@ buildscript {
     repositories {
         google()
         jcenter()
-
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath 'com.android.tools.build:gradle:3.5.0-alpha01'
 
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
@@ -17,14 +16,11 @@ allprojects {
         google()
         jcenter()
     }
-    tasks.withType(Javadoc) {
-        options.addStringOption('Xdoclint:none', '-quiet')
-    }
 }
 ext {
     sdk = 28
     minSdk = 19
-    libraryVersion = "1.0.1"
+    libraryVersion = "1.0.2"
     versionCode = 1
     retrofit = '2.5.0'
     glide = '4.8.0'

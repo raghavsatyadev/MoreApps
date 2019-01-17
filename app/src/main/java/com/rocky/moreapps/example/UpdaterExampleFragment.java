@@ -62,7 +62,7 @@ public class UpdaterExampleFragment extends Fragment implements View.OnClickList
             public void onEvent(UpdateStatus updateStatus) {
                 switch (updateStatus) {
                     case COMPLETE:
-                        //                        use this to show progress bar
+                        //                        use this to hide progress bar
                         try {
                             if (moreAppsDialog.shouldShowUpdateDialogs(getContext())) {
                                 moreAppsDialog.showUpdateDialogs(getContext(), new UpdateDialogListener() {
@@ -77,7 +77,7 @@ public class UpdaterExampleFragment extends Fragment implements View.OnClickList
                         }
                         break;
                     case FAILURE:
-                        //                        use this to show progress bar
+                        //                        use this to hide progress bar
                         break;
                     case PROCESSING:
                         //                        use this to show progress bar

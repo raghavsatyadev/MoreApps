@@ -3,6 +3,7 @@ package com.rocky.moreapps.example;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,8 @@ import java.util.List;
 
 public class MoreAppsExampleFragment extends Fragment implements View.OnClickListener {
 
+    private ConstraintLayout rootView;
+
     public static MoreAppsExampleFragment getInstance() {
         MoreAppsExampleFragment fragment = new MoreAppsExampleFragment();
         Bundle args = new Bundle();
@@ -30,6 +33,7 @@ public class MoreAppsExampleFragment extends Fragment implements View.OnClickLis
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_more_apps_example, container, false);
+        rootView = view.findViewById(R.id.root_view);
         view.findViewById(R.id.btn_1).setOnClickListener(this);
         view.findViewById(R.id.btn_2).setOnClickListener(this);
         view.findViewById(R.id.btn_3).setOnClickListener(this);
@@ -82,17 +86,19 @@ public class MoreAppsExampleFragment extends Fragment implements View.OnClickLis
      * call {@link MoreAppsDialog.Builder#build()} first
      */
     public void option2() {
-        CoreApp.getInstance().getMoreAppsDialog().show(this.getContext(), new MoreAppsDialogListener() {
-            @Override
-            public void onClose() {
+        CoreApp.getInstance().getMoreAppsDialog().show(this.getContext()
+                ,
+                new MoreAppsDialogListener() {
+                    @Override
+                    public void onClose() {
 
-            }
+                    }
 
-            @Override
-            public void onAppClicked(MoreAppsModel appsModel) {
+                    @Override
+                    public void onAppClicked(MoreAppsModel appsModel) {
 
-            }
-        });
+                    }
+                });
     }
 
     public void option3() {
@@ -102,17 +108,18 @@ public class MoreAppsExampleFragment extends Fragment implements View.OnClickLis
                 .build(new MoreAppsDownloadListener() {
                     @Override
                     public void onSuccess(MoreAppsDialog moreAppsDialog, @NonNull List<MoreAppsModel> moreAppsModels) {
-                        moreAppsDialog.show(getContext(), new MoreAppsDialogListener() {
-                            @Override
-                            public void onClose() {
+                        moreAppsDialog.show(getContext(),
+                                new MoreAppsDialogListener() {
+                                    @Override
+                                    public void onClose() {
 
-                            }
+                                    }
 
-                            @Override
-                            public void onAppClicked(MoreAppsModel appsModel) {
+                                    @Override
+                                    public void onAppClicked(MoreAppsModel appsModel) {
 
-                            }
-                        });
+                                    }
+                                });
                     }
 
                     @Override

@@ -16,6 +16,7 @@ import android.support.annotation.FontRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.transition.TransitionManager;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AlertDialog;
@@ -25,6 +26,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.security.KeyStore;
@@ -162,14 +164,14 @@ public class MoreAppsDialog {
      * <p>
      * NOTE : call {@link Builder#build()} first to load the data in {@link android.content.SharedPreferences}
      *
-     * @param context {@link Context of Activity or Fragment}
+     * @param context {@link Context} of Activity or Fragment
      */
     public boolean shouldShowUpdateDialogs(Context context) throws PackageManager.NameNotFoundException {
         int versionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_ACTIVITIES).versionCode;
 
         MoreAppsModel moreAppsModel = getCurrentAppModel(context);
         if (moreAppsModel != null) {
-            return moreAppsModel.redirectDetails != null && moreAppsModel.redirectDetails.enable ||
+            return (moreAppsModel.redirectDetails != null && moreAppsModel.redirectDetails.enable) ||
                     moreAppsModel.minVersion > versionCode || moreAppsModel.currentVersion > versionCode;
         } else
             return false;
@@ -182,7 +184,7 @@ public class MoreAppsDialog {
      * <p>
      * NOTE : call {@link Builder#build()} first to load the data in {@link android.content.SharedPreferences}
      *
-     * @param context              {@link Context of Activity or Fragment}
+     * @param context              {@link Context} of Activity or Fragment
      * @param updateDialogListener to listen for dialog close events
      */
     public void showUpdateDialogs(Context context, UpdateDialogListener updateDialogListener) throws PackageManager.NameNotFoundException {
@@ -241,7 +243,7 @@ public class MoreAppsDialog {
     }
 
     /**
-     * @param context       {@link Context of Activity or Fragment}
+     * @param context       {@link Context} of Activity or Fragment
      * @param moreAppsModel {@link MoreAppsModel}
      * @param listener      {@link UpdateDialogListener} to know when dialog is closed
      */
@@ -277,7 +279,7 @@ public class MoreAppsDialog {
     }
 
     /**
-     * @param context       {@link Context of Activity or Fragment}
+     * @param context       {@link Context} of Activity or Fragment
      * @param moreAppsModel {@link MoreAppsModel}
      */
     public void showHardUpdateDialog(final Context context, final MoreAppsModel moreAppsModel) {
@@ -299,7 +301,7 @@ public class MoreAppsDialog {
     }
 
     /**
-     * @param context       {@link Context of Activity or Fragment}
+     * @param context       {@link Context} of Activity or Fragment
      * @param moreAppsModel {@link MoreAppsModel}
      */
     public void showHardRedirect(final Context context, final MoreAppsModel moreAppsModel) {
@@ -321,7 +323,7 @@ public class MoreAppsDialog {
     }
 
     /**
-     * @param context       {@link Context of Activity or Fragment}
+     * @param context       {@link Context} of Activity or Fragment
      * @param moreAppsModel {@link MoreAppsModel}
      * @param listener      {@link UpdateDialogListener} to know when dialog is closed
      */
@@ -356,7 +358,7 @@ public class MoreAppsDialog {
     }
 
     /**
-     * @param context       {@link Context of Activity or Fragment}
+     * @param context       {@link Context} of Activity or Fragment
      * @param moreAppsModel {@link MoreAppsModel}
      * @param listener      {@link UpdateDialogListener} to know when dialog is closed
      */
@@ -373,18 +375,19 @@ public class MoreAppsDialog {
     /**
      * to show the More Apps dialog
      *
-     * @param context  {@link Context of Activity or Fragment}
+     * @param context  {@link Context} of Activity or Fragment
      * @param listener {@link MoreAppsDownloadListener} to listen for dialog events
      */
-    public void show(final Context context, final MoreAppsDialogListener listener) {
+    public void show(final Context context,
+                     final MoreAppsDialogListener listener) {
         ArrayList<MoreAppsModel> moreApps = SharedPrefsUtil.getMoreApps(context);
         if (!moreApps.isEmpty()) {
-            create(context, listener, moreApps);
+            createDialog(context, moreApps, listener);
         } else {
             updateApps(context, new MoreAppsDownloadListener() {
                 @Override
                 public void onSuccess(MoreAppsDialog moreAppsDialog, @NonNull List<MoreAppsModel> moreAppsModels) {
-                    create(context, listener, new ArrayList<>(moreAppsModels));
+                    createDialog(context, new ArrayList<>(moreAppsModels), listener);
                 }
 
                 @Override
@@ -420,7 +423,9 @@ public class MoreAppsDialog {
         setList(context, listMoreApps, fontFace, listener);
     }
 
-    private void create(Context context, final MoreAppsDialogListener listener, final ArrayList<MoreAppsModel> moreAppsModels) {
+    private void createDialog(Context context,
+                              final ArrayList<MoreAppsModel> moreAppsModels,
+                              final MoreAppsDialogListener listener) {
         dialog = new Dialog(context, R.style.Theme_Transparent);
         dialog.setContentView(dialogLayout);
         dialog.setCancelable(true);
@@ -443,6 +448,8 @@ public class MoreAppsDialog {
                     }
                 }
                 adapter.addAll(moreAppsModels);
+                ViewGroup container = dialog.findViewById(android.R.id.content);
+                if (container != null) TransitionManager.beginDelayedTransition(container);
             }
         });
         dialog.show();
@@ -512,44 +519,43 @@ public class MoreAppsDialog {
      */
     private void updateApps(@NonNull final Context context, final MoreAppsDownloadListener listener) {
         Uri uri = Uri.parse(url);
-        String lastPathSegment = uri.getLastPathSegment();
-        if (lastPathSegment != null) {
-            updateStatus = UpdateListener.UpdateStatus.PROCESSING;
-            if (updateListener != null)
-                updateListener.onEvent(UpdateListener.UpdateStatus.PROCESSING);
-            new Retrofit.Builder()
-                    .client(okHttpClient != null ? okHttpClient : enableTls12OnPreLollipop(new OkHttpClient.Builder()).build())
-                    .baseUrl(url.substring(0, url.length() - lastPathSegment.length()))
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build()
-                    .create(MoreAppsApi.class)
-                    .getAppModel(lastPathSegment)
-                    .enqueue(new Callback<List<MoreAppsModel>>() {
-                        @Override
-                        public void onResponse(@NonNull Call<List<MoreAppsModel>> call, @NonNull Response<List<MoreAppsModel>> response) {
+        String path = uri.getPath();
+        String host = url.substring(0, url.length() - (path != null ? path.length() : 0)) + "/";
+        updateStatus = UpdateListener.UpdateStatus.PROCESSING;
+        if (updateListener != null)
+            updateListener.onEvent(UpdateListener.UpdateStatus.PROCESSING);
+        new Retrofit.Builder()
+                .client(okHttpClient != null ? okHttpClient : enableTls12OnPreLollipop(new OkHttpClient.Builder()).build())
+                .baseUrl(host)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(MoreAppsApi.class)
+                .getAppModel(path)
+                .enqueue(new Callback<List<MoreAppsModel>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<MoreAppsModel>> call, @NonNull Response<List<MoreAppsModel>> response) {
 
-                            List<MoreAppsModel> body = response.body();
-                            if (body != null) {
-                                SharedPrefsUtil.setMoreApps(context, body);
-                                updateStatus = UpdateListener.UpdateStatus.COMPLETE;
-                                if (updateListener != null)
-                                    updateListener.onEvent(UpdateListener.UpdateStatus.COMPLETE);
-                                if (listener != null)
-                                    listener.onSuccess(MoreAppsDialog.this, body);
-                            }
+                        List<MoreAppsModel> body = response.body();
+                        if (body != null) {
+                            SharedPrefsUtil.setMoreApps(context, body);
+                            updateStatus = UpdateListener.UpdateStatus.COMPLETE;
+                            if (updateListener != null)
+                                updateListener.onEvent(UpdateListener.UpdateStatus.COMPLETE);
+                            if (listener != null)
+                                listener.onSuccess(MoreAppsDialog.this, body);
                         }
+                    }
 
-                        @Override
-                        public void onFailure(@NonNull Call<List<MoreAppsModel>> call, @NonNull Throwable t) {
-                            updateStatus = UpdateListener.UpdateStatus.FAILURE;
-                            if (updateListener != null) {
-                                updateListener.onEvent(UpdateListener.UpdateStatus.FAILURE);
-                                updateListener.onFailure(t);
-                            }
-                            if (listener != null) listener.onFailure(t);
+                    @Override
+                    public void onFailure(@NonNull Call<List<MoreAppsModel>> call, @NonNull Throwable t) {
+                        updateStatus = UpdateListener.UpdateStatus.FAILURE;
+                        if (updateListener != null) {
+                            updateListener.onEvent(UpdateListener.UpdateStatus.FAILURE);
+                            updateListener.onFailure(t);
                         }
-                    });
-        }
+                        if (listener != null) listener.onFailure(t);
+                    }
+                });
     }
 
     public enum UpdateDialogType {
@@ -711,7 +717,9 @@ public class MoreAppsDialog {
             build(true, null, listener);
         }
 
-        private MoreAppsDialog build(boolean shouldShow, MoreAppsDownloadListener listener, MoreAppsDialogListener dialogListener) {
+        private MoreAppsDialog build(boolean shouldShow,
+                                     MoreAppsDownloadListener listener,
+                                     MoreAppsDialogListener dialogListener) {
             MoreAppsDialog moreAppsDialog = new MoreAppsDialog(
                     url,
                     shouldOpenInPlayStore,
