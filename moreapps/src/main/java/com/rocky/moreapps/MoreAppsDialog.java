@@ -29,6 +29,7 @@ import android.widget.TextView;
 import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.net.ssl.SSLContext;
@@ -54,7 +55,7 @@ public class MoreAppsDialog {
     private final int dialogLayout;
     private final int dialogRowLayout;
     private final String dialogTitle;
-    private final String removePackageName;
+    private final HashSet<String> ignoredPackageNames;
     private int themeColor;
     private final int font;
     private final int rowTitleColor;
@@ -68,7 +69,7 @@ public class MoreAppsDialog {
                            @LayoutRes int dialogLayout,
                            @LayoutRes int dialogRowLayout,
                            String dialogTitle,
-                           String removePackageName,
+                           HashSet<String> ignoredPackageNames,
                            @ColorInt int themeColor,
                            @FontRes int font,
                            @ColorInt int rowTitleColor,
@@ -79,7 +80,7 @@ public class MoreAppsDialog {
         this.dialogLayout = dialogLayout;
         this.dialogRowLayout = dialogRowLayout;
         this.dialogTitle = dialogTitle;
-        this.removePackageName = removePackageName;
+        this.ignoredPackageNames = ignoredPackageNames;
         this.themeColor = themeColor;
         this.font = font;
         this.rowTitleColor = rowTitleColor;
@@ -204,9 +205,9 @@ public class MoreAppsDialog {
             @Override
             public void run() {
                 adapter.deleteAll();
-                if (!TextUtils.isEmpty(removePackageName)) {
+                if (!ignoredPackageNames.isEmpty()) {
                     for (int i = moreAppsModels.size() - 1; i >= 0; i--) {
-                        if (moreAppsModels.get(i).packageName.equals(removePackageName))
+                        if (ignoredPackageNames.contains(moreAppsModels.get(i).packageName))
                             moreAppsModels.remove(i);
                     }
                 }
@@ -327,7 +328,7 @@ public class MoreAppsDialog {
         private int dialogLayout = R.layout.more_apps_view;
         private int dialogRowLayout = R.layout.row_more_apps;
         private String dialogTitle = "";
-        private String removePackageName = "";
+        private HashSet<String> ignoredPackageNames = new HashSet<>();
         private int themeColor = 0;
         private int font;
         private int rowTitleColor;
@@ -355,11 +356,23 @@ public class MoreAppsDialog {
         /**
          * to remove application from the list
          *
-         * @param packageName Package name of application
+         * @param ignoredPackageName Package name of application
          * @return {@link Builder}
          */
-        public Builder removeApplicationFromList(String packageName) {
-            this.removePackageName = packageName;
+        public Builder removeApplicationFromList(String ignoredPackageName) {
+            this.ignoredPackageNames.add(ignoredPackageName);
+            return this;
+        }
+
+        /**
+         * to remove application from the list
+         *
+         * @param ignoredPackageNames Package name of application
+         * @return {@link Builder}
+         */
+        public Builder removeApplicationsFromList(List<String> ignoredPackageNames) {
+            if (ignoredPackageNames != null)
+                this.ignoredPackageNames.addAll(ignoredPackageNames);
             return this;
         }
 
@@ -479,7 +492,7 @@ public class MoreAppsDialog {
                     dialogLayout,
                     dialogRowLayout,
                     dialogTitle,
-                    removePackageName,
+                    ignoredPackageNames,
                     themeColor,
                     font,
                     rowTitleColor,

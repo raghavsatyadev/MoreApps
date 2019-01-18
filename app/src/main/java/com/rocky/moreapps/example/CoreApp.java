@@ -5,7 +5,7 @@ import android.app.Application;
 import com.rocky.moreapps.MoreAppsDialog;
 
 public class CoreApp extends Application {
-    public static final String JSON_FILE_URL = "https://raghavsatyadev.github.io/more_apps.json";
+    public static final String JSON_FILE_URL = "https://raghavsatyadev.github.io/more_apps_example.json";
     private static final String TAG = CoreApp.class.getSimpleName();
     private static CoreApp mInstance;
     private MoreAppsDialog moreAppsDialog;

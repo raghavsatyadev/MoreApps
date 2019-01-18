@@ -38,7 +38,8 @@ new MoreAppsDialog.Builder(this, CoreApp.JSON_FILE_URL)
 ```java
 new MoreAppsDialog.Builder(this, CoreApp.JSON_FILE_URL)
     .customOkHttpClient(okHttpClient) // provide custom OkHttpClient
-    .removeApplicationFromList("com.appdroidtechnologies.whatscut") // to remove an application from the list, give package name here
+    .removeApplicationFromList(packageName) // to remove an application from the list, give package name here
+    .removeApplicationsFromList(Arrays.asList(packageName, packageName)) // to remove applications from the list, give package names here
     .dialogTitle(R.string.more_apps) // custom dialog title
     .dialogLayout(R.layout.more_apps_view) // custom dialog layout, read more instructions in it's javadoc
     .dialogRowLayout(R.layout.row_more_apps) // custom list item layout, read more instructions in it's javadoc
