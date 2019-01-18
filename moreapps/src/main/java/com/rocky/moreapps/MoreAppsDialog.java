@@ -471,8 +471,6 @@ public class MoreAppsDialog {
         /**
          * custom OkHTTPClient for advance usage like network logging, private key access, etc.
          * default client has support of TLS 1.2 for accessing JSON file through Github
-         *
-         * @param okHttpClient {@link OkHttpClient}
          */
         public Builder customOkHttpClient(OkHttpClient okHttpClient) {
             this.okHttpClient = okHttpClient;

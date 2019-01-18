@@ -18,10 +18,11 @@ allprojects {
     }
 }
 ext {
-    sdk = 28
+    APK_NAME = "More-Apps"
+    targetSdk = 28
     minSdk = 19
     libraryVersion = "1.0.3"
-    versionCode = 1
+    libraryVersionCode = 3
     retrofit = '2.5.0'
     glide = '4.8.0'
 }
