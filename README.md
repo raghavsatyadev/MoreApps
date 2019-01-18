@@ -88,14 +88,14 @@ if (ForceUpdater.shouldShowUpdateDialogs(getContext()))
 ```json
 [
   {
-    "image_link": "https://lh3.googleusercontent.com/e9P4W-uQW8kdMw6yMX6NSHiy9KL7gvMPUugh4r2lOSYECTFuvZhl_rqKAlma43qA4uM8=s180-rw",
-    "name": "WhatsCut - Best Video Cut & Share App for WhatsApp",
-    "rating": 4.2,
-    "app_link": "https://play.google.com/store/apps/details?id=com.appdroidtechnologies.whatscut",
-    "package_name": "com.appdroidtechnologies.whatscut",
-    "description": "Easily cut and share large videos on WhatsApp.",
-    "min_version": 5,
-    "current_version": 6,
+    "image_link": "https://lh3.googleusercontent.com/DdARfdna5YRaFap_QS11lC4a63hZ4MyaE2knX7b4hP4Wo-GThQVzlwGgwwj7yOpII6-T=s180-rw",
+    "name": "More Apps",
+    "rating": 5,
+    "app_link": "https://play.google.com/store/apps/details?id=com.rocky.moreapps.example",
+    "package_name": "com.rocky.moreapps.example",
+    "description": "Showcase your other apps in a beautiful way. This library also includes force updater.",
+    "min_version": 2,
+    "current_version": 5,
     "redirect_details": {
       "enable": true,
       "hard_redirect": false,
@@ -103,7 +103,7 @@ if (ForceUpdater.shouldShowUpdateDialogs(getContext()))
       "dialog_message": "We have uploaded our app to new location",
       "positive_button": "Redirect",
       "negative_button": "Cancel",
-      "app_link": "https://play.google.com/store/apps/details?id=com.appdroidtechnologies.whatscut"
+      "app_link": "https://play.google.com/store/apps/details?id=com.rocky.moreapps.example"
     },
     "soft_update_details": {
       "enable": true,
