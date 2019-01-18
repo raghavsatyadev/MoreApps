@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.rocky.moreapps.ForceUpdater;
 import com.rocky.moreapps.MoreAppsDialog;
 import com.rocky.moreapps.MoreAppsModel;
 import com.rocky.moreapps.UpdateDialogListener;
@@ -17,7 +18,6 @@ import com.rocky.moreapps.UpdateListener;
 public class UpdaterExampleFragment extends Fragment implements View.OnClickListener {
 
     private static final String TAG = UpdaterExampleFragment.class.getSimpleName();
-    private MoreAppsDialog moreAppsDialog;
 
     public static UpdaterExampleFragment getInstance() {
         UpdaterExampleFragment fragment = new UpdaterExampleFragment();
@@ -56,16 +56,15 @@ public class UpdaterExampleFragment extends Fragment implements View.OnClickList
      * call {@link MoreAppsDialog.Builder#build()} first
      */
     public void option1() {
-        moreAppsDialog = CoreApp.getInstance().getMoreAppsDialog();
-        moreAppsDialog.addUpdateListener(new UpdateListener() {
+        ForceUpdater.addUpdateListener(new UpdateListener() {
             @Override
             public void onEvent(UpdateStatus updateStatus) {
                 switch (updateStatus) {
                     case COMPLETE:
                         //                        use this to hide progress bar
                         try {
-                            if (moreAppsDialog.shouldShowUpdateDialogs(getContext())) {
-                                moreAppsDialog.showUpdateDialogs(getContext(), new UpdateDialogListener() {
+                            if (ForceUpdater.shouldShowUpdateDialogs(getContext())) {
+                                ForceUpdater.showUpdateDialogs(getContext(), new UpdateDialogListener() {
                                     @Override
                                     public void onClose() {
 
@@ -76,9 +75,6 @@ public class UpdaterExampleFragment extends Fragment implements View.OnClickList
                             Log.e(TAG, "onEvent: ", e);
                         }
                         break;
-                    case FAILURE:
-                        //                        use this to hide progress bar
-                        break;
                     case PROCESSING:
                         //                        use this to show progress bar
                         break;
@@ -87,6 +83,7 @@ public class UpdaterExampleFragment extends Fragment implements View.OnClickList
 
             @Override
             public void onFailure(Throwable t) {
+                //                        use this to hide progress bar
                 Log.e(TAG, "onFailure: ", t);
             }
         });
@@ -96,7 +93,7 @@ public class UpdaterExampleFragment extends Fragment implements View.OnClickList
 
     @Override
     public void onDestroyView() {
-        if (moreAppsDialog != null) moreAppsDialog.removeUpdateListener();
+        ForceUpdater.removeUpdateListener();
         super.onDestroyView();
     }
 
@@ -105,9 +102,8 @@ public class UpdaterExampleFragment extends Fragment implements View.OnClickList
      */
     public void option2() {
         try {
-            MoreAppsDialog moreAppsDialog = CoreApp.getInstance().getMoreAppsDialog();
-            if (moreAppsDialog.shouldShowUpdateDialogs(getContext()))
-                moreAppsDialog.showUpdateDialogs(getContext(), new UpdateDialogListener() {
+            if (ForceUpdater.shouldShowUpdateDialogs(getContext()))
+                ForceUpdater.showUpdateDialogs(getContext(), new UpdateDialogListener() {
                     @Override
                     public void onClose() {
                     }
@@ -121,15 +117,14 @@ public class UpdaterExampleFragment extends Fragment implements View.OnClickList
      * call {@link MoreAppsDialog.Builder#build()} first
      */
     public void option3() {
-        MoreAppsDialog moreAppsDialog = CoreApp.getInstance().getMoreAppsDialog();
         try {
-            MoreAppsModel currentAppModel = moreAppsDialog.getCurrentAppModel(getContext());
-            switch (moreAppsDialog.dialogToShow(getContext(), currentAppModel)) {
+            MoreAppsModel currentAppModel = ForceUpdater.getCurrentAppModel(getContext());
+            switch (ForceUpdater.dialogToShow(getContext(), currentAppModel)) {
                 case HARD_REDIRECT:
-                    moreAppsDialog.showHardRedirect(getContext(), currentAppModel);
+                    ForceUpdater.showHardRedirectDialog(getContext(), currentAppModel);
                     break;
                 case SOFT_REDIRECT:
-                    moreAppsDialog.showSoftRedirect(getContext(), currentAppModel, new UpdateDialogListener() {
+                    ForceUpdater.showSoftRedirectDialog(getContext(), currentAppModel, new UpdateDialogListener() {
                         @Override
                         public void onClose() {
 
@@ -137,10 +132,10 @@ public class UpdaterExampleFragment extends Fragment implements View.OnClickList
                     });
                     break;
                 case HARD_UPDATE:
-                    moreAppsDialog.showHardUpdateDialog(getContext(), currentAppModel);
+                    ForceUpdater.showHardUpdateDialog(getContext(), currentAppModel);
                     break;
                 case SOFT_UPDATE:
-                    moreAppsDialog.showSoftUpdateDialog(getContext(), currentAppModel, new UpdateDialogListener() {
+                    ForceUpdater.showSoftUpdateDialog(getContext(), currentAppModel, new UpdateDialogListener() {
                         @Override
                         public void onClose() {
 

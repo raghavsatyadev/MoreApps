@@ -3,8 +3,6 @@ package com.rocky.moreapps;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -19,7 +17,6 @@ import android.support.annotation.StringRes;
 import android.support.transition.TransitionManager;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -65,8 +62,6 @@ public class MoreAppsDialog {
     private OkHttpClient okHttpClient;
     private MoreAppsListAdapter adapter;
     private Dialog dialog;
-    private UpdateListener updateListener;
-    private UpdateListener.UpdateStatus updateStatus = UpdateListener.UpdateStatus.NOT_STARTED;
 
     private MoreAppsDialog(@NonNull String url,
                            boolean shouldOpenInPlayStore,
@@ -138,238 +133,6 @@ public class MoreAppsDialog {
             context.getTheme().resolveAttribute(appCompatAttribute, outValue, true);
         }
         return String.format("#%06X", (0xFFFFFF & outValue.data));
-    }
-
-    /**
-     * call this method only to wait for API call to finish
-     *
-     * @param updateListener {@link UpdateDialogListener}
-     */
-    public void addUpdateListener(UpdateListener updateListener) {
-        if (updateStatus == UpdateListener.UpdateStatus.COMPLETE) {
-            updateListener.onEvent(UpdateListener.UpdateStatus.COMPLETE);
-        } else {
-            this.updateListener = updateListener;
-        }
-    }
-
-    public void removeUpdateListener() {
-        this.updateListener = null;
-    }
-
-    /**
-     * check whether to show the dialogs or not
-     * <p>
-     * This method will check {@link android.content.SharedPreferences} for the already stored data
-     * <p>
-     * NOTE : call {@link Builder#build()} first to load the data in {@link android.content.SharedPreferences}
-     *
-     * @param context {@link Context} of Activity or Fragment
-     */
-    public boolean shouldShowUpdateDialogs(Context context) throws PackageManager.NameNotFoundException {
-        int versionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_ACTIVITIES).versionCode;
-
-        MoreAppsModel moreAppsModel = getCurrentAppModel(context);
-        if (moreAppsModel != null) {
-            return (moreAppsModel.redirectDetails != null && moreAppsModel.redirectDetails.enable) ||
-                    moreAppsModel.minVersion > versionCode || moreAppsModel.currentVersion > versionCode;
-        } else
-            return false;
-    }
-
-    /**
-     * call this method to show the update dialogs
-     * <p>
-     * This method will check {@link android.content.SharedPreferences} for the already stored data
-     * <p>
-     * NOTE : call {@link Builder#build()} first to load the data in {@link android.content.SharedPreferences}
-     *
-     * @param context              {@link Context} of Activity or Fragment
-     * @param updateDialogListener to listen for dialog close events
-     */
-    public void showUpdateDialogs(Context context, UpdateDialogListener updateDialogListener) throws PackageManager.NameNotFoundException {
-        int versionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_ACTIVITIES).versionCode;
-
-        MoreAppsModel moreAppsModel = getCurrentAppModel(context);
-        if (moreAppsModel != null) {
-            if (moreAppsModel.redirectDetails != null && moreAppsModel.redirectDetails.enable) {
-                showRedirect(context, moreAppsModel, updateDialogListener);
-            } else if (moreAppsModel.minVersion > versionCode) {
-                showHardUpdateDialog(context, moreAppsModel);
-            } else if (moreAppsModel.currentVersion > versionCode) {
-                showSoftUpdateDialog(context, moreAppsModel, updateDialogListener);
-            }
-        }
-    }
-
-    /**
-     * to know which type of dialog is needed to show
-     *
-     * @param moreAppsModel {@link MoreAppsModel} of current app, get this by calling {@link MoreAppsDialog#getCurrentAppModel}
-     * @return {@link UpdateDialogType}
-     */
-    public UpdateDialogType dialogToShow(Context context, MoreAppsModel moreAppsModel) throws PackageManager.NameNotFoundException {
-        if (moreAppsModel != null) {
-            int versionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_ACTIVITIES).versionCode;
-
-            if (moreAppsModel.redirectDetails != null && moreAppsModel.redirectDetails.enable) {
-                return moreAppsModel.redirectDetails.hardRedirect ? UpdateDialogType.HARD_REDIRECT : UpdateDialogType.SOFT_REDIRECT;
-            } else if (moreAppsModel.minVersion > versionCode) {
-                return UpdateDialogType.HARD_UPDATE;
-            } else if (moreAppsModel.currentVersion > versionCode) {
-                return UpdateDialogType.SOFT_UPDATE;
-            }
-        }
-        return UpdateDialogType.NONE;
-    }
-
-    /**
-     * NOTE : call {@link Builder#build()} first to load the data in {@link android.content.SharedPreferences}
-     *
-     * @return {@link MoreAppsModel} of current app if present
-     */
-    public MoreAppsModel getCurrentAppModel(Context context) {
-        ArrayList<MoreAppsModel> moreApps = SharedPrefsUtil.getMoreApps(context);
-        if (moreApps != null && !moreApps.isEmpty()) {
-            String currentPackageName = context.getPackageName();
-            for (int i = 0; i < moreApps.size(); i++) {
-                MoreAppsModel moreAppsModel = moreApps.get(i);
-                if (moreAppsModel.packageName.equals(currentPackageName)) {
-                    return moreAppsModel;
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
-     * @param context       {@link Context} of Activity or Fragment
-     * @param moreAppsModel {@link MoreAppsModel}
-     * @param listener      {@link UpdateDialogListener} to know when dialog is closed
-     */
-    public void showSoftUpdateDialog(final Context context, final MoreAppsModel moreAppsModel, final UpdateDialogListener listener) {
-        if (moreAppsModel != null && moreAppsModel.softUpdateDetails != null) {
-            SoftUpdateDetails softUpdateDetails = moreAppsModel.softUpdateDetails;
-            new AlertDialog.Builder(context)
-                    .setTitle(softUpdateDetails.dialogTitle)
-                    .setMessage(softUpdateDetails.dialogMessage)
-                    .setPositiveButton(softUpdateDetails.positiveButton, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            openBrowser(context, moreAppsModel.appLink);
-                        }
-                    })
-                    .setNegativeButton(softUpdateDetails.negativeButton, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            if (listener != null) listener.onClose();
-                        }
-                    })
-                    .setCancelable(true)
-                    .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                            if (listener != null) listener.onClose();
-                        }
-                    })
-                    .create()
-                    .show();
-        }
-    }
-
-    /**
-     * @param context       {@link Context} of Activity or Fragment
-     * @param moreAppsModel {@link MoreAppsModel}
-     */
-    public void showHardUpdateDialog(final Context context, final MoreAppsModel moreAppsModel) {
-        if (moreAppsModel != null && moreAppsModel.hardUpdateDetails != null) {
-            HardUpdateDetails hardUpdateDetails = moreAppsModel.hardUpdateDetails;
-            new AlertDialog.Builder(context)
-                    .setTitle(hardUpdateDetails.dialogTitle)
-                    .setMessage(hardUpdateDetails.dialogMessage)
-                    .setPositiveButton(hardUpdateDetails.positiveButton, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            openBrowser(context, moreAppsModel.appLink);
-                        }
-                    })
-                    .setCancelable(false)
-                    .create()
-                    .show();
-        }
-    }
-
-    /**
-     * @param context       {@link Context} of Activity or Fragment
-     * @param moreAppsModel {@link MoreAppsModel}
-     */
-    public void showHardRedirect(final Context context, final MoreAppsModel moreAppsModel) {
-        if (moreAppsModel != null && moreAppsModel.redirectDetails != null) {
-            final RedirectDetails redirectDetails = moreAppsModel.redirectDetails;
-            new AlertDialog.Builder(context)
-                    .setTitle(redirectDetails.dialogTitle)
-                    .setMessage(redirectDetails.dialogMessage)
-                    .setPositiveButton(redirectDetails.positiveButton, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            openBrowser(context, redirectDetails.appLink);
-                        }
-                    })
-                    .setCancelable(false)
-                    .create()
-                    .show();
-        }
-    }
-
-    /**
-     * @param context       {@link Context} of Activity or Fragment
-     * @param moreAppsModel {@link MoreAppsModel}
-     * @param listener      {@link UpdateDialogListener} to know when dialog is closed
-     */
-    public void showSoftRedirect(final Context context, MoreAppsModel moreAppsModel, final UpdateDialogListener listener) {
-        if (moreAppsModel != null && moreAppsModel.redirectDetails != null) {
-            final RedirectDetails redirectDetails = moreAppsModel.redirectDetails;
-            new AlertDialog.Builder(context)
-                    .setTitle(redirectDetails.dialogTitle)
-                    .setMessage(redirectDetails.dialogMessage)
-                    .setPositiveButton(redirectDetails.positiveButton, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            openBrowser(context, redirectDetails.appLink);
-                        }
-                    })
-                    .setNegativeButton(redirectDetails.negativeButton, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (listener != null) listener.onClose();
-                        }
-                    })
-                    .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                            if (listener != null) listener.onClose();
-                        }
-                    })
-                    .setCancelable(true)
-                    .create()
-                    .show();
-        }
-    }
-
-    /**
-     * @param context       {@link Context} of Activity or Fragment
-     * @param moreAppsModel {@link MoreAppsModel}
-     * @param listener      {@link UpdateDialogListener} to know when dialog is closed
-     */
-    public void showRedirect(final Context context, final MoreAppsModel moreAppsModel, final UpdateDialogListener listener) {
-        if (moreAppsModel != null && moreAppsModel.redirectDetails != null) {
-            if (!moreAppsModel.redirectDetails.hardRedirect) {
-                showSoftRedirect(context, moreAppsModel, listener);
-            } else {
-                showHardRedirect(context, moreAppsModel);
-            }
-        }
     }
 
     /**
@@ -466,17 +229,13 @@ public class MoreAppsDialog {
                 public void onItemClick(int position, View v) {
                     MoreAppsModel appsModel = adapter.getItem(position);
                     if (shouldOpenInPlayStore) {
-                        openBrowser(context, appsModel.appLink);
+                        MoreAppsUtils.openBrowser(context, appsModel.appLink);
                     }
                     if (listener != null) listener.onAppClicked(appsModel);
                 }
             });
             listMoreApps.setAdapter(adapter);
         }
-    }
-
-    private void openBrowser(Context context, String link) {
-        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link)));
     }
 
     private void setDialogTitle(TextView txtMoreAppsTitle, Typeface fontFace) {
@@ -521,9 +280,9 @@ public class MoreAppsDialog {
         Uri uri = Uri.parse(url);
         String path = uri.getPath();
         String host = url.substring(0, url.length() - (path != null ? path.length() : 0)) + "/";
-        updateStatus = UpdateListener.UpdateStatus.PROCESSING;
-        if (updateListener != null)
-            updateListener.onEvent(UpdateListener.UpdateStatus.PROCESSING);
+        ForceUpdater.updateStatus = UpdateListener.UpdateStatus.PROCESSING;
+        if (ForceUpdater.updateListener != null)
+            ForceUpdater.updateListener.onEvent(UpdateListener.UpdateStatus.PROCESSING);
         new Retrofit.Builder()
                 .client(okHttpClient != null ? okHttpClient : enableTls12OnPreLollipop(new OkHttpClient.Builder()).build())
                 .baseUrl(host)
@@ -538,9 +297,9 @@ public class MoreAppsDialog {
                         List<MoreAppsModel> body = response.body();
                         if (body != null) {
                             SharedPrefsUtil.setMoreApps(context, body);
-                            updateStatus = UpdateListener.UpdateStatus.COMPLETE;
-                            if (updateListener != null)
-                                updateListener.onEvent(UpdateListener.UpdateStatus.COMPLETE);
+                            ForceUpdater.updateStatus = UpdateListener.UpdateStatus.COMPLETE;
+                            if (ForceUpdater.updateListener != null)
+                                ForceUpdater.updateListener.onEvent(UpdateListener.UpdateStatus.COMPLETE);
                             if (listener != null)
                                 listener.onSuccess(MoreAppsDialog.this, body);
                         }
@@ -548,18 +307,12 @@ public class MoreAppsDialog {
 
                     @Override
                     public void onFailure(@NonNull Call<List<MoreAppsModel>> call, @NonNull Throwable t) {
-                        updateStatus = UpdateListener.UpdateStatus.FAILURE;
-                        if (updateListener != null) {
-                            updateListener.onEvent(UpdateListener.UpdateStatus.FAILURE);
-                            updateListener.onFailure(t);
+                        if (ForceUpdater.updateListener != null) {
+                            ForceUpdater.updateListener.onFailure(t);
                         }
                         if (listener != null) listener.onFailure(t);
                     }
                 });
-    }
-
-    public enum UpdateDialogType {
-        NONE, SOFT_UPDATE, HARD_UPDATE, SOFT_REDIRECT, HARD_REDIRECT
     }
 
     public interface MoreAppsApi {

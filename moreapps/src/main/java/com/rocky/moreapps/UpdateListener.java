@@ -6,6 +6,6 @@ public interface UpdateListener {
     void onFailure(Throwable t);
 
     enum UpdateStatus {
-        COMPLETE, PROCESSING, FAILURE, NOT_STARTED
+        COMPLETE, PROCESSING, NOT_STARTED
     }
 }
