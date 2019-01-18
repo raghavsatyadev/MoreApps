@@ -1,10 +1,10 @@
 # MoreApps
-With More Apps library you can showcase your other apps in a beautiful way.
+Showcase your other apps in a beautiful way. This library also includes force updater.
 
 **Current version:**  <a href='https://bintray.com/raghavsatyadev/Maven/MoreApps/_latestVersion'><img src='https://api.bintray.com/packages/raghavsatyadev/Maven/MoreApps/images/download.svg'></a>
 
 # Setup
-To use this library your **minSdkVersion** must be >= 19.This library supports **AndroidX**.
+To use this library your **minSdkVersion** must be >= 19. This library supports **AndroidX**.
 
 In the build.gradle of your app module add:
 
