@@ -72,8 +72,8 @@ MoreAppsDialog moreAppsDialog = new MoreAppsDialog.Builder(this, JSON_FILE_URL).
 **Launcher Activity**
 
 ```java
-if (moreAppsDialog.shouldShowUpdateDialogs(getContext()))
-    moreAppsDialog.showUpdateDialogs(getContext(), new UpdateDialogListener() {
+if (ForceUpdater.shouldShowUpdateDialogs(getContext()))
+    ForceUpdater.showUpdateDialogs(getContext(), new UpdateDialogListener() {
         @Override
         public void onClose() {
         }
