@@ -124,6 +124,10 @@ if (ForceUpdater.shouldShowUpdateDialogs(getContext()))
 
 File is available at : https://github.com/raghavsatyadev/MoreApps/blob/master/Resources/more_apps.json
 
+# Example Application
+
+**Link** : https://play.google.com/store/apps/details?id=com.rocky.moreapps.example
+
 # Preview
 
 [![screen](https://raw.githubusercontent.com/raghavsatyadev/MoreApps/master/Resources/Option-1.png)](https://github.com/raghavsatyadev/MoreApps)
