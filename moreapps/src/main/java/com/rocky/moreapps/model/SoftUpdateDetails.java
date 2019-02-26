@@ -1,4 +1,4 @@
-package com.rocky.moreapps;
+package com.rocky.moreapps.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -31,7 +31,7 @@ public class SoftUpdateDetails implements Parcelable {
     public SoftUpdateDetails() {
     }
 
-    protected SoftUpdateDetails(Parcel in) {
+    SoftUpdateDetails(Parcel in) {
         this.enable = in.readByte() != 0;
         this.dialogTitle = in.readString();
         this.dialogMessage = in.readString();

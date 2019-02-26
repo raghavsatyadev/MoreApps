@@ -19,9 +19,9 @@ android {
                     def date = new Date()
                     def formattedDate = date.format('dd_MM_yy')
                     output.outputFileName = "${APK_NAME}-${variant.name}-${formattedDate}.apk"
-                    variant.assemble.doLast {
-                        if ( variant.mappingFile != null &&
-                                variant.mappingFile.exists() ) {
+                    variant.assembleProvider.get().doLast {
+                        if (variant.mappingFile != null &&
+                                variant.mappingFile.exists()) {
                             copy {
                                 from variant.mappingFile
                                 into output.outputFile.parent

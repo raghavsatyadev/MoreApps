@@ -1,3 +1,4 @@
 <resources>
     <string name="more_apps">More Apps</string>
+    <string name="more_apps_id">more_apps</string>
 </resources>

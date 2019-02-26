@@ -1,4 +1,4 @@
-package com.rocky.moreapps;
+package com.rocky.moreapps.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -35,7 +35,7 @@ public class RedirectDetails implements Parcelable {
     public RedirectDetails() {
     }
 
-    protected RedirectDetails(Parcel in) {
+    RedirectDetails(Parcel in) {
         this.enable = in.readByte() != 0;
         this.hardRedirect = in.readByte() != 0;
         this.dialogTitle = in.readString();

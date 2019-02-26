@@ -4,4 +4,7 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="tab_text_1">More Apps</string>
     <string name="tab_text_2">Updater</string>
+    <string name="option_1">Option 1</string>
+    <string name="option_2">Option 2</string>
+    <string name="option_3">Option 3</string>
 </resources>

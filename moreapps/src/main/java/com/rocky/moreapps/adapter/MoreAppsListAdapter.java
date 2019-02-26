@@ -1,4 +1,4 @@
-package com.rocky.moreapps;
+package com.rocky.moreapps.adapter;
 
 import android.graphics.Typeface;
 import android.support.annotation.ColorInt;
@@ -12,10 +12,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.rocky.moreapps.R;
+import com.rocky.moreapps.SimpleRatingBar;
+import com.rocky.moreapps.model.MoreAppsDetails;
 
 import java.util.ArrayList;
 
-public class MoreAppsListAdapter extends GenRecyclerAdapter<MoreAppsListAdapter.DataObjectHolder, MoreAppsModel> {
+public class MoreAppsListAdapter extends GenRecyclerAdapter<MoreAppsListAdapter.DataObjectHolder, MoreAppsDetails> {
 
     @ColorInt
     private final int rowTitleColor;
@@ -27,8 +30,8 @@ public class MoreAppsListAdapter extends GenRecyclerAdapter<MoreAppsListAdapter.
     private int themeColor;
     private Typeface fontFace;
 
-    MoreAppsListAdapter(@LayoutRes int rowLayout, @ColorInt int themeColor, Typeface fontFace, @ColorInt int rowTitleColor, @ColorInt int rowDescriptionColor) {
-        super(new ArrayList<MoreAppsModel>());
+    public MoreAppsListAdapter(@LayoutRes int rowLayout, @ColorInt int themeColor, Typeface fontFace, @ColorInt int rowTitleColor, @ColorInt int rowDescriptionColor) {
+        super(new ArrayList<MoreAppsDetails>());
         this.rowLayout = rowLayout;
         this.themeColor = themeColor;
         this.fontFace = fontFace;
@@ -44,7 +47,7 @@ public class MoreAppsListAdapter extends GenRecyclerAdapter<MoreAppsListAdapter.
 
     @Override
     protected void bindingViewHolder(DataObjectHolder holder, int position) {
-        MoreAppsModel appModel = getItem(position);
+        MoreAppsDetails appModel = getItem(position);
         if (appModel != null) {
             if (holder.imgMoreApps != null)
                 Glide.with(holder.imgMoreApps.getContext()).load(appModel.imageLink).into(holder.imgMoreApps);

@@ -1,4 +1,4 @@
-package com.rocky.moreapps;
+package com.rocky.moreapps.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +13,7 @@ public abstract class GenRecyclerAdapter
     private ArrayList<Model> models;
     private GenRecyclerAdapter.MyClickListener myClickListener;
 
-    public GenRecyclerAdapter(ArrayList<Model> models) {
+    GenRecyclerAdapter(ArrayList<Model> models) {
         this.models = models;
     }
 
@@ -79,7 +79,7 @@ public abstract class GenRecyclerAdapter
         bindingViewHolder(holder, position);
     }
 
-    public MyClickListener getMyClickListener() {
+    MyClickListener getMyClickListener() {
         return myClickListener;
     }
 

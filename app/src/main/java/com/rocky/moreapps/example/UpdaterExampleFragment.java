@@ -10,10 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.rocky.moreapps.ForceUpdater;
-import com.rocky.moreapps.MoreAppsDialog;
-import com.rocky.moreapps.MoreAppsModel;
-import com.rocky.moreapps.UpdateDialogListener;
-import com.rocky.moreapps.UpdateListener;
+import com.rocky.moreapps.listener.UpdateDialogListener;
+import com.rocky.moreapps.model.MoreAppsDetails;
 
 public class UpdaterExampleFragment extends Fragment implements View.OnClickListener {
 
@@ -32,7 +30,6 @@ public class UpdaterExampleFragment extends Fragment implements View.OnClickList
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_updater_example, container, false);
         view.findViewById(R.id.btn_1).setOnClickListener(this);
-        view.findViewById(R.id.btn_2).setOnClickListener(this);
         view.findViewById(R.id.btn_3).setOnClickListener(this);
         return view;
     }
@@ -43,9 +40,6 @@ public class UpdaterExampleFragment extends Fragment implements View.OnClickList
             case R.id.btn_1:
                 option1();
                 break;
-            case R.id.btn_2:
-                option2();
-                break;
             case R.id.btn_3:
                 option3();
                 break;
@@ -53,72 +47,31 @@ public class UpdaterExampleFragment extends Fragment implements View.OnClickList
     }
 
     /**
-     * call {@link MoreAppsDialog.Builder#build()} first
+     * call {@link com.rocky.moreapps.MoreAppsBuilder#build()} first
      */
     public void option1() {
-        ForceUpdater.addUpdateListener(new UpdateListener() {
-            @Override
-            public void onEvent(UpdateStatus updateStatus) {
-                switch (updateStatus) {
-                    case COMPLETE:
-                        //                        use this to hide progress bar
-                        try {
-                            if (ForceUpdater.shouldShowUpdateDialogs(getContext())) {
-                                ForceUpdater.showUpdateDialogs(getContext(), new UpdateDialogListener() {
-                                    @Override
-                                    public void onClose() {
+        try {
+            if (ForceUpdater.shouldShowUpdateDialogs(getContext())) {
+                ForceUpdater.showUpdateDialogs(getContext(), new UpdateDialogListener() {
+                    @Override
+                    public void onClose() {
 
-                                    }
-                                });
-                            }
-                        } catch (PackageManager.NameNotFoundException e) {
-                            Log.e(TAG, "onEvent: ", e);
-                        }
-                        break;
-                    case PROCESSING:
-                        //                        use this to show progress bar
-                        break;
-                }
+                    }
+                });
             }
-
-            @Override
-            public void onFailure(Throwable t) {
-                //                        use this to hide progress bar
-                Log.e(TAG, "onFailure: ", t);
-            }
-        });
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e(TAG, "option1: ", e);
+        }
 
 //        call moreAppsDialog.removeUpdateListener(); in onStop() or onDestroy() or onDestroyView()
     }
 
-    @Override
-    public void onDestroyView() {
-        ForceUpdater.removeUpdateListener();
-        super.onDestroyView();
-    }
-
     /**
-     * call {@link MoreAppsDialog.Builder#build()} first
-     */
-    public void option2() {
-        try {
-            if (ForceUpdater.shouldShowUpdateDialogs(getContext()))
-                ForceUpdater.showUpdateDialogs(getContext(), new UpdateDialogListener() {
-                    @Override
-                    public void onClose() {
-                    }
-                });
-        } catch (PackageManager.NameNotFoundException e) {
-            Log.e(TAG, "option2: ", e);
-        }
-    }
-
-    /**
-     * call {@link MoreAppsDialog.Builder#build()} first
+     * call {@link com.rocky.moreapps.MoreAppsBuilder#build()} first
      */
     public void option3() {
         try {
-            MoreAppsModel currentAppModel = ForceUpdater.getCurrentAppModel(getContext());
+            MoreAppsDetails currentAppModel = ForceUpdater.getCurrentAppModel(getContext());
             switch (ForceUpdater.dialogToShow(getContext(), currentAppModel)) {
                 case HARD_REDIRECT:
                     ForceUpdater.showHardRedirectDialog(getContext(), currentAppModel);

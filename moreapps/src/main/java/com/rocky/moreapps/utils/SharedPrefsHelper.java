@@ -1,4 +1,4 @@
-package com.rocky.moreapps;
+package com.rocky.moreapps.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;

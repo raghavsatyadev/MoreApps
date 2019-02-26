@@ -2,6 +2,7 @@ package com.rocky.moreapps.example;
 
 import android.app.Application;
 
+import com.rocky.moreapps.MoreAppsBuilder;
 import com.rocky.moreapps.MoreAppsDialog;
 
 public class CoreApp extends Application {
@@ -29,6 +30,6 @@ public class CoreApp extends Application {
     }
 
     private void createMoreAppDialog() {
-        moreAppsDialog = new MoreAppsDialog.Builder(this, JSON_FILE_URL).build();
+        moreAppsDialog = new MoreAppsBuilder(this, JSON_FILE_URL).build();
     }
 }
