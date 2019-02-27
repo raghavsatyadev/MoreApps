@@ -73,7 +73,8 @@ public class MoreAppsExampleFragment extends Fragment implements View.OnClickLis
                 .themeColor(Color.parseColor("#F44336")) // custom theme color, read more in javadoc default primary color
                 .rowTitleColor(Color.parseColor("#000000")) // custom list item title color
                 .rowDescriptionColor(Color.parseColor("#888888")) // custom list item description color
-                .setPeriodicSettings(7, TimeUnit.DAYS)
+                .setPeriodicSettings(15, TimeUnit.MINUTES, // set interval of detail updating and showing notifications as required, default is 7 days
+                        R.mipmap.ic_launcher, R.drawable.ic_small_icon) // launcher icon and small icon (small icon is optional, small icon should be of single color)
                 .buildAndShow(new MoreAppsDialogListener() {
                     @Override
                     public void onClose() {

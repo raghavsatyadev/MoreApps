@@ -1,8 +1,15 @@
 package com.rocky.moreapps;
 
+import android.app.PendingIntent;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.net.Uri;
+import android.support.annotation.ColorInt;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -21,7 +28,10 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.rocky.moreapps.listener.MoreAppsDownloadListener;
-import com.rocky.moreapps.model.PeriodicUpdateSettings;
+import com.rocky.moreapps.model.MoreAppsDetails;
+import com.rocky.moreapps.settings.PeriodicUpdateSettings;
+import com.rocky.moreapps.utils.MoreAppsUtils;
+import com.rocky.moreapps.utils.NotificationUtils;
 import com.rocky.moreapps.utils.SharedPrefsUtil;
 
 import java.io.BufferedReader;
@@ -31,6 +41,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+import java.util.Random;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -39,58 +50,89 @@ public class MoreAppsWorker extends Worker {
     private static final String WORKER_TAG_PERIODIC = "MORE_APPS_PERIODIC";
     private static final String WORKER_TAG_ONE_TIME = "MORE_APPS_ONE_TIME";
     private static final String TAG = MoreAppsWorker.class.getSimpleName();
-    private static final String URL = "Url";
+    private static final String URL = "URL";
+    private static final String BIG_ICON = "BIG_ICON";
+    private static final String SMALL_ICON = "SMALL_ICON";
+    private static final String THEME_COLOR = "THEME_COLOR";
     private static final String USER_AGENT = "Mozilla/5.0";
+    private static final String IS_PERIODIC = "IS_PERIODIC";
+    private Context context;
 
     public MoreAppsWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
+        this.context = context;
     }
 
     static void startWorker(final Context context,
                             String url,
                             final MoreAppsDownloadListener listener,
                             final MoreAppsDialog moreAppsDialog,
-                            PeriodicUpdateSettings updateSettings) {
+                            final int themeColor,
+                            final PeriodicUpdateSettings updateSettings) {
+
         if (!isWorkScheduled()) {
             Constraints constraints = new Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build();
-            Data data = new Data.Builder().putString(URL, url).build();
+            Data.Builder dataBuilder = new Data.Builder()
+                    .putInt(BIG_ICON, updateSettings.getBigIconID())
+                    .putInt(SMALL_ICON, updateSettings.getSmallIconID())
+                    .putInt(THEME_COLOR, themeColor)
+                    .putString(URL, url);
             WorkManager instance = WorkManager.getInstance();
 
-            PeriodicWorkRequest periodicWorkRequest = new PeriodicWorkRequest
-                    .Builder(MoreAppsWorker.class,
-                    updateSettings.getInterval(),
-                    updateSettings.getTimeUnit())
+            setupPeriodicRequest(constraints, dataBuilder, updateSettings, instance);
+
+            setupOneTimeRequest(context, constraints, dataBuilder, moreAppsDialog, listener, instance);
+        }
+    }
+
+    private static void setupOneTimeRequest(final Context context, Constraints constraints, Data.Builder dataBuilder,
+                                            final MoreAppsDialog moreAppsDialog,
+                                            final MoreAppsDownloadListener listener, WorkManager instance) {
+        if (SharedPrefsUtil.getMoreApps(context).isEmpty()) {
+            OneTimeWorkRequest oneTimeWorkRequest = new OneTimeWorkRequest.Builder(MoreAppsWorker.class)
                     .setConstraints(constraints)
-                    .setInputData(data)
+                    .setInputData(dataBuilder.putBoolean(IS_PERIODIC, false).build())
                     .build();
 
-            instance.enqueueUniquePeriodicWork(WORKER_TAG_PERIODIC, ExistingPeriodicWorkPolicy.KEEP, periodicWorkRequest);
+            instance.enqueueUniqueWork(WORKER_TAG_ONE_TIME, ExistingWorkPolicy.KEEP, oneTimeWorkRequest);
 
-            if (SharedPrefsUtil.getMoreApps(context).isEmpty()) {
-                OneTimeWorkRequest oneTimeWorkRequest = new OneTimeWorkRequest.Builder(MoreAppsWorker.class)
-                        .setConstraints(constraints)
-                        .setInputData(data)
-                        .build();
-                instance.enqueueUniqueWork(WORKER_TAG_ONE_TIME, ExistingWorkPolicy.KEEP, oneTimeWorkRequest);
-                if (listener != null) {
-                    final LiveData<List<WorkInfo>> workInfo = instance.getWorkInfosForUniqueWorkLiveData(WORKER_TAG_ONE_TIME);
-                    Observer<List<WorkInfo>> observer = new Observer<List<WorkInfo>>() {
-                        @Override
-                        public void onChanged(@Nullable List<WorkInfo> workInfos) {
-                            handleResult(context, moreAppsDialog, workInfos, workInfo, this, listener);
-                        }
-                    };
-                    workInfo.observeForever(observer);
-                }
+            if (listener != null) {
+                final LiveData<List<WorkInfo>> workInfo = instance.getWorkInfosForUniqueWorkLiveData(WORKER_TAG_ONE_TIME);
+                Observer<List<WorkInfo>> observer = new Observer<List<WorkInfo>>() {
+                    @Override
+                    public void onChanged(@Nullable List<WorkInfo> workInfos) {
+                        handleResult(context, moreAppsDialog, workInfos, workInfo, this, listener);
+                    }
+                };
+                workInfo.observeForever(observer);
             }
         }
+    }
+
+    private static void setupPeriodicRequest(Constraints constraints, Data.Builder dataBuilder,
+                                             final PeriodicUpdateSettings updateSettings, WorkManager instance) {
+        PeriodicWorkRequest periodicWorkRequest =
+                new PeriodicWorkRequest.Builder(MoreAppsWorker.class, updateSettings.getInterval(), updateSettings.getTimeUnit())
+                        .setConstraints(constraints)
+                        .setInputData(dataBuilder.putBoolean(IS_PERIODIC, true).build())
+                        .build();
+
+        instance.enqueueUniquePeriodicWork(WORKER_TAG_PERIODIC, ExistingPeriodicWorkPolicy.KEEP, periodicWorkRequest);
+
+        final LiveData<List<WorkInfo>> workInfoPeriodic = instance.getWorkInfosForUniqueWorkLiveData(WORKER_TAG_PERIODIC);
+        Observer<List<WorkInfo>> observerPeriodic = new Observer<List<WorkInfo>>() {
+            @Override
+            public void onChanged(@Nullable List<WorkInfo> workInfos) {
+
+            }
+        };
+        workInfoPeriodic.observeForever(observerPeriodic);
     }
 
     private static void handleResult(Context context, MoreAppsDialog moreAppsDialog, List<WorkInfo> workInfos, LiveData<List<WorkInfo>> workInfoLiveData, Observer<List<WorkInfo>> observer, MoreAppsDownloadListener listener) {
         if (workInfos != null && !workInfos.isEmpty()) {
             WorkInfo.State state = workInfos.get(0).getState();
             if (state == WorkInfo.State.SUCCEEDED) {
-                Log.d(TAG, "run: " + SharedPrefsUtil.getMoreAppsString(context));
                 listener.onSuccess(moreAppsDialog, SharedPrefsUtil.getMoreApps(context));
                 workInfoLiveData.removeObserver(observer);
             } else if (state == WorkInfo.State.FAILED) {
@@ -103,56 +145,6 @@ public class MoreAppsWorker extends Worker {
     private static boolean isWorkScheduled() {
         WorkInfo.State workerState = getWorkerState();
         return workerState == WorkInfo.State.RUNNING || workerState == WorkInfo.State.ENQUEUED;
-    }
-
-    private static WorkInfo.State getWorkerState() {
-        WorkManager instance = WorkManager.getInstance();
-        final LiveData<List<WorkInfo>> infos = instance.getWorkInfosForUniqueWorkLiveData(MoreAppsWorker.WORKER_TAG_PERIODIC);
-        List<WorkInfo> value = infos.getValue();
-        if (value != null && !value.isEmpty()) {
-            WorkInfo.State state = value.get(0).getState();
-            if (state == WorkInfo.State.ENQUEUED || state == WorkInfo.State.RUNNING) {
-                return state;
-            }
-        }
-        return null;
-    }
-
-    @NonNull
-    @Override
-    public Result doWork() {
-        return setupMoreAppsAPI();
-    }
-
-    private Result setupMoreAppsAPI() {
-        String moreAppsJSON = callMoreAppsAPI();
-
-        if (!TextUtils.isEmpty(moreAppsJSON)) {
-            SharedPrefsUtil.setMoreApps(getApplicationContext(), moreAppsJSON);
-            return Result.success();
-        }
-
-        return Result.failure();
-    }
-
-    private String callMoreAppsAPI() {
-        String response = null;
-        try {
-            URL url = new URL(getInputData().getString(URL));
-
-            if (url.getHost().equalsIgnoreCase("https")) {
-                HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
-                response = setConnectionProperties(con);
-            } else {
-                HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                response = setConnectionProperties(con);
-            }
-        } catch (MalformedURLException e) {
-            Log.e(TAG, "callMoreAppsAPI: ", e);
-        } catch (IOException e) {
-            Log.e(TAG, "callMoreAppsAPI: ", e);
-        }
-        return response;
     }
 
     private String setConnectionProperties(HttpURLConnection con) throws IOException {
@@ -192,5 +184,138 @@ public class MoreAppsWorker extends Worker {
         in.close();
 
         return response.toString();
+    }
+
+    private static WorkInfo.State getWorkerState() {
+        WorkManager instance = WorkManager.getInstance();
+        final LiveData<List<WorkInfo>> infos = instance.getWorkInfosForUniqueWorkLiveData(MoreAppsWorker.WORKER_TAG_PERIODIC);
+        List<WorkInfo> value = infos.getValue();
+        if (value != null && !value.isEmpty()) {
+            WorkInfo.State state = value.get(0).getState();
+            if (state == WorkInfo.State.ENQUEUED || state == WorkInfo.State.RUNNING) {
+                return state;
+            }
+        }
+        return null;
+    }
+
+    @NonNull
+    @Override
+    public Result doWork() {
+        String moreAppsJSON = callMoreAppsAPI();
+
+        if (!TextUtils.isEmpty(moreAppsJSON)) {
+            SharedPrefsUtil.setMoreApps(getApplicationContext(), moreAppsJSON);
+            if (getInputData().getBoolean(IS_PERIODIC, false)) {
+                try {
+                    handleNotification(context);
+                } catch (PackageManager.NameNotFoundException e) {
+                    Log.e(TAG, "doWork: ", e);
+                }
+            }
+            return Result.success();
+        }
+
+        return Result.failure();
+    }
+
+    private void handleNotification(Context context) throws PackageManager.NameNotFoundException {
+        int bigIconID = getInputData().getInt(BIG_ICON, 0);
+
+        if (bigIconID != 0) {
+            int smallIconData = getInputData().getInt(SMALL_ICON, 0);
+            int smallIconID = smallIconData == 0 ? bigIconID : smallIconData;
+
+            int notificationColor = getInputData().getInt(THEME_COLOR, 0) == 0 ?
+                    Color.parseColor(MoreAppsUtils.getPrimaryColorInHex(context)) :
+                    getInputData().getInt(THEME_COLOR, 0);
+
+            prepareNotification(context, bigIconID, smallIconID, notificationColor);
+        }
+    }
+
+    private void prepareNotification(Context context,
+                                     @DrawableRes int bigIconID,
+                                     @DrawableRes int smallIconID,
+                                     @ColorInt int notificationColor) throws PackageManager.NameNotFoundException {
+        MoreAppsDetails currentAppModel = MoreAppsUtils.getCurrentAppModel(context, SharedPrefsUtil.getMoreApps(context));
+        ForceUpdater.UpdateDialogType updateDialogType = ForceUpdater.dialogToShow(context, currentAppModel);
+
+        switch (updateDialogType) {
+            case HARD_UPDATE:
+                sendNotification(context, currentAppModel.hardUpdateDetails.dialogTitle,
+                        currentAppModel.hardUpdateDetails.dialogMessage,
+                        currentAppModel.appLink,
+                        bigIconID,
+                        smallIconID,
+                        notificationColor);
+                break;
+            case SOFT_UPDATE:
+                sendNotification(context, currentAppModel.softUpdateDetails.dialogTitle,
+                        currentAppModel.softUpdateDetails.dialogMessage,
+                        currentAppModel.appLink,
+                        bigIconID,
+                        smallIconID,
+                        notificationColor);
+                break;
+            case HARD_REDIRECT:
+                sendNotification(context, currentAppModel.redirectDetails.dialogTitle,
+                        currentAppModel.redirectDetails.dialogMessage,
+                        currentAppModel.redirectDetails.appLink,
+                        bigIconID,
+                        smallIconID,
+                        notificationColor);
+                break;
+            case SOFT_REDIRECT:
+                sendNotification(context, currentAppModel.redirectDetails.dialogTitle,
+                        currentAppModel.redirectDetails.dialogMessage,
+                        currentAppModel.redirectDetails.appLink,
+                        bigIconID,
+                        smallIconID,
+                        notificationColor);
+                break;
+        }
+    }
+
+    private void sendNotification(Context context, String notificationName,
+                                  String notificationDescription,
+                                  String appLink,
+                                  @DrawableRes int bigIconID,
+                                  @DrawableRes int smallIconID,
+                                  @ColorInt int notificationColor) {
+
+        NotificationUtils.sendNotification(context,
+                new Random().nextInt(),
+                notificationName,
+                notificationDescription,
+                null,
+                new Intent(Intent.ACTION_VIEW, Uri.parse(appLink)),
+                PendingIntent.FLAG_ONE_SHOT,
+                bigIconID,
+                smallIconID,
+                notificationColor
+        );
+    }
+
+    private String callMoreAppsAPI() {
+        String response = null;
+        try {
+            Data inputData = getInputData();
+            String urlString = inputData.getString(URL);
+            URL url = new URL(urlString);
+
+            if (url.getHost().equalsIgnoreCase("https")) {
+                HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+                response = setConnectionProperties(con);
+            } else {
+                HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                response = setConnectionProperties(con);
+            }
+        } catch (MalformedURLException e) {
+            Log.e(TAG, "callMoreAppsAPI: ", e);
+        } catch (IOException e) {
+            Log.e(TAG, "callMoreAppsAPI: ", e);
+        }
+        return response;
     }
 }

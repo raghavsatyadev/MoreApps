@@ -2,6 +2,7 @@ package com.rocky.moreapps;
 
 import android.content.Context;
 import android.support.annotation.ColorInt;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.FontRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -9,8 +10,8 @@ import android.support.annotation.StringRes;
 
 import com.rocky.moreapps.listener.MoreAppsDialogListener;
 import com.rocky.moreapps.listener.MoreAppsDownloadListener;
-import com.rocky.moreapps.model.MoreAppsDesignSettings;
-import com.rocky.moreapps.model.PeriodicUpdateSettings;
+import com.rocky.moreapps.settings.MoreAppsDesignSettings;
+import com.rocky.moreapps.settings.PeriodicUpdateSettings;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -126,7 +127,7 @@ public class MoreAppsBuilder {
      * @return {@link MoreAppsBuilder}
      */
     public MoreAppsBuilder themeColor(@ColorInt int themeColor) {
-        designSettings.setThemeColor(themeColor);
+        designSettings.setThemeColor(context, themeColor);
         return this;
     }
 
@@ -158,12 +159,33 @@ public class MoreAppsBuilder {
     /**
      * set interval for the API calling, after every interval app details will be updated.
      *
-     * @param interval interval > 0
-     * @param timeUnit {@link TimeUnit}
+     * @param bigIconID app icon
      */
-    public MoreAppsBuilder setPeriodicSettings(int interval, TimeUnit timeUnit) {
+    public MoreAppsBuilder setPeriodicSettings(@DrawableRes int bigIconID) {
+        return setPeriodicSettings(bigIconID, 0);
+    }
+
+    /**
+     * set interval for the API calling, after every interval app details will be updated.
+     *
+     * @param bigIconID   app icon
+     * @param smallIconID small notification icon
+     */
+    public MoreAppsBuilder setPeriodicSettings(@DrawableRes int bigIconID, @DrawableRes int smallIconID) {
+        return setPeriodicSettings(7, TimeUnit.DAYS, bigIconID, smallIconID);
+    }
+
+    /**
+     * set interval for the API calling, after every interval app details will be updated.
+     *
+     * @param interval    interval &gt; 0
+     * @param timeUnit    {@link TimeUnit}
+     * @param bigIconID   app icon
+     * @param smallIconID small notification icon
+     */
+    public MoreAppsBuilder setPeriodicSettings(int interval, TimeUnit timeUnit, @DrawableRes int bigIconID, @DrawableRes int smallIconID) {
         if (interval > 0 && timeUnit != null)
-            updateSettings.setSettings(interval, timeUnit);
+            updateSettings.setSettings(interval, timeUnit, bigIconID, smallIconID);
 
         return this;
     }

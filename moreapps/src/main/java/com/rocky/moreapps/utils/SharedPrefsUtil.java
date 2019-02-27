@@ -26,7 +26,7 @@ public class SharedPrefsUtil {
         return SharedPrefsHelper.getInstance(context).get(AppPrefStrings.MORE_APPS, "");
     }
 
-    private static ArrayList<MoreAppsDetails> convertStringToModel(String json) {
+    public static ArrayList<MoreAppsDetails> convertStringToModel(String json) {
         Gson gson = new Gson();
         ArrayList<MoreAppsDetails> moreAppsDetails = new ArrayList<>();
         try {

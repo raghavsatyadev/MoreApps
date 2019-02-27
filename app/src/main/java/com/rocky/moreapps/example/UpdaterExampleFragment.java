@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.rocky.moreapps.ForceUpdater;
 import com.rocky.moreapps.listener.UpdateDialogListener;
 import com.rocky.moreapps.model.MoreAppsDetails;
+import com.rocky.moreapps.utils.MoreAppsUtils;
 
 public class UpdaterExampleFragment extends Fragment implements View.OnClickListener {
 
@@ -71,7 +72,7 @@ public class UpdaterExampleFragment extends Fragment implements View.OnClickList
      */
     public void option3() {
         try {
-            MoreAppsDetails currentAppModel = ForceUpdater.getCurrentAppModel(getContext());
+            MoreAppsDetails currentAppModel = MoreAppsUtils.getCurrentAppModel(getContext());
             switch (ForceUpdater.dialogToShow(getContext(), currentAppModel)) {
                 case HARD_REDIRECT:
                     ForceUpdater.showHardRedirectDialog(getContext(), currentAppModel);

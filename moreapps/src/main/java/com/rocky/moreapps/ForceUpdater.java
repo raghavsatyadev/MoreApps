@@ -11,9 +11,6 @@ import com.rocky.moreapps.model.MoreAppsDetails;
 import com.rocky.moreapps.model.RedirectDetails;
 import com.rocky.moreapps.model.SoftUpdateDetails;
 import com.rocky.moreapps.utils.MoreAppsUtils;
-import com.rocky.moreapps.utils.SharedPrefsUtil;
-
-import java.util.ArrayList;
 
 public class ForceUpdater {
 
@@ -29,7 +26,7 @@ public class ForceUpdater {
     public static boolean shouldShowUpdateDialogs(Context context) throws PackageManager.NameNotFoundException {
         int versionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_ACTIVITIES).versionCode;
 
-        MoreAppsDetails moreAppsDetails = getCurrentAppModel(context);
+        MoreAppsDetails moreAppsDetails = MoreAppsUtils.getCurrentAppModel(context);
 
         if (moreAppsDetails != null) {
             if (moreAppsDetails.redirectDetails != null && moreAppsDetails.redirectDetails.enable) {
@@ -59,7 +56,7 @@ public class ForceUpdater {
     public static void showUpdateDialogs(Context context, UpdateDialogListener updateDialogListener) throws PackageManager.NameNotFoundException {
         int versionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_ACTIVITIES).versionCode;
 
-        MoreAppsDetails moreAppsDetails = getCurrentAppModel(context);
+        MoreAppsDetails moreAppsDetails = MoreAppsUtils.getCurrentAppModel(context);
 
         if (moreAppsDetails != null) {
             if (moreAppsDetails.redirectDetails != null && moreAppsDetails.redirectDetails.enable) {
@@ -82,7 +79,7 @@ public class ForceUpdater {
     /**
      * to know which type of dialog is needed to show
      *
-     * @param moreAppsDetails {@link MoreAppsDetails} of current app, get this by calling {@link ForceUpdater#getCurrentAppModel}
+     * @param moreAppsDetails {@link MoreAppsDetails} of current app, get this by calling {@link MoreAppsUtils#getCurrentAppModel}
      * @return {@link UpdateDialogType}
      */
     public static UpdateDialogType dialogToShow(Context context, MoreAppsDetails moreAppsDetails) throws PackageManager.NameNotFoundException {
@@ -105,25 +102,6 @@ public class ForceUpdater {
             }
         }
         return UpdateDialogType.NONE;
-    }
-
-    /**
-     * NOTE : call {@link MoreAppsBuilder#build()} first to load the data in {@link android.content.SharedPreferences}
-     *
-     * @return {@link MoreAppsDetails} of current app if present
-     */
-    public static MoreAppsDetails getCurrentAppModel(Context context) {
-        ArrayList<MoreAppsDetails> moreApps = SharedPrefsUtil.getMoreApps(context);
-        if (moreApps != null && !moreApps.isEmpty()) {
-            String currentPackageName = context.getPackageName();
-            for (int i = 0; i < moreApps.size(); i++) {
-                MoreAppsDetails moreAppsDetails = moreApps.get(i);
-                if (moreAppsDetails.packageName.equals(currentPackageName)) {
-                    return moreAppsDetails;
-                }
-            }
-        }
-        return null;
     }
 
     /**

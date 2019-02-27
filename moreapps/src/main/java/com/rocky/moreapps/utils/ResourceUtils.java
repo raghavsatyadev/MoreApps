@@ -7,7 +7,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 
-class ResourceUtils {
+public class ResourceUtils {
 
     public static String getString(Context context, @StringRes int stringId) {
         return context.getString(stringId);

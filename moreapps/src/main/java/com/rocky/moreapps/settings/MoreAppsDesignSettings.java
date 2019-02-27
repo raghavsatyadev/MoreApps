@@ -1,10 +1,13 @@
-package com.rocky.moreapps.model;
+package com.rocky.moreapps.settings;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.ColorInt;
 import android.support.annotation.FontRes;
 import android.support.annotation.LayoutRes;
 
 import com.rocky.moreapps.R;
+import com.rocky.moreapps.utils.MoreAppsUtils;
 
 import java.util.HashSet;
 import java.util.List;
@@ -74,8 +77,11 @@ public class MoreAppsDesignSettings {
         return themeColor;
     }
 
-    public void setThemeColor(int themeColor) {
-        this.themeColor = themeColor;
+    public void setThemeColor(Context context, @ColorInt int themeColor) {
+        if (themeColor == 0) {
+            this.themeColor = Color.parseColor(MoreAppsUtils.getPrimaryColorInHex(context));
+        } else
+            this.themeColor = themeColor;
     }
 
     public int getFont() {

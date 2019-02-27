@@ -12,6 +12,8 @@ import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.ColorInt;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
@@ -27,17 +29,16 @@ import java.net.URL;
 
 public class NotificationUtils {
     private static final String TAG = NotificationUtils.class.getSimpleName();
-    private static Uri defaultSoundUri;
-    private static Bitmap icLauncher;
-    private static int notificationColor;
 
-    private static NotificationCompat.Builder setNotificationStyle(NotificationCompat.Builder builder,
+    private static NotificationCompat.Builder setNotificationStyle(Context context,
+                                                                   NotificationCompat.Builder builder,
                                                                    String imageURL,
                                                                    String title,
-                                                                   String message) {
+                                                                   String message,
+                                                                   @DrawableRes int bigIconID) {
         if (!TextUtils.isEmpty(imageURL)) {
             NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle()
-                    .bigLargeIcon(icLauncher)
+                    .bigLargeIcon(getBitmapFromDrawable(ResourceUtils.getDrawable(context, bigIconID)))
                     .setSummaryText(message)
                     .setBigContentTitle(title);
             Bitmap bitmapFromUrl = getBitmapFromUrl(imageURL);
@@ -72,40 +73,27 @@ public class NotificationUtils {
     }
 
     // TODO: 20-Feb-19 update small icon as required
-    private int getSmallIcon() {
+    private static int getSmallIcon(@DrawableRes int bigIconID, @DrawableRes int smallIconID) {
         boolean useWhiteIcon = (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT);
-//        return useWhiteIcon ? R.drawable.ic_small_icon : R.mipmap.ic_launcher;
-        return R.drawable.ic_close;
+        return useWhiteIcon ? smallIconID : bigIconID;
     }
 
-    // TODO: 20-Feb-19 update big icon as required
-    private int getBigIcon() {
-//        return R.mipmap.ic_launcher;
-        return R.drawable.ic_close;
-    }
+    private static NotificationCompat.Builder getNotificationBuilder(Context context,
+                                                                     String channelID,
+                                                                     String title,
+                                                                     String message,
+                                                                     String imageURL,
+                                                                     PendingIntent pendingIntent,
+                                                                     @DrawableRes int bigIconID,
+                                                                     @DrawableRes int smallIconID,
+                                                                     @ColorInt int notificationColor) {
 
-    private NotificationCompat.Builder getNotificationBuilder(Context context,
-                                                              String channelID,
-                                                              String title,
-                                                              String message,
-                                                              String imageURL,
-                                                              PendingIntent pendingIntent) {
-
-        if (defaultSoundUri == null)
-            defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        if (icLauncher == null) {
-            icLauncher = getBitmapFromDrawable(ResourceUtils.getDrawable(context, getBigIcon()));
-        }
-        if (notificationColor == 0) {
-            // TODO: 20-Feb-19 update notification color as required
-//            notificationColor = ResourceUtils.getColor(context, R.color.notification_color);
-            notificationColor = ResourceUtils.getColor(context, R.color.app_background);
-        }
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelID)
                 .setAutoCancel(true)
-                .setSmallIcon(getSmallIcon())
-                .setLargeIcon(icLauncher)
+                .setSmallIcon(getSmallIcon(bigIconID, smallIconID))
+                .setLargeIcon(getBitmapFromDrawable(ResourceUtils.getDrawable(context, bigIconID)))
                 .setSound(defaultSoundUri)
                 .setColor(notificationColor)
                 .setContentTitle(title)
@@ -113,11 +101,11 @@ public class NotificationUtils {
                 .setContentIntent(pendingIntent)
                 .setTicker(message);
 
-        return setNotificationStyle(builder, imageURL, title, message);
+        return setNotificationStyle(context, builder, imageURL, title, message, bigIconID);
     }
 
     @NonNull
-    private Bitmap getBitmapFromDrawable(@NonNull Drawable drawable) {
+    private static Bitmap getBitmapFromDrawable(@NonNull Drawable drawable) {
         final Bitmap bmp = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         final Canvas canvas = new Canvas(bmp);
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -125,28 +113,33 @@ public class NotificationUtils {
         return bmp;
     }
 
-    public void sendNotification(Context context, int NOTIFICATION_ID, String title,
-                                 String message, String imageURL,
-                                 Intent intent, int pendingIntentFlag) {
-        NotificationManager notificationManager = getNotificationManager(context);
-//        String appName = ResourceUtils.getString(R.string.app_name);
-        // TODO: 20-Feb-19 update app name as required
-        String appName = ResourceUtils.getString(context, R.string.more_apps);
+    public static void sendNotification(Context context, int NOTIFICATION_ID, String title,
+                                        String message, String imageURL,
+                                        Intent intent, int pendingIntentFlag,
+                                        @DrawableRes int bigIconID, @DrawableRes int smallIconID,
+                                        @ColorInt int notificationColor) {
 
-//        String channelID = ResourceUtils.getString(R.string.channel_id);
-        // TODO: 20-Feb-19 update channel id as required
-        String channelID = ResourceUtils.getString(context, R.string.more_apps_id);
+        NotificationManager notificationManager = getNotificationManager(context);
+
+        String channelID = ResourceUtils.getString(context, R.string.channel_id);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             getNotificationChannel(context, notificationManager, channelID);
         }
 
+        Log.d(TAG, "title: " + title);
+
         NotificationCompat.Builder builder;
         builder = getNotificationBuilder(context,
                 channelID,
-                !TextUtils.isEmpty(title) ? title : appName,
+                title,
                 message,
                 imageURL,
-                PendingIntent.getActivity(context, NOTIFICATION_ID, intent, pendingIntentFlag));
+                PendingIntent.getActivity(context, NOTIFICATION_ID, intent, pendingIntentFlag),
+                bigIconID,
+                smallIconID,
+                notificationColor);
+
         if (builder != null) {
 
             notificationManager.notify(NOTIFICATION_ID, builder.build());
@@ -154,26 +147,18 @@ public class NotificationUtils {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void getNotificationChannel(Context context, NotificationManager notificationManager, String channelID) {
+    private static void getNotificationChannel(Context context, NotificationManager notificationManager, String channelID) {
 
-        // The user-visible name of the channel.
-//        String channelName = ResourceUtils.getString(R.string.channel_name);
-        // TODO: 20-Feb-19 update channel name
-        String channelName = ResourceUtils.getString(context, R.string.more_apps);
+        String channelName = ResourceUtils.getString(context, R.string.channel_name);
 
-        // The user-visible description of the channel.
-//        String channelDescription = ResourceUtils.getString(R.string.channel_description);
-        // TODO: 20-Feb-19 update channel description
-        String channelDescription = ResourceUtils.getString(context, R.string.more_apps);
+        String channelDescription = ResourceUtils.getString(context, R.string.channel_description);
 
         int importance = NotificationManager.IMPORTANCE_DEFAULT;
+
         NotificationChannel mChannel = new NotificationChannel(channelID, channelName, importance);
 
-        // Configure the notification channel.
         mChannel.setDescription(channelDescription);
 
-        // Sets the notification light color for notifications posted to this
-        // channel, if the device supports this feature.
         notificationManager.createNotificationChannel(mChannel);
     }
 }

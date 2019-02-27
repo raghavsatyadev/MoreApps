@@ -4,9 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.transition.TransitionManager;
@@ -15,7 +13,6 @@ import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -24,9 +21,9 @@ import com.rocky.moreapps.adapter.GenRecyclerAdapter;
 import com.rocky.moreapps.adapter.MoreAppsListAdapter;
 import com.rocky.moreapps.listener.MoreAppsDialogListener;
 import com.rocky.moreapps.listener.MoreAppsDownloadListener;
-import com.rocky.moreapps.model.MoreAppsDesignSettings;
 import com.rocky.moreapps.model.MoreAppsDetails;
-import com.rocky.moreapps.model.PeriodicUpdateSettings;
+import com.rocky.moreapps.settings.MoreAppsDesignSettings;
+import com.rocky.moreapps.settings.PeriodicUpdateSettings;
 import com.rocky.moreapps.utils.MoreAppsUtils;
 import com.rocky.moreapps.utils.SharedPrefsUtil;
 
@@ -44,18 +41,6 @@ public class MoreAppsDialog {
         this.url = url;
         this.designSettings = designSettings;
         this.updateSettings = updateSettings;
-    }
-
-    private static String getPrimaryColorInHex(@NonNull Context context) {
-        TypedValue outValue = new TypedValue();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            context.getTheme().resolveAttribute(R.attr.colorPrimary, outValue, true);
-        } else {
-            // get color defined for AppCompat
-            int appCompatAttribute = context.getResources().getIdentifier("colorPrimary", "attr", context.getPackageName());
-            context.getTheme().resolveAttribute(appCompatAttribute, outValue, true);
-        }
-        return String.format("#%06X", (0xFFFFFF & outValue.data));
     }
 
     /**
@@ -85,7 +70,7 @@ public class MoreAppsDialog {
     }
 
     void startWorker(Context context, MoreAppsDownloadListener listener) {
-        MoreAppsWorker.startWorker(context, url, listener, this, updateSettings);
+        MoreAppsWorker.startWorker(context, url, listener, this, designSettings.getThemeColor(), updateSettings);
     }
 
     private void prepareView(@NonNull Context context, Dialog view, MoreAppsDialogListener listener) {
@@ -98,10 +83,6 @@ public class MoreAppsDialog {
 
         if (designSettings.getFont() != 0) {
             fontFace = ResourcesCompat.getFont(context, designSettings.getFont());
-        }
-
-        if (designSettings.getThemeColor() == 0) {
-            designSettings.setThemeColor(Color.parseColor(getPrimaryColorInHex(context)));
         }
 
         setCloseButton(closeButton, listener);
