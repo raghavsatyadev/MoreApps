@@ -22,7 +22,7 @@ public class CoreApp extends Application {
         mInstance = this;
 
 //        this pattern is part of option-2
-//        createMoreAppDialog();
+        createMoreAppDialog();
     }
 
     public MoreAppsDialog getMoreAppsDialog() {
