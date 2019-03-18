@@ -56,7 +56,16 @@ public class SharedPrefsUtil {
         }
     }
 
+    public static boolean isFirstTimePeriodic(@NonNull Context context) {
+        return SharedPrefsHelper.getInstance(context).get(AppPrefStrings.IS_FIRST_TIME_PERIODIC, true);
+    }
+
+    public static void setFirstTimePeriodic(@NonNull Context context, boolean status) {
+        SharedPrefsHelper.getInstance(context).save(AppPrefStrings.IS_FIRST_TIME_PERIODIC, status);
+    }
+
     interface AppPrefStrings {
         String MORE_APPS = "MORE_APPS";
+        String IS_FIRST_TIME_PERIODIC = "IS_FIRST_TIME_PERIODIC";
     }
 }

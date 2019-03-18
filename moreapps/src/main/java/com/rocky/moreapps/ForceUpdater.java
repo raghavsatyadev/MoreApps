@@ -32,9 +32,9 @@ public class ForceUpdater {
             if (moreAppsDetails.redirectDetails != null && moreAppsDetails.redirectDetails.enable) {
                 //redirection enabled
                 return true;
-            } else if (moreAppsDetails.hardUpdateDetails != null && moreAppsDetails.hardUpdateDetails.enable) {
+            } else if (moreAppsDetails.hardUpdateDetails != null && moreAppsDetails.hardUpdateDetails.enable && moreAppsDetails.minVersion > versionCode) {
                 //hard update enabled
-                return moreAppsDetails.minVersion > versionCode;
+                return true;
             } else if (moreAppsDetails.softUpdateDetails != null && moreAppsDetails.softUpdateDetails.enable) {
                 //soft update enabled
                 return moreAppsDetails.currentVersion > versionCode || moreAppsDetails.minVersion > versionCode;
@@ -62,11 +62,9 @@ public class ForceUpdater {
             if (moreAppsDetails.redirectDetails != null && moreAppsDetails.redirectDetails.enable) {
                 //redirection called
                 showRedirectDialog(context, moreAppsDetails, updateDialogListener);
-            } else if (moreAppsDetails.hardUpdateDetails != null && moreAppsDetails.hardUpdateDetails.enable) {
-                if (moreAppsDetails.minVersion > versionCode) {
-                    //hard update called
-                    showHardUpdateDialog(context, moreAppsDetails);
-                }
+            } else if (moreAppsDetails.hardUpdateDetails != null && moreAppsDetails.hardUpdateDetails.enable && moreAppsDetails.minVersion > versionCode) {
+                //hard update called
+                showHardUpdateDialog(context, moreAppsDetails);
             } else if (moreAppsDetails.softUpdateDetails != null && moreAppsDetails.softUpdateDetails.enable) {
                 if (moreAppsDetails.currentVersion > versionCode || moreAppsDetails.minVersion > versionCode) {
                     //soft update called
@@ -89,11 +87,9 @@ public class ForceUpdater {
             if (moreAppsDetails.redirectDetails != null && moreAppsDetails.redirectDetails.enable) {
                 //redirection required
                 return moreAppsDetails.redirectDetails.hardRedirect ? UpdateDialogType.HARD_REDIRECT : UpdateDialogType.SOFT_REDIRECT;
-            } else if (moreAppsDetails.hardUpdateDetails != null && moreAppsDetails.hardUpdateDetails.enable) {
-                if (moreAppsDetails.minVersion > versionCode) {
-                    //hard update required
-                    return UpdateDialogType.HARD_UPDATE;
-                }
+            } else if (moreAppsDetails.hardUpdateDetails != null && moreAppsDetails.hardUpdateDetails.enable && moreAppsDetails.minVersion > versionCode) {
+                //hard update required
+                return UpdateDialogType.HARD_UPDATE;
             } else if (moreAppsDetails.softUpdateDetails != null && moreAppsDetails.softUpdateDetails.enable) {
                 if (moreAppsDetails.currentVersion > versionCode || moreAppsDetails.minVersion > versionCode) {
                     //soft update required
@@ -105,9 +101,9 @@ public class ForceUpdater {
     }
 
     /**
-     * @param context       {@link Context} of Activity or Fragment
+     * @param context         {@link Context} of Activity or Fragment
      * @param moreAppsDetails {@link MoreAppsDetails}
-     * @param listener      {@link UpdateDialogListener} to know when dialog is closed
+     * @param listener        {@link UpdateDialogListener} to know when dialog is closed
      */
     public static void showSoftUpdateDialog(final Context context, final MoreAppsDetails moreAppsDetails, final UpdateDialogListener listener) {
         if (moreAppsDetails != null && moreAppsDetails.softUpdateDetails != null && moreAppsDetails.softUpdateDetails.enable) {
@@ -141,7 +137,7 @@ public class ForceUpdater {
     }
 
     /**
-     * @param context       {@link Context} of Activity or Fragment
+     * @param context         {@link Context} of Activity or Fragment
      * @param moreAppsDetails {@link MoreAppsDetails}
      */
     public static void showHardUpdateDialog(final Context context, final MoreAppsDetails moreAppsDetails) {
@@ -163,7 +159,7 @@ public class ForceUpdater {
     }
 
     /**
-     * @param context       {@link Context} of Activity or Fragment
+     * @param context         {@link Context} of Activity or Fragment
      * @param moreAppsDetails {@link MoreAppsDetails}
      */
     public static void showHardRedirectDialog(final Context context, final MoreAppsDetails moreAppsDetails) {
@@ -186,9 +182,9 @@ public class ForceUpdater {
     }
 
     /**
-     * @param context       {@link Context} of Activity or Fragment
+     * @param context         {@link Context} of Activity or Fragment
      * @param moreAppsDetails {@link MoreAppsDetails}
-     * @param listener      {@link UpdateDialogListener} to know when dialog is closed
+     * @param listener        {@link UpdateDialogListener} to know when dialog is closed
      */
     public static void showSoftRedirectDialog(final Context context, MoreAppsDetails moreAppsDetails, final UpdateDialogListener listener) {
         if (moreAppsDetails != null && moreAppsDetails.redirectDetails != null &&
@@ -222,9 +218,9 @@ public class ForceUpdater {
     }
 
     /**
-     * @param context       {@link Context} of Activity or Fragment
+     * @param context         {@link Context} of Activity or Fragment
      * @param moreAppsDetails {@link MoreAppsDetails}
-     * @param listener      {@link UpdateDialogListener} to know when dialog is closed
+     * @param listener        {@link UpdateDialogListener} to know when dialog is closed
      */
     private static void showRedirectDialog(final Context context, final MoreAppsDetails moreAppsDetails, final UpdateDialogListener listener) {
         if (moreAppsDetails != null && moreAppsDetails.redirectDetails != null &&

@@ -127,8 +127,6 @@ public class NotificationUtils {
             getNotificationChannel(context, notificationManager, channelID);
         }
 
-        Log.d(TAG, "title: " + title);
-
         NotificationCompat.Builder builder;
         builder = getNotificationBuilder(context,
                 channelID,
@@ -139,9 +137,7 @@ public class NotificationUtils {
                 bigIconID,
                 smallIconID,
                 notificationColor);
-
         if (builder != null) {
-
             notificationManager.notify(NOTIFICATION_ID, builder.build());
         }
     }

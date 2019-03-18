@@ -15,18 +15,6 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
-import androidx.work.Constraints;
-import androidx.work.Data;
-import androidx.work.ExistingPeriodicWorkPolicy;
-import androidx.work.ExistingWorkPolicy;
-import androidx.work.NetworkType;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkInfo;
-import androidx.work.WorkManager;
-import androidx.work.Worker;
-import androidx.work.WorkerParameters;
-
 import com.rocky.moreapps.listener.MoreAppsDownloadListener;
 import com.rocky.moreapps.model.MoreAppsDetails;
 import com.rocky.moreapps.settings.PeriodicUpdateSettings;
@@ -44,6 +32,18 @@ import java.util.List;
 import java.util.Random;
 
 import javax.net.ssl.HttpsURLConnection;
+
+import androidx.work.Constraints;
+import androidx.work.Data;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
 
 public class MoreAppsWorker extends Worker {
 
@@ -118,15 +118,6 @@ public class MoreAppsWorker extends Worker {
                         .build();
 
         instance.enqueueUniquePeriodicWork(WORKER_TAG_PERIODIC, ExistingPeriodicWorkPolicy.KEEP, periodicWorkRequest);
-
-        final LiveData<List<WorkInfo>> workInfoPeriodic = instance.getWorkInfosForUniqueWorkLiveData(WORKER_TAG_PERIODIC);
-        Observer<List<WorkInfo>> observerPeriodic = new Observer<List<WorkInfo>>() {
-            @Override
-            public void onChanged(@Nullable List<WorkInfo> workInfos) {
-
-            }
-        };
-        workInfoPeriodic.observeForever(observerPeriodic);
     }
 
     private static void handleResult(Context context, MoreAppsDialog moreAppsDialog, List<WorkInfo> workInfos, LiveData<List<WorkInfo>> workInfoLiveData, Observer<List<WorkInfo>> observer, MoreAppsDownloadListener listener) {
@@ -207,10 +198,14 @@ public class MoreAppsWorker extends Worker {
         if (!TextUtils.isEmpty(moreAppsJSON)) {
             SharedPrefsUtil.setMoreApps(getApplicationContext(), moreAppsJSON);
             if (getInputData().getBoolean(IS_PERIODIC, false)) {
-                try {
-                    handleNotification(context);
-                } catch (PackageManager.NameNotFoundException e) {
-                    Log.e(TAG, "doWork: ", e);
+                if (!SharedPrefsUtil.isFirstTimePeriodic(context)) {
+                    try {
+                        handleNotification(getApplicationContext());
+                    } catch (PackageManager.NameNotFoundException e) {
+                        Log.e(TAG, "doWork: ", e);
+                    }
+                } else {
+                    SharedPrefsUtil.setFirstTimePeriodic(context, false);
                 }
             }
             return Result.success();
@@ -219,7 +214,8 @@ public class MoreAppsWorker extends Worker {
         return Result.failure();
     }
 
-    private void handleNotification(Context context) throws PackageManager.NameNotFoundException {
+    private void handleNotification(Context context) throws
+            PackageManager.NameNotFoundException {
         int bigIconID = getInputData().getInt(BIG_ICON, 0);
 
         if (bigIconID != 0) {
