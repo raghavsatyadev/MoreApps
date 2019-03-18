@@ -19,7 +19,7 @@ dependencies {
 **Basic**
 
 ```java
-new MoreAppsDialog.Builder(this, CoreApp.JSON_FILE_URL)
+new MoreAppsBuilder(this, CoreApp.JSON_FILE_URL)
     .buildAndShow(new MoreAppsDialogListener() {
         @Override
         public void onClose() {
@@ -68,7 +68,7 @@ new MoreAppsBuilder(this.getContext(), CoreApp.JSON_FILE_URL)
 **Application Class**
 
 ```java
-MoreAppsDialog moreAppsDialog = new MoreAppsDialog.Builder(this, JSON_FILE_URL)
+MoreAppsDialog moreAppsDialog = new MoreAppsBuilder(this, JSON_FILE_URL)
             .setPeriodicSettings(15, TimeUnit.MINUTES, // set interval of detail updating and showing notifications as required, default is 7 days
             R.mipmap.ic_launcher, R.drawable.ic_small_icon) // launcher icon and small icon (small icon is optional, small icon should be of single color)
             .build(); //calling this method in application class would be recommended
