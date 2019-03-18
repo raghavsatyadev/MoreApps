@@ -8,7 +8,7 @@ import com.rocky.moreapps.MoreAppsDialog;
 import java.util.concurrent.TimeUnit;
 
 public class CoreApp extends Application {
-    public static final String JSON_FILE_URL = "http://api.sultannews.net/app_config/updater.json";
+    public static final String JSON_FILE_URL = "https://raghavsatyadev.github.io/more_apps_example.json";
     private static CoreApp mInstance;
     private MoreAppsDialog moreAppsDialog;
 
@@ -22,7 +22,7 @@ public class CoreApp extends Application {
         mInstance = this;
 
 //        this pattern is part of option-2
-        createMoreAppDialog();
+//        createMoreAppDialog();
     }
 
     public MoreAppsDialog getMoreAppsDialog() {

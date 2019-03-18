@@ -22,7 +22,7 @@ ext {
     targetSdk = 28
     minSdk = 19
     libraryVersion = "1.0.5"
-    libraryVersionCode = 1
+    libraryVersionCode = 5
     retrofit = '2.5.0'
     glide = '4.8.0'
 }
