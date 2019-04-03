@@ -5,7 +5,7 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.support.v7.app.AlertDialog;
 
-import com.rocky.moreapps.listener.UpdateDialogListener;
+import com.rocky.moreapps.listener.MoreAppsUpdateDialogListener;
 import com.rocky.moreapps.model.HardUpdateDetails;
 import com.rocky.moreapps.model.MoreAppsDetails;
 import com.rocky.moreapps.model.RedirectDetails;
@@ -51,9 +51,9 @@ public class ForceUpdater {
      * NOTE : call {@link MoreAppsBuilder#build()} first to load the data in {@link android.content.SharedPreferences}
      *
      * @param context              {@link Context} of Activity or Fragment
-     * @param updateDialogListener to listen for dialog close events
+     * @param moreAppsUpdateDialogListener to listen for dialog close events
      */
-    public static void showUpdateDialogs(Context context, UpdateDialogListener updateDialogListener) throws PackageManager.NameNotFoundException {
+    public static void showUpdateDialogs(Context context, MoreAppsUpdateDialogListener moreAppsUpdateDialogListener) throws PackageManager.NameNotFoundException {
         int versionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_ACTIVITIES).versionCode;
 
         MoreAppsDetails moreAppsDetails = MoreAppsUtils.getCurrentAppModel(context);
@@ -61,14 +61,14 @@ public class ForceUpdater {
         if (moreAppsDetails != null) {
             if (moreAppsDetails.redirectDetails != null && moreAppsDetails.redirectDetails.enable) {
                 //redirection called
-                showRedirectDialog(context, moreAppsDetails, updateDialogListener);
+                showRedirectDialog(context, moreAppsDetails, moreAppsUpdateDialogListener);
             } else if (moreAppsDetails.hardUpdateDetails != null && moreAppsDetails.hardUpdateDetails.enable && moreAppsDetails.minVersion > versionCode) {
                 //hard update called
                 showHardUpdateDialog(context, moreAppsDetails);
             } else if (moreAppsDetails.softUpdateDetails != null && moreAppsDetails.softUpdateDetails.enable) {
                 if (moreAppsDetails.currentVersion > versionCode || moreAppsDetails.minVersion > versionCode) {
                     //soft update called
-                    showSoftUpdateDialog(context, moreAppsDetails, updateDialogListener);
+                    showSoftUpdateDialog(context, moreAppsDetails, moreAppsUpdateDialogListener);
                 }
             }
         }
@@ -103,9 +103,9 @@ public class ForceUpdater {
     /**
      * @param context         {@link Context} of Activity or Fragment
      * @param moreAppsDetails {@link MoreAppsDetails}
-     * @param listener        {@link UpdateDialogListener} to know when dialog is closed
+     * @param listener        {@link MoreAppsUpdateDialogListener} to know when dialog is closed
      */
-    public static void showSoftUpdateDialog(final Context context, final MoreAppsDetails moreAppsDetails, final UpdateDialogListener listener) {
+    public static void showSoftUpdateDialog(final Context context, final MoreAppsDetails moreAppsDetails, final MoreAppsUpdateDialogListener listener) {
         if (moreAppsDetails != null && moreAppsDetails.softUpdateDetails != null && moreAppsDetails.softUpdateDetails.enable) {
             SoftUpdateDetails softUpdateDetails = moreAppsDetails.softUpdateDetails;
             new AlertDialog.Builder(context)
@@ -184,9 +184,9 @@ public class ForceUpdater {
     /**
      * @param context         {@link Context} of Activity or Fragment
      * @param moreAppsDetails {@link MoreAppsDetails}
-     * @param listener        {@link UpdateDialogListener} to know when dialog is closed
+     * @param listener        {@link MoreAppsUpdateDialogListener} to know when dialog is closed
      */
-    public static void showSoftRedirectDialog(final Context context, MoreAppsDetails moreAppsDetails, final UpdateDialogListener listener) {
+    public static void showSoftRedirectDialog(final Context context, MoreAppsDetails moreAppsDetails, final MoreAppsUpdateDialogListener listener) {
         if (moreAppsDetails != null && moreAppsDetails.redirectDetails != null &&
                 moreAppsDetails.redirectDetails.enable && !moreAppsDetails.redirectDetails.hardRedirect) {
             final RedirectDetails redirectDetails = moreAppsDetails.redirectDetails;
@@ -220,9 +220,9 @@ public class ForceUpdater {
     /**
      * @param context         {@link Context} of Activity or Fragment
      * @param moreAppsDetails {@link MoreAppsDetails}
-     * @param listener        {@link UpdateDialogListener} to know when dialog is closed
+     * @param listener        {@link MoreAppsUpdateDialogListener} to know when dialog is closed
      */
-    private static void showRedirectDialog(final Context context, final MoreAppsDetails moreAppsDetails, final UpdateDialogListener listener) {
+    private static void showRedirectDialog(final Context context, final MoreAppsDetails moreAppsDetails, final MoreAppsUpdateDialogListener listener) {
         if (moreAppsDetails != null && moreAppsDetails.redirectDetails != null &&
                 moreAppsDetails.redirectDetails.enable) {
             if (moreAppsDetails.redirectDetails.hardRedirect) {

@@ -27,8 +27,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class NotificationUtils {
-    private static final String TAG = NotificationUtils.class.getSimpleName();
+public class MoreAppsNotifyUtil {
+    private static final String TAG = MoreAppsNotifyUtil.class.getSimpleName();
 
     private static NotificationCompat.Builder setNotificationStyle(Context context,
                                                                    NotificationCompat.Builder builder,
@@ -38,7 +38,7 @@ public class NotificationUtils {
                                                                    @DrawableRes int bigIconID) {
         if (!TextUtils.isEmpty(imageURL)) {
             NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle()
-                    .bigLargeIcon(getBitmapFromDrawable(ResourceUtils.getDrawable(context, bigIconID)))
+                    .bigLargeIcon(getBitmapFromDrawable(MoreAppsResource.getDrawable(context, bigIconID)))
                     .setSummaryText(message)
                     .setBigContentTitle(title);
             Bitmap bitmapFromUrl = getBitmapFromUrl(imageURL);
@@ -93,7 +93,7 @@ public class NotificationUtils {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelID)
                 .setAutoCancel(true)
                 .setSmallIcon(getSmallIcon(bigIconID, smallIconID))
-                .setLargeIcon(getBitmapFromDrawable(ResourceUtils.getDrawable(context, bigIconID)))
+                .setLargeIcon(getBitmapFromDrawable(MoreAppsResource.getDrawable(context, bigIconID)))
                 .setSound(defaultSoundUri)
                 .setColor(notificationColor)
                 .setContentTitle(title)
@@ -121,7 +121,7 @@ public class NotificationUtils {
 
         NotificationManager notificationManager = getNotificationManager(context);
 
-        String channelID = ResourceUtils.getString(context, R.string.channel_id);
+        String channelID = MoreAppsResource.getString(context, R.string.channel_id);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             getNotificationChannel(context, notificationManager, channelID);
@@ -145,9 +145,9 @@ public class NotificationUtils {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private static void getNotificationChannel(Context context, NotificationManager notificationManager, String channelID) {
 
-        String channelName = ResourceUtils.getString(context, R.string.channel_name);
+        String channelName = MoreAppsResource.getString(context, R.string.channel_name);
 
-        String channelDescription = ResourceUtils.getString(context, R.string.channel_description);
+        String channelDescription = MoreAppsResource.getString(context, R.string.channel_description);
 
         int importance = NotificationManager.IMPORTANCE_DEFAULT;
 

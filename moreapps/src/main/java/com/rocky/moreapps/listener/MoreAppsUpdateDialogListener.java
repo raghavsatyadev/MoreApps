@@ -1,5 +1,5 @@
 package com.rocky.moreapps.listener;
 
-public interface UpdateDialogListener {
+public interface MoreAppsUpdateDialogListener {
     void onClose();
 }

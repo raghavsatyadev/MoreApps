@@ -18,7 +18,7 @@ import com.rocky.moreapps.model.MoreAppsDetails;
 
 import java.util.ArrayList;
 
-public class MoreAppsListAdapter extends GenRecyclerAdapter<MoreAppsListAdapter.DataObjectHolder, MoreAppsDetails> {
+public class MoreAppsListAdapter extends MoreAppsBaseAdapter<MoreAppsListAdapter.DataObjectHolder, MoreAppsDetails> {
 
     @ColorInt
     private final int rowTitleColor;

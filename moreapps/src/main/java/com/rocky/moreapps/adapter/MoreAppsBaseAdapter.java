@@ -7,13 +7,13 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
-public abstract class GenRecyclerAdapter
+public abstract class MoreAppsBaseAdapter
         <ViewHolder extends RecyclerView.ViewHolder, Model>
         extends RecyclerView.Adapter<ViewHolder> {
     private ArrayList<Model> models;
-    private GenRecyclerAdapter.MyClickListener myClickListener;
+    private MoreAppsBaseAdapter.MyClickListener myClickListener;
 
-    GenRecyclerAdapter(ArrayList<Model> models) {
+    MoreAppsBaseAdapter(ArrayList<Model> models) {
         this.models = models;
     }
 
@@ -83,7 +83,7 @@ public abstract class GenRecyclerAdapter
         return myClickListener;
     }
 
-    public void setOnItemClickListener(GenRecyclerAdapter.MyClickListener myClickListener) {
+    public void setOnItemClickListener(MoreAppsBaseAdapter.MyClickListener myClickListener) {
         this.myClickListener = myClickListener;
     }
 

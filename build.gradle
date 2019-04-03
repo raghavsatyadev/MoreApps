@@ -21,8 +21,8 @@ ext {
     APK_NAME = "More-Apps"
     targetSdk = 28
     minSdk = 19
-    libraryVersion = "1.0.5"
-    libraryVersionCode = 5
+    libraryVersion = "1.0.6"
+    libraryVersionCode = 6
     retrofit = '2.5.0'
     glide = '4.9.0'
 }

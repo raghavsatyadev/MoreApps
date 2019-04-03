@@ -18,9 +18,9 @@ import android.util.Log;
 import com.rocky.moreapps.listener.MoreAppsDownloadListener;
 import com.rocky.moreapps.model.MoreAppsDetails;
 import com.rocky.moreapps.settings.PeriodicUpdateSettings;
+import com.rocky.moreapps.utils.MoreAppsNotifyUtil;
+import com.rocky.moreapps.utils.MoreAppsPrefUtil;
 import com.rocky.moreapps.utils.MoreAppsUtils;
-import com.rocky.moreapps.utils.NotificationUtils;
-import com.rocky.moreapps.utils.SharedPrefsUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -88,7 +88,7 @@ public class MoreAppsWorker extends Worker {
     private static void setupOneTimeRequest(final Context context, Constraints constraints, Data.Builder dataBuilder,
                                             final MoreAppsDialog moreAppsDialog,
                                             final MoreAppsDownloadListener listener, WorkManager instance) {
-        if (SharedPrefsUtil.getMoreApps(context).isEmpty()) {
+        if (MoreAppsPrefUtil.getMoreApps(context).isEmpty()) {
             OneTimeWorkRequest oneTimeWorkRequest = new OneTimeWorkRequest.Builder(MoreAppsWorker.class)
                     .setConstraints(constraints)
                     .setInputData(dataBuilder.putBoolean(IS_PERIODIC, false).build())
@@ -124,7 +124,7 @@ public class MoreAppsWorker extends Worker {
         if (workInfos != null && !workInfos.isEmpty()) {
             WorkInfo.State state = workInfos.get(0).getState();
             if (state == WorkInfo.State.SUCCEEDED) {
-                listener.onSuccess(moreAppsDialog, SharedPrefsUtil.getMoreApps(context));
+                listener.onSuccess(moreAppsDialog, MoreAppsPrefUtil.getMoreApps(context));
                 workInfoLiveData.removeObserver(observer);
             } else if (state == WorkInfo.State.FAILED) {
                 listener.onFailure();
@@ -196,16 +196,16 @@ public class MoreAppsWorker extends Worker {
         String moreAppsJSON = callMoreAppsAPI();
 
         if (!TextUtils.isEmpty(moreAppsJSON)) {
-            SharedPrefsUtil.setMoreApps(getApplicationContext(), moreAppsJSON);
+            MoreAppsPrefUtil.setMoreApps(getApplicationContext(), moreAppsJSON);
             if (getInputData().getBoolean(IS_PERIODIC, false)) {
-                if (!SharedPrefsUtil.isFirstTimePeriodic(context)) {
+                if (!MoreAppsPrefUtil.isFirstTimePeriodic(context)) {
                     try {
                         handleNotification(getApplicationContext());
                     } catch (PackageManager.NameNotFoundException e) {
                         Log.e(TAG, "doWork: ", e);
                     }
                 } else {
-                    SharedPrefsUtil.setFirstTimePeriodic(context, false);
+                    MoreAppsPrefUtil.setFirstTimePeriodic(context, false);
                 }
             }
             return Result.success();
@@ -234,7 +234,7 @@ public class MoreAppsWorker extends Worker {
                                      @DrawableRes int bigIconID,
                                      @DrawableRes int smallIconID,
                                      @ColorInt int notificationColor) throws PackageManager.NameNotFoundException {
-        MoreAppsDetails currentAppModel = MoreAppsUtils.getCurrentAppModel(context, SharedPrefsUtil.getMoreApps(context));
+        MoreAppsDetails currentAppModel = MoreAppsUtils.getCurrentAppModel(context, MoreAppsPrefUtil.getMoreApps(context));
         ForceUpdater.UpdateDialogType updateDialogType = ForceUpdater.dialogToShow(context, currentAppModel);
 
         switch (updateDialogType) {
@@ -280,7 +280,7 @@ public class MoreAppsWorker extends Worker {
                                   @DrawableRes int smallIconID,
                                   @ColorInt int notificationColor) {
 
-        NotificationUtils.sendNotification(context,
+        MoreAppsNotifyUtil.sendNotification(context,
                 new Random().nextInt(),
                 notificationName,
                 notificationDescription,

@@ -14,16 +14,16 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SharedPrefsUtil {
+public class MoreAppsPrefUtil {
 
-    private static final String TAG = SharedPrefsUtil.class.getSimpleName();
+    private static final String TAG = MoreAppsPrefUtil.class.getSimpleName();
 
     public static ArrayList<MoreAppsDetails> getMoreApps(@NonNull Context context) {
         return convertStringToModel(getMoreAppsString(context));
     }
 
     public static String getMoreAppsString(Context context) {
-        return SharedPrefsHelper.getInstance(context).get(AppPrefStrings.MORE_APPS, "");
+        return MoreAppsPrefHelper.getInstance(context).get(AppPrefStrings.MORE_APPS, "");
     }
 
     public static ArrayList<MoreAppsDetails> convertStringToModel(String json) {
@@ -46,22 +46,22 @@ public class SharedPrefsUtil {
         Gson gson = new Gson();
         if (moreAppsDetails != null) {
             String appModelsJson = gson.toJson(moreAppsDetails);
-            SharedPrefsHelper.getInstance(context).save(AppPrefStrings.MORE_APPS, appModelsJson);
+            MoreAppsPrefHelper.getInstance(context).save(AppPrefStrings.MORE_APPS, appModelsJson);
         }
     }
 
     public static void setMoreApps(@NonNull Context context, String moreAppsJSON) {
         if (!TextUtils.isEmpty(moreAppsJSON)) {
-            SharedPrefsHelper.getInstance(context).save(AppPrefStrings.MORE_APPS, moreAppsJSON);
+            MoreAppsPrefHelper.getInstance(context).save(AppPrefStrings.MORE_APPS, moreAppsJSON);
         }
     }
 
     public static boolean isFirstTimePeriodic(@NonNull Context context) {
-        return SharedPrefsHelper.getInstance(context).get(AppPrefStrings.IS_FIRST_TIME_PERIODIC, true);
+        return MoreAppsPrefHelper.getInstance(context).get(AppPrefStrings.IS_FIRST_TIME_PERIODIC, true);
     }
 
     public static void setFirstTimePeriodic(@NonNull Context context, boolean status) {
-        SharedPrefsHelper.getInstance(context).save(AppPrefStrings.IS_FIRST_TIME_PERIODIC, status);
+        MoreAppsPrefHelper.getInstance(context).save(AppPrefStrings.IS_FIRST_TIME_PERIODIC, status);
     }
 
     interface AppPrefStrings {

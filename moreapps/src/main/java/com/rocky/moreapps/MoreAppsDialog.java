@@ -17,15 +17,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.rocky.moreapps.adapter.GenRecyclerAdapter;
+import com.rocky.moreapps.adapter.MoreAppsBaseAdapter;
 import com.rocky.moreapps.adapter.MoreAppsListAdapter;
 import com.rocky.moreapps.listener.MoreAppsDialogListener;
 import com.rocky.moreapps.listener.MoreAppsDownloadListener;
 import com.rocky.moreapps.model.MoreAppsDetails;
 import com.rocky.moreapps.settings.MoreAppsDesignSettings;
 import com.rocky.moreapps.settings.PeriodicUpdateSettings;
+import com.rocky.moreapps.utils.MoreAppsPrefUtil;
 import com.rocky.moreapps.utils.MoreAppsUtils;
-import com.rocky.moreapps.utils.SharedPrefsUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +51,10 @@ public class MoreAppsDialog {
      */
     public void show(final Context context,
                      final MoreAppsDialogListener listener) {
-        final ArrayList<MoreAppsDetails> moreApps = SharedPrefsUtil.getMoreApps(context);
+        if (designSettings.getThemeColor() == 0) {
+            designSettings.setThemeColor(context, 0);
+        }
+        final ArrayList<MoreAppsDetails> moreApps = MoreAppsPrefUtil.getMoreApps(context);
         if (!moreApps.isEmpty()) {
             createDialog(context, moreApps, listener);
         } else {
@@ -136,7 +139,7 @@ public class MoreAppsDialog {
                     designSettings.getRowTitleColor(),
                     designSettings.getRowDescriptionColor());
 
-            adapter.setOnItemClickListener(new GenRecyclerAdapter.MyClickListener() {
+            adapter.setOnItemClickListener(new MoreAppsBaseAdapter.MyClickListener() {
                 @Override
                 public void onItemClick(int position, View v) {
                     MoreAppsDetails appsModel = adapter.getItem(position);

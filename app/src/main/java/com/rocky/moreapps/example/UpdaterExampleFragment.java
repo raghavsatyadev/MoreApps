@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.rocky.moreapps.ForceUpdater;
-import com.rocky.moreapps.listener.UpdateDialogListener;
+import com.rocky.moreapps.listener.MoreAppsUpdateDialogListener;
 import com.rocky.moreapps.model.MoreAppsDetails;
 import com.rocky.moreapps.utils.MoreAppsUtils;
 
@@ -53,7 +53,7 @@ public class UpdaterExampleFragment extends Fragment implements View.OnClickList
     public void option1() {
         try {
             if (ForceUpdater.shouldShowUpdateDialogs(getContext())) {
-                ForceUpdater.showUpdateDialogs(getContext(), new UpdateDialogListener() {
+                ForceUpdater.showUpdateDialogs(getContext(), new MoreAppsUpdateDialogListener() {
                     @Override
                     public void onClose() {
 
@@ -78,7 +78,7 @@ public class UpdaterExampleFragment extends Fragment implements View.OnClickList
                     ForceUpdater.showHardRedirectDialog(getContext(), currentAppModel);
                     break;
                 case SOFT_REDIRECT:
-                    ForceUpdater.showSoftRedirectDialog(getContext(), currentAppModel, new UpdateDialogListener() {
+                    ForceUpdater.showSoftRedirectDialog(getContext(), currentAppModel, new MoreAppsUpdateDialogListener() {
                         @Override
                         public void onClose() {
 
@@ -89,7 +89,7 @@ public class UpdaterExampleFragment extends Fragment implements View.OnClickList
                     ForceUpdater.showHardUpdateDialog(getContext(), currentAppModel);
                     break;
                 case SOFT_UPDATE:
-                    ForceUpdater.showSoftUpdateDialog(getContext(), currentAppModel, new UpdateDialogListener() {
+                    ForceUpdater.showSoftUpdateDialog(getContext(), currentAppModel, new MoreAppsUpdateDialogListener() {
                         @Override
                         public void onClose() {
 

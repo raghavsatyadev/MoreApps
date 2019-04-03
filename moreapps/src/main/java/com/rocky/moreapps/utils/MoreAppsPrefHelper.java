@@ -7,21 +7,21 @@ import android.support.annotation.NonNull;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class SharedPrefsHelper {
+class MoreAppsPrefHelper {
     private static final String SHARED_PREFS_NAME = "MORE_APPS";
 
-    private static SharedPrefsHelper instance;
+    private static MoreAppsPrefHelper instance;
 
     private SharedPreferences sharedPreferences;
 
-    private SharedPrefsHelper(@NonNull Context context) {
+    private MoreAppsPrefHelper(@NonNull Context context) {
         instance = this;
         sharedPreferences = context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
     }
 
-    public static synchronized SharedPrefsHelper getInstance(@NonNull Context context) {
+    public static synchronized MoreAppsPrefHelper getInstance(@NonNull Context context) {
         if (instance == null) {
-            instance = new SharedPrefsHelper(context);
+            instance = new MoreAppsPrefHelper(context);
         }
 
         return instance;
