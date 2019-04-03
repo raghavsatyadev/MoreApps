@@ -43,10 +43,6 @@ public class MoreAppsUtils {
 
     public static String getAttrColorString(Context context, @AttrRes int attrID, String attributeName) {
         TypedValue outValue = new TypedValue();
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            context.getTheme().resolveAttribute(attrID, outValue, true);
-//        } else {
-        // get color defined for AppCompat
         int appCompatAttribute = context.getResources().getIdentifier(attributeName, "attr", context.getPackageName());
         context.getTheme().resolveAttribute(appCompatAttribute, outValue, true);
 //        }
@@ -54,16 +50,6 @@ public class MoreAppsUtils {
     }
 
     public static String getPrimaryColorInHex(@NonNull Context context) {
-//        TypedValue outValue = new TypedValue();
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            context.getTheme().resolveAttribute(R.attr.colorPrimary, outValue, true);
-//        } else {
-//            // get color defined for AppCompat
-//            int appCompatAttribute = context.getResources().getIdentifier("colorPrimary", "attr", context.getPackageName());
-//            context.getTheme().resolveAttribute(appCompatAttribute, outValue, true);
-//        }
-//        return String.format("#%06X", (0xFFFFFF & outValue.data));
-
         return getAttrColorString(context, R.attr.colorPrimary, "colorPrimary");
     }
 }
