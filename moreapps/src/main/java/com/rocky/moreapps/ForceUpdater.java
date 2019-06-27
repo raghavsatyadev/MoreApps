@@ -136,7 +136,7 @@ public class ForceUpdater {
                         })
                         .create()
                         .show();
-                MoreAppsPrefUtil.increaseSoftUpdateShownTimes(context, moreAppsDetails.currentVersion);
+                MoreAppsPrefUtil.increaseSoftUpdateShownTimes(context);
             }
         }
     }

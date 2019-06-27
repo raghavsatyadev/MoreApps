@@ -43,6 +43,7 @@
     "soft_update_details": {
       "enable": true,
       "dialog_show_count": 3,
+      "notification_show_count": 3,
       "dialog_title": "Update Required!",
       "dialog_message": "Soft Update is required",
       "positive_button": "Update",

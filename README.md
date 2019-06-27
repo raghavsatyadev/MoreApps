@@ -113,6 +113,7 @@ if (ForceUpdater.shouldShowUpdateDialogs(getContext()))
       "soft_update_details": {
         "enable": true,
         "dialog_show_count": 3,
+        "notification_show_count": 3,
         "dialog_title": "Update Required!",
         "dialog_message": "Soft Update is required",
         "positive_button": "Update",
@@ -137,6 +138,7 @@ if (ForceUpdater.shouldShowUpdateDialogs(getContext()))
 | redirect_details->app_link | new location of APK |
 | soft_update_details | to show that there is a new version available for downloading |
 | soft_update_details->dialog_show_count | how many times the soft update dialog should show up for current update(updating current version in json will reset the counter) |
+| soft_update_details->notification_show_count | how many times the soft update notification should show up for current update(updating current version in json will reset the counter) |
 | hard_update_details | to show that this update of the app is no longer useful, user has to download new update |
 
 File is available at : https://github.com/raghavsatyadev/MoreApps/blob/master/Resources/more_apps.json

@@ -64,22 +64,24 @@ public class MoreAppsPrefUtil {
         MoreAppsPrefHelper.getInstance(context).save(AppPrefStrings.IS_FIRST_TIME_PERIODIC, status);
     }
 
-    public static boolean shouldShowSoftUpdate(Context context, int dialogShowCount, int currentVersion) {
-        int dialogShownTimes = getSoftUpdateShownTimes(context);
-        int savedCurrentVersion = getCurrentVersion(context);
-        if (currentVersion > savedCurrentVersion) {
-            saveSoftUpdateShownTimes(context, 0);
-            return true;
-        }
-        return dialogShowCount == 0 || dialogShowCount > dialogShownTimes;
-    }
-
     public static void saveCurrentVersion(Context context, int currentVersion) {
+        saveSoftUpdateShownTimes(context, 0);
+        saveSoftUpdateNotificationShownTimes(context, 0);
         MoreAppsPrefHelper.getInstance(context).save(AppPrefStrings.CURRENT_VERSION, currentVersion);
     }
 
     private static int getCurrentVersion(Context context) {
         return MoreAppsPrefHelper.getInstance(context).get(AppPrefStrings.CURRENT_VERSION, 0);
+    }
+
+    public static boolean shouldShowSoftUpdate(Context context, int dialogShowCount, int currentVersion) {
+        int dialogShownTimes = getSoftUpdateShownTimes(context);
+        int savedCurrentVersion = getCurrentVersion(context);
+        if (currentVersion > savedCurrentVersion) {
+            saveCurrentVersion(context, currentVersion);
+            return true;
+        }
+        return dialogShowCount == 0 || dialogShowCount > dialogShownTimes;
     }
 
     private static int getSoftUpdateShownTimes(Context context) {
@@ -90,17 +92,41 @@ public class MoreAppsPrefUtil {
         MoreAppsPrefHelper.getInstance(context).save(AppPrefStrings.DIALOG_SHOW_COUNT, softUpdateShownTimes);
     }
 
-    public static void increaseSoftUpdateShownTimes(Context context, int currentVersion) {
+    public static void increaseSoftUpdateShownTimes(Context context) {
         int softUpdateShownTimes = getSoftUpdateShownTimes(context);
         softUpdateShownTimes++;
         saveSoftUpdateShownTimes(context, softUpdateShownTimes);
-        saveCurrentVersion(context, currentVersion);
+    }
+
+    public static boolean shouldShowSoftUpdateNotification(Context context, int notificationShowCount, int currentVersion) {
+        int notificationShownTimes = getSoftUpdateNotificationShownTimes(context);
+        int savedCurrentVersion = getCurrentVersion(context);
+        if (currentVersion > savedCurrentVersion) {
+            saveCurrentVersion(context, currentVersion);
+            return true;
+        }
+        return notificationShowCount == 0 || notificationShowCount > notificationShownTimes;
+    }
+
+    private static int getSoftUpdateNotificationShownTimes(Context context) {
+        return MoreAppsPrefHelper.getInstance(context).get(AppPrefStrings.NOTIFICATION_SHOW_COUNT, 0);
+    }
+
+    public static void saveSoftUpdateNotificationShownTimes(Context context, int softUpdateNotificationShownTimes) {
+        MoreAppsPrefHelper.getInstance(context).save(AppPrefStrings.NOTIFICATION_SHOW_COUNT, softUpdateNotificationShownTimes);
+    }
+
+    public static void increaseSoftUpdateNotificationShownTimes(Context context) {
+        int softUpdateNotificationShownTimes = getSoftUpdateNotificationShownTimes(context);
+        softUpdateNotificationShownTimes++;
+        saveSoftUpdateNotificationShownTimes(context, softUpdateNotificationShownTimes);
     }
 
     interface AppPrefStrings {
         String MORE_APPS = "MORE_APPS";
         String IS_FIRST_TIME_PERIODIC = "IS_FIRST_TIME_PERIODIC";
         String DIALOG_SHOW_COUNT = "DIALOG_SHOW_COUNT";
+        String NOTIFICATION_SHOW_COUNT = "NOTIFICATION_SHOW_COUNT";
         String CURRENT_VERSION = "CURRENT_VERSION";
     }
 }

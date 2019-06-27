@@ -27,12 +27,13 @@ public class SoftUpdateDetails implements Parcelable {
     public String positiveButton;
     @SerializedName("negative_button")
     public String negativeButton;
+    @SerializedName("dialog_show_count")
+    public int dialogShowCount = 0;
+    @SerializedName("notification_show_count")
+    public int notificationShowCount = 0;
 
     public SoftUpdateDetails() {
     }
-
-    @SerializedName("dialog_show_count")
-    public int dialogShowCount = 0;
 
     protected SoftUpdateDetails(Parcel in) {
         enable = in.readByte() != 0;
