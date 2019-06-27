@@ -6,17 +6,6 @@ import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
 public class MoreAppsDetails implements Parcelable {
-    public static final Parcelable.Creator<MoreAppsDetails> CREATOR = new Parcelable.Creator<MoreAppsDetails>() {
-        @Override
-        public MoreAppsDetails createFromParcel(Parcel source) {
-            return new MoreAppsDetails(source);
-        }
-
-        @Override
-        public MoreAppsDetails[] newArray(int size) {
-            return new MoreAppsDetails[size];
-        }
-    };
     @SerializedName("image_link")
     public String imageLink;
     @SerializedName("name")
@@ -45,19 +34,31 @@ public class MoreAppsDetails implements Parcelable {
     public MoreAppsDetails() {
     }
 
-    private MoreAppsDetails(Parcel in) {
-        this.imageLink = in.readString();
-        this.name = in.readString();
-        this.rating = in.readDouble();
-        this.packageName = in.readString();
-        this.description = in.readString();
-        this.minVersion = in.readInt();
-        this.currentVersion = in.readInt();
-        this.redirectDetails = in.readParcelable(RedirectDetails.class.getClassLoader());
-        this.softUpdateDetails = in.readParcelable(SoftUpdateDetails.class.getClassLoader());
-        this.hardUpdateDetails = in.readParcelable(HardUpdateDetails.class.getClassLoader());
-        this.appLink = in.readString();
-        this.showInDialog = in.readByte() != 0;
+    public static final Creator<MoreAppsDetails> CREATOR = new Creator<MoreAppsDetails>() {
+        @Override
+        public MoreAppsDetails createFromParcel(Parcel in) {
+            return new MoreAppsDetails(in);
+        }
+
+        @Override
+        public MoreAppsDetails[] newArray(int size) {
+            return new MoreAppsDetails[size];
+        }
+    };
+
+    protected MoreAppsDetails(Parcel in) {
+        imageLink = in.readString();
+        name = in.readString();
+        rating = in.readDouble();
+        packageName = in.readString();
+        description = in.readString();
+        minVersion = in.readInt();
+        currentVersion = in.readInt();
+        redirectDetails = in.readParcelable(RedirectDetails.class.getClassLoader());
+        softUpdateDetails = in.readParcelable(SoftUpdateDetails.class.getClassLoader());
+        hardUpdateDetails = in.readParcelable(HardUpdateDetails.class.getClassLoader());
+        appLink = in.readString();
+        showInDialog = in.readByte() != 0;
     }
 
     @Override
@@ -67,17 +68,17 @@ public class MoreAppsDetails implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.imageLink);
-        dest.writeString(this.name);
-        dest.writeDouble(this.rating);
-        dest.writeString(this.packageName);
-        dest.writeString(this.description);
-        dest.writeInt(this.minVersion);
-        dest.writeInt(this.currentVersion);
-        dest.writeParcelable(this.redirectDetails, flags);
-        dest.writeParcelable(this.softUpdateDetails, flags);
-        dest.writeParcelable(this.hardUpdateDetails, flags);
-        dest.writeString(this.appLink);
-        dest.writeByte(this.showInDialog ? (byte) 1 : (byte) 0);
+        dest.writeString(imageLink);
+        dest.writeString(name);
+        dest.writeDouble(rating);
+        dest.writeString(packageName);
+        dest.writeString(description);
+        dest.writeInt(minVersion);
+        dest.writeInt(currentVersion);
+        dest.writeParcelable(redirectDetails, flags);
+        dest.writeParcelable(softUpdateDetails, flags);
+        dest.writeParcelable(hardUpdateDetails, flags);
+        dest.writeString(appLink);
+        dest.writeByte((byte) (showInDialog ? 1 : 0));
     }
 }

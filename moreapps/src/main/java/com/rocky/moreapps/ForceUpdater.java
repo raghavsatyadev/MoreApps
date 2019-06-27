@@ -1,3 +1,4 @@
+
 package com.rocky.moreapps;
 
 import android.content.Context;
@@ -10,6 +11,7 @@ import com.rocky.moreapps.model.HardUpdateDetails;
 import com.rocky.moreapps.model.MoreAppsDetails;
 import com.rocky.moreapps.model.RedirectDetails;
 import com.rocky.moreapps.model.SoftUpdateDetails;
+import com.rocky.moreapps.utils.MoreAppsPrefUtil;
 import com.rocky.moreapps.utils.MoreAppsUtils;
 
 public class ForceUpdater {
@@ -50,7 +52,7 @@ public class ForceUpdater {
      * <p>
      * NOTE : call {@link MoreAppsBuilder#build()} first to load the data in {@link android.content.SharedPreferences}
      *
-     * @param context              {@link Context} of Activity or Fragment
+     * @param context                      {@link Context} of Activity or Fragment
      * @param moreAppsUpdateDialogListener to listen for dialog close events
      */
     public static void showUpdateDialogs(Context context, MoreAppsUpdateDialogListener moreAppsUpdateDialogListener) throws PackageManager.NameNotFoundException {
@@ -108,31 +110,34 @@ public class ForceUpdater {
     public static void showSoftUpdateDialog(final Context context, final MoreAppsDetails moreAppsDetails, final MoreAppsUpdateDialogListener listener) {
         if (moreAppsDetails != null && moreAppsDetails.softUpdateDetails != null && moreAppsDetails.softUpdateDetails.enable) {
             SoftUpdateDetails softUpdateDetails = moreAppsDetails.softUpdateDetails;
-            new AlertDialog.Builder(context)
-                    .setTitle(softUpdateDetails.dialogTitle)
-                    .setMessage(softUpdateDetails.dialogMessage)
-                    .setPositiveButton(softUpdateDetails.positiveButton, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            MoreAppsUtils.openBrowser(context, moreAppsDetails.appLink);
-                        }
-                    })
-                    .setNegativeButton(softUpdateDetails.negativeButton, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            if (listener != null) listener.onClose();
-                        }
-                    })
-                    .setCancelable(true)
-                    .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                            if (listener != null) listener.onClose();
-                        }
-                    })
-                    .create()
-                    .show();
+            if (MoreAppsPrefUtil.shouldShowSoftUpdate(context, softUpdateDetails.dialogShowCount, moreAppsDetails.currentVersion)) {
+                new AlertDialog.Builder(context)
+                        .setTitle(softUpdateDetails.dialogTitle)
+                        .setMessage(softUpdateDetails.dialogMessage)
+                        .setPositiveButton(softUpdateDetails.positiveButton, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                MoreAppsUtils.openBrowser(context, moreAppsDetails.appLink);
+                            }
+                        })
+                        .setNegativeButton(softUpdateDetails.negativeButton, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                if (listener != null) listener.onClose();
+                            }
+                        })
+                        .setCancelable(true)
+                        .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                if (listener != null) listener.onClose();
+                            }
+                        })
+                        .create()
+                        .show();
+                MoreAppsPrefUtil.increaseSoftUpdateShownTimes(context, moreAppsDetails.currentVersion);
+            }
         }
     }
 

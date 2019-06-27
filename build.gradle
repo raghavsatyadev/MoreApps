@@ -4,7 +4,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.2'
+        classpath 'com.android.tools.build:gradle:3.4.1'
 
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
@@ -21,8 +21,8 @@ ext {
     APK_NAME = "More-Apps"
     targetSdk = 28
     minSdk = 19
-    libraryVersion = "1.0.6"
-    libraryVersionCode = 6
+    libraryVersion = "1.0.7"
+    libraryVersionCode = 7
     retrofit = '2.5.0'
     glide = '4.9.0'
 }

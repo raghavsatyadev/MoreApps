@@ -6,10 +6,10 @@ import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
 public class SoftUpdateDetails implements Parcelable {
-    public static final Parcelable.Creator<SoftUpdateDetails> CREATOR = new Parcelable.Creator<SoftUpdateDetails>() {
+    public static final Creator<SoftUpdateDetails> CREATOR = new Creator<SoftUpdateDetails>() {
         @Override
-        public SoftUpdateDetails createFromParcel(Parcel source) {
-            return new SoftUpdateDetails(source);
+        public SoftUpdateDetails createFromParcel(Parcel in) {
+            return new SoftUpdateDetails(in);
         }
 
         @Override
@@ -31,12 +31,15 @@ public class SoftUpdateDetails implements Parcelable {
     public SoftUpdateDetails() {
     }
 
-    SoftUpdateDetails(Parcel in) {
-        this.enable = in.readByte() != 0;
-        this.dialogTitle = in.readString();
-        this.dialogMessage = in.readString();
-        this.positiveButton = in.readString();
-        this.negativeButton = in.readString();
+    @SerializedName("dialog_show_count")
+    public int dialogShowCount = 0;
+
+    protected SoftUpdateDetails(Parcel in) {
+        enable = in.readByte() != 0;
+        dialogTitle = in.readString();
+        dialogMessage = in.readString();
+        positiveButton = in.readString();
+        negativeButton = in.readString();
     }
 
     @Override
@@ -46,10 +49,10 @@ public class SoftUpdateDetails implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeByte(this.enable ? (byte) 1 : (byte) 0);
-        dest.writeString(this.dialogTitle);
-        dest.writeString(this.dialogMessage);
-        dest.writeString(this.positiveButton);
-        dest.writeString(this.negativeButton);
+        dest.writeByte((byte) (enable ? 1 : 0));
+        dest.writeString(dialogTitle);
+        dest.writeString(dialogMessage);
+        dest.writeString(positiveButton);
+        dest.writeString(negativeButton);
     }
 }

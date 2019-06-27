@@ -18,7 +18,7 @@ dependencies {
 
 **Basic**
 
-```java
+```method
 new MoreAppsBuilder(this, CoreApp.JSON_FILE_URL)
     .buildAndShow(new MoreAppsDialogListener() {
         @Override
@@ -35,7 +35,7 @@ new MoreAppsBuilder(this, CoreApp.JSON_FILE_URL)
 
 **Customization**
 
-```java
+```method
 new MoreAppsBuilder(this.getContext(), CoreApp.JSON_FILE_URL)
     .removeApplicationFromList("com.appdroidtechnologies.whatscut") // to remove an application from the list, give package name here
     .removeApplicationFromList(Arrays.asList("com.appdroidtechnologies.whatscut")) // to remove applications from the list, give package names here
@@ -67,7 +67,7 @@ new MoreAppsBuilder(this.getContext(), CoreApp.JSON_FILE_URL)
 
 **Application Class**
 
-```java
+```method
 MoreAppsDialog moreAppsDialog = new MoreAppsBuilder(this, JSON_FILE_URL)
             .setPeriodicSettings(15, TimeUnit.MINUTES, // set interval of detail updating and showing notifications as required, default is 7 days
             R.mipmap.ic_launcher, R.drawable.ic_small_icon) // launcher icon and small icon (small icon is optional, small icon should be of single color)
@@ -76,7 +76,7 @@ MoreAppsDialog moreAppsDialog = new MoreAppsBuilder(this, JSON_FILE_URL)
 
 **Launcher Activity**
 
-```java
+```method
 if (ForceUpdater.shouldShowUpdateDialogs(getContext()))
     ForceUpdater.showUpdateDialogs(getContext(), new UpdateDialogListener() {
         @Override
@@ -91,41 +91,53 @@ if (ForceUpdater.shouldShowUpdateDialogs(getContext()))
 
 ```json
 [
-  {
-    "image_link": "https://lh3.googleusercontent.com/DdARfdna5YRaFap_QS11lC4a63hZ4MyaE2knX7b4hP4Wo-GThQVzlwGgwwj7yOpII6-T=s180-rw",
-    "name": "More Apps",
-    "rating": 5,
-    "app_link": "https://play.google.com/store/apps/details?id=com.rocky.moreapps.example",
-    "package_name": "com.rocky.moreapps.example",
-    "description": "Showcase your other apps in a beautiful way. This library also includes force updater.",
-    "min_version": 2,
-    "current_version": 5,
-    "show_in_dialog": true,
-    "redirect_details": {
-      "enable": true,
-      "hard_redirect": false,
-      "dialog_title": "Redirect Notice",
-      "dialog_message": "We have uploaded our app to new location",
-      "positive_button": "Redirect",
-      "negative_button": "Cancel",
-      "app_link": "https://play.google.com/store/apps/details?id=com.rocky.moreapps.example"
-    },
-    "soft_update_details": {
-      "enable": true,
-      "dialog_title": "Update Required!",
-      "dialog_message": "Soft Update is required",
-      "positive_button": "Update",
-      "negative_button": "Cancel"
-    },
-    "hard_update_details": {
-      "enable": true,
-      "dialog_title": "Update Required!",
-      "dialog_message": "Hard Update is required",
-      "positive_button": "Update"
+    {
+      "image_link": "https://lh3.googleusercontent.com/DdGcPVh9kkUSdL2dKAUcGmejPXaNwnfbS5y5XtMFsXVST-GThQVzlwGgwwj7yOpII6-T=s180-rw",
+      "name": "More Apps",
+      "rating": 5,
+      "app_link": "https://play.google.com/store/apps/details?id=com.rocky.moreapps.example",
+      "package_name": "com.rocky.moreapps.example",
+      "description": "Showcase your other apps in a beautiful way. This library also includes force updater.",
+      "min_version": 6,
+      "current_version": 7,
+      "show_in_dialog": true,
+      "redirect_details": {
+        "enable": false,
+        "hard_redirect": false,
+        "dialog_title": "Redirect Notice",
+        "dialog_message": "We have uploaded our app to new location",
+        "positive_button": "Redirect",
+        "negative_button": "Cancel",
+        "app_link": "https://play.google.com/store/apps/details?id=com.rocky.moreapps.example"
+      },
+      "soft_update_details": {
+        "enable": true,
+        "dialog_show_count": 3,
+        "dialog_title": "Update Required!",
+        "dialog_message": "Soft Update is required",
+        "positive_button": "Update",
+        "negative_button": "Cancel"
+      },
+      "hard_update_details": {
+        "enable": true,
+        "dialog_title": "Update Required!",
+        "dialog_message": "Hard Update is required",
+        "positive_button": "Update"
+      }
     }
-  }
 ]
 ```
+**Understanding JSON fields**
+
+| Field | Description |
+| --- | --- |
+| show_in_dialog | if false this app will not show up in more apps dialog |
+| redirect_details | enable this to point users to download the app from new location (helpful when google removes the app from playstore) |
+| redirect_details->hard_redirect | won't let the user go into the app |
+| redirect_details->app_link | new location of APK |
+| soft_update_details | to show that there is a new version available for downloading |
+| soft_update_details->dialog_show_count | how many times the soft update dialog should show up for current update(updating current version in json will reset the counter) |
+| hard_update_details | to show that this update of the app is no longer useful, user has to download new update |
 
 File is available at : https://github.com/raghavsatyadev/MoreApps/blob/master/Resources/more_apps.json
 

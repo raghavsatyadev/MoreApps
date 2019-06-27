@@ -64,8 +64,43 @@ public class MoreAppsPrefUtil {
         MoreAppsPrefHelper.getInstance(context).save(AppPrefStrings.IS_FIRST_TIME_PERIODIC, status);
     }
 
+    public static boolean shouldShowSoftUpdate(Context context, int dialogShowCount, int currentVersion) {
+        int dialogShownTimes = getSoftUpdateShownTimes(context);
+        int savedCurrentVersion = getCurrentVersion(context);
+        if (currentVersion > savedCurrentVersion) {
+            saveSoftUpdateShownTimes(context, 0);
+            return true;
+        }
+        return dialogShowCount == 0 || dialogShowCount > dialogShownTimes;
+    }
+
+    public static void saveCurrentVersion(Context context, int currentVersion) {
+        MoreAppsPrefHelper.getInstance(context).save(AppPrefStrings.CURRENT_VERSION, currentVersion);
+    }
+
+    private static int getCurrentVersion(Context context) {
+        return MoreAppsPrefHelper.getInstance(context).get(AppPrefStrings.CURRENT_VERSION, 0);
+    }
+
+    private static int getSoftUpdateShownTimes(Context context) {
+        return MoreAppsPrefHelper.getInstance(context).get(AppPrefStrings.DIALOG_SHOW_COUNT, 0);
+    }
+
+    public static void saveSoftUpdateShownTimes(Context context, int softUpdateShownTimes) {
+        MoreAppsPrefHelper.getInstance(context).save(AppPrefStrings.DIALOG_SHOW_COUNT, softUpdateShownTimes);
+    }
+
+    public static void increaseSoftUpdateShownTimes(Context context, int currentVersion) {
+        int softUpdateShownTimes = getSoftUpdateShownTimes(context);
+        softUpdateShownTimes++;
+        saveSoftUpdateShownTimes(context, softUpdateShownTimes);
+        saveCurrentVersion(context, currentVersion);
+    }
+
     interface AppPrefStrings {
         String MORE_APPS = "MORE_APPS";
         String IS_FIRST_TIME_PERIODIC = "IS_FIRST_TIME_PERIODIC";
+        String DIALOG_SHOW_COUNT = "DIALOG_SHOW_COUNT";
+        String CURRENT_VERSION = "CURRENT_VERSION";
     }
 }

@@ -1,6 +1,6 @@
 [
   {
-    "image_link": "https://lh3.googleusercontent.com/e9P4W-uQW8kdMw6yMX6NSHiy9KL7gvMPUugh4r2lOSYECTFuvZhl_rqKAlma43qA4uM8=s180-rw",
+    "image_link": "https://lh3.googleusercontent.com/e9P4W-uQR3vsyDZ69gHWn89z2emRaubaZgLB3E1FbC6HidPZfEribmgep47BAdKTrCJ7=s180-rw",
     "name": "WhatsCut - Best Video Cut & Share App for WhatsApp",
     "rating": 4.2,
     "app_link": "https://play.google.com/store/apps/details?id=com.appdroidtechnologies.whatscut",
@@ -22,26 +22,27 @@
     "show_in_dialog": true
   },
   {
-    "image_link": "https://lh3.googleusercontent.com/DdARfdna5YRaFap_QS11lC4a63hZ4MyaE2knX7b4hP4Wo-GThQVzlwGgwwj7yOpII6-T=s180-rw",
+    "image_link": "https://lh3.googleusercontent.com/DdGcPVh9kkUSbi2pP7CGRif83mbjwWkdmcCnXtMFsXVST-GThQVzlwGgwwj7yOpII6-T=s180-rw",
     "name": "More Apps",
     "rating": 5,
-    "app_link": "https://play.google.com/store/apps/details?id=com.appdroidtechno.tools.tictoc",
+    "app_link": "https://play.google.com/store/apps/details?id=com.rocky.moreapps.example",
     "package_name": "com.rocky.moreapps.example",
-    "description": "Every tool/feature you need to manage TikTok (formally Known as Musically) app.",
-    "min_version": 2,
-    "current_version": 5,
+    "description": "Showcase your other apps in a beautiful way. This library also includes force updater.",
+    "min_version": 6,
+    "current_version": 7,
     "show_in_dialog": true,
     "redirect_details": {
-      "enable": true,
+      "enable": false,
       "hard_redirect": false,
       "dialog_title": "Redirect Notice",
       "dialog_message": "We have uploaded our app to new location",
       "positive_button": "Redirect",
       "negative_button": "Cancel",
-      "app_link": "https://play.google.com/store/apps/details?id=com.appdroidtechno.tools.tictoc"
+      "app_link": "https://play.google.com/store/apps/details?id=com.rocky.moreapps.example"
     },
     "soft_update_details": {
       "enable": true,
+      "dialog_show_count": 3,
       "dialog_title": "Update Required!",
       "dialog_message": "Soft Update is required",
       "positive_button": "Update",
