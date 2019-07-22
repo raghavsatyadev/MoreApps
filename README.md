@@ -1,3 +1,5 @@
+[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/I2I8ZPRJ)
+
 # MoreApps
 Showcase your other apps in a beautiful way. This library also includes force updater.
 
