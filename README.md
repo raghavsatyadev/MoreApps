@@ -71,7 +71,7 @@ new MoreAppsBuilder(this.getContext(), CoreApp.JSON_FILE_URL)
 
 ```method
 MoreAppsDialog moreAppsDialog = new MoreAppsBuilder(this, JSON_FILE_URL)
-            .setPeriodicSettings(15, TimeUnit.MINUTES, // set interval of detail updating and showing notifications as required, default is 7 days
+            .setPeriodicSettings(15, TimeUnit.DAYS, // set interval of detail updating and showing notifications as required, default is 7 days
             R.mipmap.ic_launcher, R.drawable.ic_small_icon) // launcher icon and small icon (small icon is optional, small icon should be of single color)
             .build(); //calling this method in application class would be recommended
 ```
