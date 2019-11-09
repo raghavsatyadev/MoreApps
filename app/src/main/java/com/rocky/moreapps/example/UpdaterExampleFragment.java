@@ -43,7 +43,7 @@ public class UpdaterExampleFragment extends Fragment implements View.OnClickList
                 option1();
                 break;
             case R.id.btn_3:
-                option3();
+                option2();
                 break;
         }
     }
@@ -71,7 +71,7 @@ public class UpdaterExampleFragment extends Fragment implements View.OnClickList
     /**
      * call {@link com.rocky.moreapps.MoreAppsBuilder#build()} first
      */
-    public void option3() {
+    public void option2() {
         try {
             MoreAppsDetails currentAppModel = MoreAppsUtils.getCurrentAppModel(getContext());
             switch (ForceUpdater.dialogToShow(getContext(), currentAppModel)) {
@@ -102,7 +102,7 @@ public class UpdaterExampleFragment extends Fragment implements View.OnClickList
                     break;
             }
         } catch (PackageManager.NameNotFoundException e) {
-            Log.e(TAG, "option3: ", e);
+            Log.e(TAG, "option2: ", e);
         }
     }
 }

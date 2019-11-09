@@ -69,14 +69,14 @@ public class MoreAppsWorker extends Worker {
                             final int themeColor,
                             final PeriodicUpdateSettings updateSettings) {
 
-        if (!isWorkScheduled()) {
+        if (!isWorkScheduled(context)) {
             Constraints constraints = new Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build();
             Data.Builder dataBuilder = new Data.Builder()
                     .putInt(BIG_ICON, updateSettings.getBigIconID())
                     .putInt(SMALL_ICON, updateSettings.getSmallIconID())
                     .putInt(THEME_COLOR, themeColor)
                     .putString(URL, url);
-            WorkManager instance = WorkManager.getInstance();
+            WorkManager instance = WorkManager.getInstance(context);
 
             setupPeriodicRequest(constraints, dataBuilder, updateSettings, instance);
 
@@ -132,8 +132,8 @@ public class MoreAppsWorker extends Worker {
         }
     }
 
-    private static boolean isWorkScheduled() {
-        WorkInfo.State workerState = getWorkerState();
+    private static boolean isWorkScheduled(Context context) {
+        WorkInfo.State workerState = getWorkerState(context);
         return workerState == WorkInfo.State.RUNNING || workerState == WorkInfo.State.ENQUEUED;
     }
 
@@ -176,8 +176,8 @@ public class MoreAppsWorker extends Worker {
         return response.toString();
     }
 
-    private static WorkInfo.State getWorkerState() {
-        WorkManager instance = WorkManager.getInstance();
+    private static WorkInfo.State getWorkerState(Context context) {
+        WorkManager instance = WorkManager.getInstance(context);
         final LiveData<List<WorkInfo>> infos = instance.getWorkInfosForUniqueWorkLiveData(MoreAppsWorker.WORKER_TAG_PERIODIC);
         List<WorkInfo> value = infos.getValue();
         if (value != null && !value.isEmpty()) {
@@ -222,7 +222,7 @@ public class MoreAppsWorker extends Worker {
             int smallIconID = smallIconData == 0 ? bigIconID : smallIconData;
 
             int notificationColor = getInputData().getInt(THEME_COLOR, 0) == 0 ?
-                    Color.parseColor(MoreAppsUtils.getPrimaryColorInHex(context)) :
+                    Color.parseColor(MoreAppsUtils.getColorPrimaryInHex(context)) :
                     getInputData().getInt(THEME_COLOR, 0);
 
             prepareNotification(context, bigIconID, smallIconID, notificationColor);

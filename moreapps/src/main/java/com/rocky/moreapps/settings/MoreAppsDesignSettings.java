@@ -22,7 +22,7 @@ public class MoreAppsDesignSettings {
     private String dialogTitle = "";
     private HashSet<String> ignoredPackageNames = new HashSet<>();
     @ColorInt
-    private int themeColor = 0;
+    private int primaryColor = 0, accentColor = 0;
     @FontRes
     private int font;
     @ColorInt
@@ -74,15 +74,22 @@ public class MoreAppsDesignSettings {
         this.ignoredPackageNames.add(ignoredPackageName);
     }
 
-    public int getThemeColor() {
-        return themeColor;
+    public int getPrimaryColor() {
+        return primaryColor;
     }
 
-    public void setThemeColor(Context context, @ColorInt int themeColor) {
-        if (themeColor == 0) {
-            this.themeColor = Color.parseColor(MoreAppsUtils.getPrimaryColorInHex(context));
-        } else
-            this.themeColor = themeColor;
+    public int getAccentColor() {
+        return accentColor;
+    }
+
+    public void setTheme(Context context, @ColorInt int primaryColor, @ColorInt int accentColor) {
+        if (primaryColor == 0) {
+            this.primaryColor = Color.parseColor(MoreAppsUtils.getColorPrimaryInHex(context));
+            this.accentColor = Color.parseColor(MoreAppsUtils.getColorOnPrimaryColorInHex(context));
+        } else {
+            this.primaryColor = primaryColor;
+            this.accentColor = accentColor;
+        }
     }
 
     public int getFont() {

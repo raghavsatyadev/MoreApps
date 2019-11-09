@@ -124,11 +124,12 @@ public class MoreAppsBuilder {
     }
 
     /**
-     * @param themeColor changes dialog title, rating bar, close button color
+     * @param primaryColor changes dialog title, rating bar, close button color
+     * @param accentColor  changes close button image color
      * @return {@link MoreAppsBuilder}
      */
-    public MoreAppsBuilder themeColor(@ColorInt int themeColor) {
-        designSettings.setThemeColor(context, themeColor);
+    public MoreAppsBuilder theme(@ColorInt int primaryColor, @ColorInt int accentColor) {
+        designSettings.setTheme(context, primaryColor, accentColor);
         return this;
     }
 

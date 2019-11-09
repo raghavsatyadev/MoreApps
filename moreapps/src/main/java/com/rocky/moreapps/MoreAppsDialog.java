@@ -9,15 +9,18 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.ViewCompat;
+import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.transition.TransitionManager;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.rocky.moreapps.adapter.MoreAppsBaseAdapter;
 import com.rocky.moreapps.adapter.MoreAppsListAdapter;
 import com.rocky.moreapps.listener.MoreAppsDialogListener;
@@ -52,8 +55,8 @@ public class MoreAppsDialog {
      */
     public void show(final Context context,
                      final MoreAppsDialogListener listener) {
-        if (designSettings.getThemeColor() == 0) {
-            designSettings.setThemeColor(context, 0);
+        if (designSettings.getPrimaryColor() == 0) {
+            designSettings.setTheme(context, 0, 0);
         }
         final ArrayList<MoreAppsDetails> moreApps = MoreAppsPrefUtil.getMoreApps(context);
         if (!moreApps.isEmpty()) {
@@ -74,7 +77,7 @@ public class MoreAppsDialog {
     }
 
     void startWorker(Context context, MoreAppsDownloadListener listener) {
-        MoreAppsWorker.startWorker(context, url, listener, this, designSettings.getThemeColor(), updateSettings);
+        MoreAppsWorker.startWorker(context, url, listener, this, designSettings.getPrimaryColor(), updateSettings);
     }
 
     private void prepareView(@NonNull Context context, Dialog view, MoreAppsDialogListener listener) {
@@ -135,7 +138,7 @@ public class MoreAppsDialog {
 
             listMoreApps.setNestedScrollingEnabled(true);
             adapter = new MoreAppsListAdapter(designSettings.getDialogRowLayout(),
-                    designSettings.getThemeColor(),
+                    designSettings.getPrimaryColor(),
                     fontFace,
                     designSettings.getRowTitleColor(),
                     designSettings.getRowDescriptionColor());
@@ -156,7 +159,7 @@ public class MoreAppsDialog {
 
     private void setDialogTitle(TextView txtMoreAppsTitle, Typeface fontFace) {
         if (txtMoreAppsTitle != null) {
-            txtMoreAppsTitle.setTextColor(designSettings.getThemeColor());
+            txtMoreAppsTitle.setTextColor(designSettings.getPrimaryColor());
 
             if (fontFace != null) txtMoreAppsTitle.setTypeface(fontFace);
 
@@ -168,12 +171,19 @@ public class MoreAppsDialog {
 
     private void setSeparator(View viewTitleSeparator) {
         if (viewTitleSeparator != null)
-            viewTitleSeparator.setBackgroundColor(designSettings.getThemeColor());
+            viewTitleSeparator.setBackgroundColor(designSettings.getPrimaryColor());
     }
 
     private void setCloseButton(View closeButton, final MoreAppsDialogListener listener) {
         if (closeButton != null) {
-            ViewCompat.setBackgroundTintList(closeButton, ColorStateList.valueOf(designSettings.getThemeColor()));
+            ViewCompat.setBackgroundTintList(closeButton, ColorStateList.valueOf(designSettings.getPrimaryColor()));
+
+            if (closeButton instanceof FloatingActionButton) {
+                ((FloatingActionButton) closeButton).setSupportImageTintList(ColorStateList.valueOf(designSettings.getAccentColor()));
+            } else if (closeButton instanceof ImageView) {
+                ImageViewCompat.setImageTintList(((ImageView) closeButton), ColorStateList.valueOf(designSettings.getAccentColor()));
+            }
+
             closeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

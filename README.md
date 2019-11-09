@@ -49,7 +49,8 @@ new MoreAppsBuilder(this.getContext(), CoreApp.JSON_FILE_URL)
     .dialogRowLayout(R.layout.row_more_apps) // custom list item layout, read more instructions in it's javadoc
     .openAppsInPlayStore(true) // on clicking the item, should it open in the play store
     .font(R.font.sans_bold) // custom font
-    .themeColor(Color.parseColor("#F44336")) // custom theme color, read more in javadoc default primary color
+    .theme(Color.parseColor("#F44336"), Color.parseColor("#FFFFFF")) // custom theme color, read more in javadoc,
+    // default colorPrimary-colorOnPrimary of theme
     .rowTitleColor(Color.parseColor("#000000")) // custom list item title color
     .rowDescriptionColor(Color.parseColor("#888888")) // custom list item description color
     .setPeriodicSettings(15, TimeUnit.MINUTES, // set interval of detail updating and showing notifications as required, default is 7 days
@@ -73,10 +74,10 @@ new MoreAppsBuilder(this.getContext(), CoreApp.JSON_FILE_URL)
 **Application Class**
 
 ```method
-MoreAppsDialog moreAppsDialog = new MoreAppsBuilder(this, JSON_FILE_URL)
-            .setPeriodicSettings(15, TimeUnit.DAYS, // set interval of detail updating and showing notifications as required, default is 7 days
-            R.mipmap.ic_launcher, R.drawable.ic_small_icon) // launcher icon and small icon (small icon is optional, small icon should be of single color)
-            .build(); //calling this method in application class would be recommended
+new MoreAppsBuilder(this, JSON_FILE_URL)
+    .setPeriodicSettings(15, TimeUnit.DAYS, // set interval of detail updating and showing notifications as required, default is 7 days
+    R.mipmap.ic_launcher, R.drawable.ic_small_icon) // launcher icon and small icon (small icon is optional, small icon should be of single color)
+    .build(); //calling this method in application class would be recommended
 ```
 
 **Launcher Activity**

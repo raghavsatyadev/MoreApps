@@ -67,6 +67,6 @@
         app:borderWidth="0dp"
         app:elevation="0dp"
         app:fabSize="normal"
-        app:srcCompat="@drawable/ic_close" />
-
+        app:srcCompat="@drawable/ic_close"
+        app:tint="@android:color/white" />
 </LinearLayout>

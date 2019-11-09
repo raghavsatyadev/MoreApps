@@ -57,7 +57,7 @@ dependencies {
 
     implementation "com.github.bumptech.glide:glide:${glide}"
 
-    implementation 'androidx.work:work-runtime:2.2.0'
+    implementation 'androidx.work:work-runtime:2.3.0-alpha03'
 }
 if (project.rootProject.file('credentials.properties').exists()) {
     apply from: rootProject.file('bintray.gradle')

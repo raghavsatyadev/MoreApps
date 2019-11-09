@@ -50,7 +50,11 @@ public class MoreAppsUtils {
         return String.format("#%06X", (0xFFFFFF & outValue.data));
     }
 
-    public static String getPrimaryColorInHex(@NonNull Context context) {
+    public static String getColorPrimaryInHex(@NonNull Context context) {
         return getAttrColorString(context, R.attr.colorPrimary, "colorPrimary");
+    }
+
+    public static String getColorOnPrimaryColorInHex(@NonNull Context context) {
+        return getAttrColorString(context, R.attr.colorOnPrimary, "colorOnPrimary");
     }
 }
