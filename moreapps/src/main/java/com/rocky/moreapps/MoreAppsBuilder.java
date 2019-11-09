@@ -1,12 +1,13 @@
 package com.rocky.moreapps;
 
 import android.content.Context;
-import android.support.annotation.ColorInt;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.FontRes;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.FontRes;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 
 import com.rocky.moreapps.listener.MoreAppsDialogListener;
 import com.rocky.moreapps.listener.MoreAppsDownloadListener;

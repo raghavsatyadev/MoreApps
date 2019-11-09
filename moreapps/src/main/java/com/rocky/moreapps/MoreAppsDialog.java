@@ -6,16 +6,17 @@ import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.transition.TransitionManager;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.transition.TransitionManager;
 
 import com.rocky.moreapps.adapter.MoreAppsBaseAdapter;
 import com.rocky.moreapps.adapter.MoreAppsListAdapter;

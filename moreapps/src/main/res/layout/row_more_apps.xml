@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,11 +11,11 @@
     app:cardUseCompatPadding="true"
     app:contentPadding="5dp">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/img_more_apps"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -26,7 +26,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/txt_more_apps_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -55,7 +55,7 @@
             app:srb_starSize="20dp"
             app:srb_stepSize="0.2" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/txt_more_apps_description"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -68,11 +68,11 @@
             app:layout_constraintStart_toEndOf="@+id/guideline7"
             app:layout_constraintTop_toBottomOf="@+id/rating_more_apps" />
 
-        <android.support.constraint.Guideline
+        <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.20" />
-    </android.support.constraint.ConstraintLayout>
-</android.support.design.card.MaterialCardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

@@ -1,20 +1,20 @@
 package com.rocky.moreapps;
 
 import android.app.PendingIntent;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
-import android.support.annotation.ColorInt;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.work.Constraints;
 import androidx.work.Data;
 import androidx.work.ExistingPeriodicWorkPolicy;
@@ -38,7 +38,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Random;
@@ -237,44 +236,39 @@ public class MoreAppsWorker extends Worker {
         MoreAppsDetails currentAppModel = MoreAppsUtils.getCurrentAppModel(context, MoreAppsPrefUtil.getMoreApps(context));
         ForceUpdater.UpdateDialogType updateDialogType = ForceUpdater.dialogToShow(context, currentAppModel);
 
-        switch (updateDialogType) {
-            case HARD_UPDATE:
-                sendNotification(context, currentAppModel.hardUpdateDetails.dialogTitle,
-                        currentAppModel.hardUpdateDetails.dialogMessage,
-                        currentAppModel.appLink,
-                        bigIconID,
-                        smallIconID,
-                        notificationColor);
-                break;
-            case SOFT_UPDATE:
-                if (MoreAppsPrefUtil.shouldShowSoftUpdateNotification(context,
-                        currentAppModel.softUpdateDetails.notificationShowCount,
-                        currentAppModel.currentVersion)) {
-                    sendNotification(context, currentAppModel.softUpdateDetails.dialogTitle,
-                            currentAppModel.softUpdateDetails.dialogMessage,
+        if (currentAppModel != null) {
+            switch (updateDialogType) {
+                case HARD_UPDATE:
+                    sendNotification(context, currentAppModel.hardUpdateDetails.dialogTitle,
+                            currentAppModel.hardUpdateDetails.dialogMessage,
                             currentAppModel.appLink,
                             bigIconID,
                             smallIconID,
                             notificationColor);
-                    MoreAppsPrefUtil.increaseSoftUpdateNotificationShownTimes(context);
-                }
-                break;
-            case HARD_REDIRECT:
-                sendNotification(context, currentAppModel.redirectDetails.dialogTitle,
-                        currentAppModel.redirectDetails.dialogMessage,
-                        currentAppModel.redirectDetails.appLink,
-                        bigIconID,
-                        smallIconID,
-                        notificationColor);
-                break;
-            case SOFT_REDIRECT:
-                sendNotification(context, currentAppModel.redirectDetails.dialogTitle,
-                        currentAppModel.redirectDetails.dialogMessage,
-                        currentAppModel.redirectDetails.appLink,
-                        bigIconID,
-                        smallIconID,
-                        notificationColor);
-                break;
+                    break;
+                case SOFT_UPDATE:
+                    if (MoreAppsPrefUtil.shouldShowSoftUpdateNotification(context,
+                            currentAppModel.softUpdateDetails.notificationShowCount,
+                            currentAppModel.currentVersion)) {
+                        sendNotification(context, currentAppModel.softUpdateDetails.dialogTitle,
+                                currentAppModel.softUpdateDetails.dialogMessage,
+                                currentAppModel.appLink,
+                                bigIconID,
+                                smallIconID,
+                                notificationColor);
+                        MoreAppsPrefUtil.increaseSoftUpdateNotificationShownTimes(context);
+                    }
+                    break;
+                case HARD_REDIRECT:
+                case SOFT_REDIRECT:
+                    sendNotification(context, currentAppModel.redirectDetails.dialogTitle,
+                            currentAppModel.redirectDetails.dialogMessage,
+                            currentAppModel.redirectDetails.appLink,
+                            bigIconID,
+                            smallIconID,
+                            notificationColor);
+                    break;
+            }
         }
     }
 
@@ -312,8 +306,6 @@ public class MoreAppsWorker extends Worker {
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
                 response = setConnectionProperties(con);
             }
-        } catch (MalformedURLException e) {
-            Log.e(TAG, "callMoreAppsAPI: ", e);
         } catch (IOException e) {
             Log.e(TAG, "callMoreAppsAPI: ", e);
         }

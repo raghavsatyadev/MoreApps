@@ -1,15 +1,16 @@
 package com.rocky.moreapps.adapter;
 
 import android.graphics.Typeface;
-import android.support.annotation.ColorInt;
-import android.support.annotation.LayoutRes;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.LayoutRes;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.rocky.moreapps.R;

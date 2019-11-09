@@ -12,13 +12,14 @@ import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.support.annotation.ColorInt;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
 
 import com.rocky.moreapps.R;
 

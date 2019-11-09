@@ -2,9 +2,10 @@ buildscript {
     repositories {
         google()
         jcenter()
+        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.1'
+        classpath 'com.android.tools.build:gradle:4.0.0-alpha02'
 
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
@@ -15,16 +16,17 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
     }
 }
 ext {
     APK_NAME = "More-Apps"
     targetSdk = 28
     minSdk = 19
-    libraryVersion = "1.0.7"
-    libraryVersionCode = 7
-    retrofit = '2.5.0'
-    glide = '4.9.0'
+    libraryVersion = "2.0.0"
+    libraryVersionCode = 9
+    retrofit = '2.6.2'
+    glide = '4.10.0'
 }
 task clean(type: Delete) {
     delete rootProject.buildDir

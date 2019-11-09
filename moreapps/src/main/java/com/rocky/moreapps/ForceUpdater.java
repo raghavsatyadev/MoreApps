@@ -4,8 +4,8 @@ package com.rocky.moreapps;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.support.v7.app.AlertDialog;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.rocky.moreapps.listener.MoreAppsUpdateDialogListener;
 import com.rocky.moreapps.model.HardUpdateDetails;
 import com.rocky.moreapps.model.MoreAppsDetails;
@@ -111,7 +111,7 @@ public class ForceUpdater {
         if (moreAppsDetails != null && moreAppsDetails.softUpdateDetails != null && moreAppsDetails.softUpdateDetails.enable) {
             SoftUpdateDetails softUpdateDetails = moreAppsDetails.softUpdateDetails;
             if (MoreAppsPrefUtil.shouldShowSoftUpdate(context, softUpdateDetails.dialogShowCount, moreAppsDetails.currentVersion)) {
-                new AlertDialog.Builder(context)
+                new MaterialAlertDialogBuilder(context)
                         .setTitle(softUpdateDetails.dialogTitle)
                         .setMessage(softUpdateDetails.dialogMessage)
                         .setPositiveButton(softUpdateDetails.positiveButton, new DialogInterface.OnClickListener() {
@@ -148,7 +148,7 @@ public class ForceUpdater {
     public static void showHardUpdateDialog(final Context context, final MoreAppsDetails moreAppsDetails) {
         if (moreAppsDetails != null && moreAppsDetails.hardUpdateDetails != null && moreAppsDetails.hardUpdateDetails.enable) {
             HardUpdateDetails hardUpdateDetails = moreAppsDetails.hardUpdateDetails;
-            new AlertDialog.Builder(context)
+            new MaterialAlertDialogBuilder(context)
                     .setTitle(hardUpdateDetails.dialogTitle)
                     .setMessage(hardUpdateDetails.dialogMessage)
                     .setPositiveButton(hardUpdateDetails.positiveButton, new DialogInterface.OnClickListener() {
@@ -171,7 +171,7 @@ public class ForceUpdater {
         if (moreAppsDetails != null && moreAppsDetails.redirectDetails != null &&
                 moreAppsDetails.redirectDetails.enable && moreAppsDetails.redirectDetails.hardRedirect) {
             final RedirectDetails redirectDetails = moreAppsDetails.redirectDetails;
-            new AlertDialog.Builder(context)
+            new MaterialAlertDialogBuilder(context)
                     .setTitle(redirectDetails.dialogTitle)
                     .setMessage(redirectDetails.dialogMessage)
                     .setPositiveButton(redirectDetails.positiveButton, new DialogInterface.OnClickListener() {
@@ -195,7 +195,7 @@ public class ForceUpdater {
         if (moreAppsDetails != null && moreAppsDetails.redirectDetails != null &&
                 moreAppsDetails.redirectDetails.enable && !moreAppsDetails.redirectDetails.hardRedirect) {
             final RedirectDetails redirectDetails = moreAppsDetails.redirectDetails;
-            new AlertDialog.Builder(context)
+            new MaterialAlertDialogBuilder(context)
                     .setTitle(redirectDetails.dialogTitle)
                     .setMessage(redirectDetails.dialogMessage)
                     .setPositiveButton(redirectDetails.positiveButton, new DialogInterface.OnClickListener() {

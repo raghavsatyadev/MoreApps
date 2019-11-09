@@ -1,9 +1,10 @@
 package com.rocky.moreapps.utils;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;

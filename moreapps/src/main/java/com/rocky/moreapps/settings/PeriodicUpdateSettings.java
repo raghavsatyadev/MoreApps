@@ -1,6 +1,6 @@
 package com.rocky.moreapps.settings;
 
-import android.support.annotation.DrawableRes;
+import androidx.annotation.DrawableRes;
 
 import java.util.concurrent.TimeUnit;
 

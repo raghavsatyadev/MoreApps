@@ -2,9 +2,10 @@ package com.rocky.moreapps.settings;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.annotation.ColorInt;
-import android.support.annotation.FontRes;
-import android.support.annotation.LayoutRes;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.FontRes;
+import androidx.annotation.LayoutRes;
 
 import com.rocky.moreapps.R;
 import com.rocky.moreapps.utils.MoreAppsUtils;

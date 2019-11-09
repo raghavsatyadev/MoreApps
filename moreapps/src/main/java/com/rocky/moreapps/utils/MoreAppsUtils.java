@@ -3,9 +3,10 @@ package com.rocky.moreapps.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.annotation.AttrRes;
-import android.support.annotation.NonNull;
 import android.util.TypedValue;
+
+import androidx.annotation.AttrRes;
+import androidx.annotation.NonNull;
 
 import com.rocky.moreapps.MoreAppsBuilder;
 import com.rocky.moreapps.R;

@@ -1,6 +1,6 @@
 package com.rocky.moreapps.listener;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.rocky.moreapps.MoreAppsDialog;
 import com.rocky.moreapps.model.MoreAppsDetails;
