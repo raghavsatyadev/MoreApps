@@ -47,14 +47,23 @@ import javax.net.ssl.HttpsURLConnection;
 public class MoreAppsWorker extends Worker {
 
     private static final String WORKER_TAG_PERIODIC = "MORE_APPS_PERIODIC";
+
     private static final String WORKER_TAG_ONE_TIME = "MORE_APPS_ONE_TIME";
+
     private static final String TAG = MoreAppsWorker.class.getSimpleName();
+
     private static final String URL = "URL";
+
     private static final String BIG_ICON = "BIG_ICON";
+
     private static final String SMALL_ICON = "SMALL_ICON";
+
     private static final String THEME_COLOR = "THEME_COLOR";
+
     private static final String USER_AGENT = "Mozilla/5.0";
+
     private static final String IS_PERIODIC = "IS_PERIODIC";
+
     private Context context;
 
     public MoreAppsWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
@@ -78,15 +87,16 @@ public class MoreAppsWorker extends Worker {
                     .putString(URL, url);
             WorkManager instance = WorkManager.getInstance(context);
 
-            setupPeriodicRequest(constraints, dataBuilder, updateSettings, instance);
-
-            setupOneTimeRequest(context, constraints, dataBuilder, moreAppsDialog, listener, instance);
+            setupOneTimeRequest(context, constraints, dataBuilder, moreAppsDialog, listener, instance, updateSettings);
         }
     }
 
-    private static void setupOneTimeRequest(final Context context, Constraints constraints, Data.Builder dataBuilder,
+    private static void setupOneTimeRequest(final Context context, Constraints constraints,
+                                            Data.Builder dataBuilder,
                                             final MoreAppsDialog moreAppsDialog,
-                                            final MoreAppsDownloadListener listener, WorkManager instance) {
+                                            final MoreAppsDownloadListener listener,
+                                            WorkManager instance,
+                                            PeriodicUpdateSettings updateSettings) {
         if (MoreAppsPrefUtil.getMoreApps(context).isEmpty()) {
             OneTimeWorkRequest oneTimeWorkRequest = new OneTimeWorkRequest.Builder(MoreAppsWorker.class)
                     .setConstraints(constraints)
@@ -100,7 +110,7 @@ public class MoreAppsWorker extends Worker {
                 Observer<List<WorkInfo>> observer = new Observer<List<WorkInfo>>() {
                     @Override
                     public void onChanged(@Nullable List<WorkInfo> workInfos) {
-                        handleResult(context, moreAppsDialog, workInfos, workInfo, this, listener);
+                        handleResult(context, moreAppsDialog, workInfos, workInfo, this, listener, constraints, dataBuilder, updateSettings, instance);
                     }
                 };
                 workInfo.observeForever(observer);
@@ -109,7 +119,8 @@ public class MoreAppsWorker extends Worker {
     }
 
     private static void setupPeriodicRequest(Constraints constraints, Data.Builder dataBuilder,
-                                             final PeriodicUpdateSettings updateSettings, WorkManager instance) {
+                                             final PeriodicUpdateSettings updateSettings,
+                                             WorkManager instance) {
         PeriodicWorkRequest periodicWorkRequest =
                 new PeriodicWorkRequest.Builder(MoreAppsWorker.class, updateSettings.getInterval(), updateSettings.getTimeUnit())
                         .setConstraints(constraints)
@@ -119,15 +130,24 @@ public class MoreAppsWorker extends Worker {
         instance.enqueueUniquePeriodicWork(WORKER_TAG_PERIODIC, ExistingPeriodicWorkPolicy.KEEP, periodicWorkRequest);
     }
 
-    private static void handleResult(Context context, MoreAppsDialog moreAppsDialog, List<WorkInfo> workInfos, LiveData<List<WorkInfo>> workInfoLiveData, Observer<List<WorkInfo>> observer, MoreAppsDownloadListener listener) {
+    private static void handleResult(Context context, MoreAppsDialog moreAppsDialog,
+                                     List<WorkInfo> workInfos,
+                                     LiveData<List<WorkInfo>> workInfoLiveData,
+                                     Observer<List<WorkInfo>> observer,
+                                     MoreAppsDownloadListener listener, Constraints constraints,
+                                     Data.Builder dataBuilder,
+                                     PeriodicUpdateSettings updateSettings, WorkManager instance) {
         if (workInfos != null && !workInfos.isEmpty()) {
-            WorkInfo.State state = workInfos.get(0).getState();
+            WorkInfo workInfo = workInfos.get(0);
+            WorkInfo.State state = workInfo.getState();
             if (state == WorkInfo.State.SUCCEEDED) {
                 listener.onSuccess(moreAppsDialog, MoreAppsPrefUtil.getMoreApps(context));
                 workInfoLiveData.removeObserver(observer);
+                setupPeriodicRequest(constraints, dataBuilder, updateSettings, instance);
             } else if (state == WorkInfo.State.FAILED) {
                 listener.onFailure();
                 workInfoLiveData.removeObserver(observer);
+                setupPeriodicRequest(constraints, dataBuilder, updateSettings, instance);
             }
         }
     }
@@ -154,7 +174,7 @@ public class MoreAppsWorker extends Worker {
         con.setRequestMethod("GET");
         con.setRequestProperty("User-Agent", USER_AGENT);
         int responseCode = con.getResponseCode();
-        if (responseCode == HttpURLConnection.HTTP_OK) { // success
+        if (responseCode == HttpsURLConnection.HTTP_OK) { // success
             BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 
             return getMoreAppsResponse(in);

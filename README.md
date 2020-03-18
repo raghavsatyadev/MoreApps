@@ -12,7 +12,6 @@ To use this library your **minSdkVersion** must be >= 19.
 **Current version:**  <a href='https://bintray.com/raghavsatyadev/Maven/MoreApps/_latestVersion'><img src='https://api.bintray.com/packages/raghavsatyadev/Maven/MoreApps/images/download.svg'></a>
 
 In the build.gradle of your app module add:
-
 ```gradle
 dependencies {
     implementation 'com.rocky.moreapps:moreapps:x.x.x'
