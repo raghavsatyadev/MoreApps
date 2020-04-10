@@ -1,8 +1,6 @@
 package com.rocky.moreapps.example;
 
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +9,11 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.rocky.moreapps.ForceUpdater;
-import com.rocky.moreapps.listener.MoreAppsUpdateDialogListener;
+import com.rocky.moreapps.MoreAppsLifecycleListener;
 import com.rocky.moreapps.model.MoreAppsDetails;
 import com.rocky.moreapps.utils.MoreAppsUtils;
 
 public class UpdaterExampleFragment extends Fragment implements View.OnClickListener {
-
-    private static final String TAG = UpdaterExampleFragment.class.getSimpleName();
 
     public static UpdaterExampleFragment getInstance() {
         UpdaterExampleFragment fragment = new UpdaterExampleFragment();
@@ -32,7 +28,9 @@ public class UpdaterExampleFragment extends Fragment implements View.OnClickList
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_updater_example, container, false);
         view.findViewById(R.id.btn_1).setOnClickListener(this);
+        view.findViewById(R.id.btn_2).setOnClickListener(this);
         view.findViewById(R.id.btn_3).setOnClickListener(this);
+
         return view;
     }
 
@@ -42,8 +40,11 @@ public class UpdaterExampleFragment extends Fragment implements View.OnClickList
             case R.id.btn_1:
                 option1();
                 break;
-            case R.id.btn_3:
+            case R.id.btn_2:
                 option2();
+                break;
+            case R.id.btn_3:
+                option3();
                 break;
         }
     }
@@ -52,57 +53,60 @@ public class UpdaterExampleFragment extends Fragment implements View.OnClickList
      * call {@link com.rocky.moreapps.MoreAppsBuilder#build()} first
      */
     public void option1() {
-        try {
-            if (ForceUpdater.shouldShowUpdateDialogs(getContext())) {
-                ForceUpdater.showUpdateDialogs(getContext(), new MoreAppsUpdateDialogListener() {
-                    @Override
-                    public void onClose() {
+        if (ForceUpdater.shouldShowUpdateDialogs(getContext())) {
+            ForceUpdater.showUpdateDialogs(getContext(), () -> {
 
-                    }
-                });
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            Log.e(TAG, "option1: ", e);
+            });
         }
 
 //        call moreAppsDialog.removeUpdateListener(); in onStop() or onDestroy() or onDestroyView()
     }
 
+    private void option2() {
+        ForceUpdater.showDialogLive(getContext(), this, new MoreAppsLifecycleListener() {
+            @Override
+            public void onStart() {
+            }
+
+            @Override
+            public void onStop() {
+            }
+
+            @Override
+            public void showingDialog() {
+            }
+
+            @Override
+            public void onComplete() {
+            }
+        });
+    }
+
     /**
      * call {@link com.rocky.moreapps.MoreAppsBuilder#build()} first
      */
-    public void option2() {
-        try {
-            MoreAppsDetails currentAppModel = MoreAppsUtils.getCurrentAppModel(getContext());
-            switch (ForceUpdater.dialogToShow(getContext(), currentAppModel)) {
-                case HARD_REDIRECT:
-                    ForceUpdater.showHardRedirectDialog(getContext(), currentAppModel);
-                    break;
-                case SOFT_REDIRECT:
-                    ForceUpdater.showSoftRedirectDialog(getContext(), currentAppModel, new MoreAppsUpdateDialogListener() {
-                        @Override
-                        public void onClose() {
+    public void option3() {
+        MoreAppsDetails currentAppModel = MoreAppsUtils.getCurrentAppModel(getContext());
+        switch (ForceUpdater.dialogToShow(getContext(), currentAppModel)) {
+            case HARD_REDIRECT:
+                ForceUpdater.showHardRedirectDialog(getContext(), currentAppModel);
+                break;
+            case SOFT_REDIRECT:
+                ForceUpdater.showSoftRedirectDialog(getContext(), currentAppModel, () -> {
 
-                        }
-                    });
-                    break;
-                case HARD_UPDATE:
-                    ForceUpdater.showHardUpdateDialog(getContext(), currentAppModel);
-                    break;
-                case SOFT_UPDATE:
-                    ForceUpdater.showSoftUpdateDialog(getContext(), currentAppModel, new MoreAppsUpdateDialogListener() {
-                        @Override
-                        public void onClose() {
+                });
+                break;
+            case HARD_UPDATE:
+                ForceUpdater.showHardUpdateDialog(getContext(), currentAppModel);
+                break;
+            case SOFT_UPDATE:
+                ForceUpdater.showSoftUpdateDialog(getContext(), currentAppModel, () -> {
 
-                        }
-                    });
-                    break;
-                case NONE:
+                });
+                break;
+            case NONE:
 //                    do nothing
-                    break;
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            Log.e(TAG, "option2: ", e);
+                break;
         }
     }
 }

@@ -32,7 +32,7 @@ public class MoreAppsListAdapter extends MoreAppsBaseAdapter<MoreAppsListAdapter
     private Typeface fontFace;
 
     public MoreAppsListAdapter(@LayoutRes int rowLayout, @ColorInt int themeColor, Typeface fontFace, @ColorInt int rowTitleColor, @ColorInt int rowDescriptionColor) {
-        super(new ArrayList<MoreAppsDetails>());
+        super(new ArrayList<>());
         this.rowLayout = rowLayout;
         this.themeColor = themeColor;
         this.fontFace = fontFace;

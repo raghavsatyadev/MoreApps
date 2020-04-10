@@ -13,7 +13,7 @@ import com.rocky.moreapps.MoreAppsBuilder;
 import com.rocky.moreapps.listener.MoreAppsDialogListener;
 import com.rocky.moreapps.model.MoreAppsDetails;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 public class MoreAppsExampleFragment extends Fragment implements View.OnClickListener {
@@ -54,7 +54,7 @@ public class MoreAppsExampleFragment extends Fragment implements View.OnClickLis
 
         new MoreAppsBuilder(this.getContext(), CoreApp.JSON_FILE_URL)
                 .removeApplicationFromList("com.appdroidtechnologies.whatscut") // to remove an application from the list, give package name here
-                .removeApplicationFromList(Arrays.asList("com.appdroidtechnologies.whatscut")) // to remove applications from the list, give package names here
+                .removeApplicationFromList(Collections.singletonList("com.appdroidtechnologies.whatscut")) // to remove applications from the list, give package names here
                 .dialogTitle(R.string.more_apps) // custom dialog title
                 .dialogLayout(R.layout.more_apps_view) // custom dialog layout, read more instructions in it's javadoc
                 .dialogRowLayout(R.layout.row_more_apps) // custom list item layout, read more instructions in it's javadoc

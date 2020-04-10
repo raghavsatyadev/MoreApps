@@ -2,7 +2,6 @@ package com.rocky.moreapps;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.os.Handler;
@@ -21,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.transition.TransitionManager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.rocky.moreapps.adapter.MoreAppsBaseAdapter;
 import com.rocky.moreapps.adapter.MoreAppsListAdapter;
 import com.rocky.moreapps.listener.MoreAppsDialogListener;
 import com.rocky.moreapps.listener.MoreAppsDownloadListener;
@@ -108,26 +106,20 @@ public class MoreAppsDialog {
         dialog.setContentView(designSettings.getDialogLayout());
         dialog.setCancelable(true);
         dialog.setCanceledOnTouchOutside(true);
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                if (listener != null) listener.onClose();
-            }
+        dialog.setOnDismissListener(dialog -> {
+            if (listener != null) listener.onClose();
         });
         prepareView(context, dialog, listener);
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                adapter.deleteAll();
-                for (int i = moreAppsDetails.size() - 1; i >= 0; i--) {
-                    if (!moreAppsDetails.get(i).showInDialog ||
-                            (!designSettings.getIgnoredPackageNames().isEmpty() && designSettings.getIgnoredPackageNames().contains(moreAppsDetails.get(i).packageName)))
-                        moreAppsDetails.remove(i);
-                }
-                adapter.addAll(moreAppsDetails);
-                ViewGroup container = dialog.findViewById(android.R.id.content);
-                if (container != null) TransitionManager.beginDelayedTransition(container);
+        new Handler().post(() -> {
+            adapter.deleteAll();
+            for (int i = moreAppsDetails.size() - 1; i >= 0; i--) {
+                if (!moreAppsDetails.get(i).showInDialog ||
+                        (!designSettings.getIgnoredPackageNames().isEmpty() && designSettings.getIgnoredPackageNames().contains(moreAppsDetails.get(i).packageName)))
+                    moreAppsDetails.remove(i);
             }
+            adapter.addAll(moreAppsDetails);
+            ViewGroup container = dialog.findViewById(android.R.id.content);
+            if (container != null) TransitionManager.beginDelayedTransition(container);
         });
         dialog.show();
     }
@@ -143,15 +135,12 @@ public class MoreAppsDialog {
                     designSettings.getRowTitleColor(),
                     designSettings.getRowDescriptionColor());
 
-            adapter.setOnItemClickListener(new MoreAppsBaseAdapter.MyClickListener() {
-                @Override
-                public void onItemClick(int position, View v) {
-                    MoreAppsDetails appsModel = adapter.getItem(position);
-                    if (designSettings.shouldOpenInPlayStore()) {
-                        MoreAppsUtils.openBrowser(context, appsModel.appLink);
-                    }
-                    if (listener != null) listener.onAppClicked(appsModel);
+            adapter.setOnItemClickListener((position, v) -> {
+                MoreAppsDetails appsModel = adapter.getItem(position);
+                if (designSettings.shouldOpenInPlayStore()) {
+                    MoreAppsUtils.openBrowser(context, appsModel.appLink);
                 }
+                if (listener != null) listener.onAppClicked(appsModel);
             });
             listMoreApps.setAdapter(adapter);
         }
@@ -184,12 +173,9 @@ public class MoreAppsDialog {
                 ImageViewCompat.setImageTintList(((ImageView) closeButton), ColorStateList.valueOf(designSettings.getAccentColor()));
             }
 
-            closeButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.dismiss();
-                    if (listener != null) listener.onClose();
-                }
+            closeButton.setOnClickListener(v -> {
+                dialog.dismiss();
+                if (listener != null) listener.onClose();
             });
         }
     }

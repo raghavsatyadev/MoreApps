@@ -1,30 +1,52 @@
 buildscript {
+    ext {
+        APK_NAME = "MoreApps"
+        targetSdk = 29
+        minSdk = 19
+        libraryVersion = "2.0.3"
+        libraryVersionCode = 12
+        renameOutputs = { variant, output, outputName ->
+            outputFullName = "${outputName}-${variant.name}-${new Date().format('dd-MM-yy_HH-mm')}"
+            if (!variant.getName().equals("debug")) {
+                output.outputFileName = "../" + "${outputFullName}.apk"
+            }
+            if (variant.getName().equals('release')) {
+                variant.assembleProvider.get().doLast {
+                    outputFullName = "${outputName}-${variant.name}-${new Date().format('dd-MM-yy_HH-mm')}"
+                    if (variant.mappingFileProvider.get() != null) {
+                        copy {
+                            from variant.mappingFileProvider.get()
+                            into output.outputFile.parent
+                            rename { String fileName ->
+                                "${outputFullName}.txt"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
     repositories {
         google()
         jcenter()
         maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.0-alpha09'
+        classpath 'com.android.tools.build:gradle:4.0.0-beta04'
 
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
     }
 }
-
+//wrapper {
+//    distributionType = Wrapper.DistributionType.ALL
+//}
 allprojects {
     repositories {
         google()
         jcenter()
         maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
     }
-}
-ext {
-    APK_NAME = "More-Apps"
-    targetSdk = 29
-    minSdk = 19
-    libraryVersion = "2.0.2"
-    libraryVersionCode = 11
 }
 task clean(type: Delete) {
     delete rootProject.buildDir

@@ -1041,12 +1041,9 @@ public class SimpleRatingBar extends View {
         ratingAnimator.setRepeatMode(builder.repeatMode);
 
         // Callback that executes on animation steps.
-        ratingAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                float value = (float) (animation.getAnimatedValue());
-                setRating(value);
-            }
+        ratingAnimator.addUpdateListener(animation -> {
+            float value = (float) (animation.getAnimatedValue());
+            setRating(value);
         });
 
         if (builder.interpolator != null) {
@@ -1212,13 +1209,19 @@ public class SimpleRatingBar extends View {
      * - Animation: Bounce
      * - Duration: 2s
      */
-    public class AnimationBuilder {
+    public static class AnimationBuilder {
         private SimpleRatingBar ratingBar;
+
         private long duration;
+
         private Interpolator interpolator;
+
         private float ratingTarget;
+
         private int repeatCount;
+
         private int repeatMode;
+
         private AnimatorListener animatorListener;
 
         private AnimationBuilder(SimpleRatingBar ratingBar) {
