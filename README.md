@@ -81,24 +81,28 @@ new MoreAppsBuilder(this, JSON_FILE_URL)
     .build(); //calling this method in application class would be recommended
 ```
 
-**Launcher Activity**
+**Calling Method (Writing in Launcher Activity's onCreate method is recommended)**
 
 ```method
 ForceUpdater.showDialogLive(context, lifecycleOwner, new MoreAppsLifecycleListener() {
         @Override
         public void onStart() {
+            // Activity or Fragment's onStart LifeCycle Method
         }
 
         @Override
         public void onStop() {
+            // Activity or Fragment's onStop LifeCycle Method
         }
 
         @Override
         public void showingDialog() {
+            // stop other work till this dialog is showing
         }
 
         @Override
         public void onComplete() {
+            // do other work
         }
     });
 ```
