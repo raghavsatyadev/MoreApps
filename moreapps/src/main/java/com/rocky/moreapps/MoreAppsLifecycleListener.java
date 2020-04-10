@@ -1,16 +1,13 @@
 package com.rocky.moreapps;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-
 public interface MoreAppsLifecycleListener {
     /**
-     * {@link AppCompatActivity} or {@link Fragment} onStart LifeCycle Method
+     * AppCompatActivity or Fragment onStart LifeCycle Method
      */
     void onStart();
 
     /**
-     * {@link AppCompatActivity} or {@link Fragment} onStop LifeCycle Method
+     * AppCompatActivity or Fragment onStop LifeCycle Method
      */
     void onStop();
 
