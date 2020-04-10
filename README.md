@@ -84,10 +84,21 @@ new MoreAppsBuilder(this, JSON_FILE_URL)
 **Launcher Activity**
 
 ```method
-if (ForceUpdater.shouldShowUpdateDialogs(getContext()))
-    ForceUpdater.showUpdateDialogs(getContext(), new UpdateDialogListener() {
+ForceUpdater.showDialogLive(context, lifecycleOwner, new MoreAppsLifecycleListener() {
         @Override
-        public void onClose() {
+        public void onStart() {
+        }
+
+        @Override
+        public void onStop() {
+        }
+
+        @Override
+        public void showingDialog() {
+        }
+
+        @Override
+        public void onComplete() {
         }
     });
 ```
