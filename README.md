@@ -171,7 +171,7 @@ File is available at : https://github.com/raghavsatyadev/MoreApps/blob/master/Re
 
 # Preview
 
-[![screen](https://raw.githubusercontent.com/raghavsatyadev/MoreApps/master/Resources/Option-1.png)](https://github.com/raghavsatyadev/MoreApps)
+<img src="Resources/Option-1.png" width="30%" />
 
 This library uses 
 
