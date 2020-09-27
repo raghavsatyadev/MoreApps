@@ -122,27 +122,30 @@ new MoreAppsBuilder(this, JSON_FILE_URL)
 **Calling Method (Writing in Launcher Activity's onCreate method is recommended)**
 
 ```method
-ForceUpdater.showDialogLive(context, lifecycleOwner, new MoreAppsLifecycleListener() {
-        @Override
-        public void onStart() {
-            // Activity or Fragment's onStart LifeCycle Method
-        }
+ForceUpdater.showDialogLive(getContext(),
+        this,
+        R.style.CustomDialog, //optional to change styling of alertdialog. Theme must extend instances of Theme.MaterialComponents.Dialog.Alert
+        new MoreAppsLifecycleListener() {
+            @Override
+            public void onStart() {
+                // Activity or Fragment's onStart LifeCycle Method
+            }
 
-        @Override
-        public void onStop() {
-            // Activity or Fragment's onStop LifeCycle Method
-        }
+            @Override
+            public void onStop() {
+                // Activity or Fragment's onStop LifeCycle Method
+            }
 
-        @Override
-        public void showingDialog() {
-            // stop other work till this dialog is showing
-        }
+            @Override
+            public void showingDialog() {
+                // stop other work till this dialog is showing
+            }
 
-        @Override
-        public void onComplete() {
-            // do other work
-        }
-    });
+            @Override
+            public void onComplete() {
+                // do other work
+            }
+        });
 ```
 
 **Json File Format**

@@ -6,6 +6,9 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.util.Log;
 
+import androidx.annotation.StyleRes;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -23,10 +26,27 @@ public class ForceUpdater {
     /**
      * shows dialog if needed and keeps check of lifecycle
      *
+     * @param context        {@link Context} of Activity or Fragment
+     * @param lifecycleOwner Provide {@link AppCompatActivity} or {@link Fragment} Object
+     * @param listener       {@link MoreAppsLifecycleListener}
+     */
+    public static void showDialogLive(Context context,
+                                      LifecycleOwner lifecycleOwner,
+                                      MoreAppsLifecycleListener listener) {
+        showDialogLive(context, lifecycleOwner, 0, listener);
+    }
+
+    /**
+     * shows dialog if needed and keeps check of lifecycle
+     *
      * @param context  {@link Context} of Activity or Fragment
+     * @param styleRes Style resource to change style of alert dialog style.
+     *                 It must extend instances of Theme.MaterialComponents.Dialog.Alert
      * @param listener {@link MoreAppsLifecycleListener}
      */
-    public static void showDialogLive(Context context, LifecycleOwner lifecycleOwner,
+    public static void showDialogLive(Context context,
+                                      LifecycleOwner lifecycleOwner,
+                                      @StyleRes int styleRes,
                                       MoreAppsLifecycleListener listener) {
         ForceUpdater.UpdateDialogType updateDialogType = ForceUpdater.dialogToShow(context, MoreAppsUtils.getCurrentAppModel(context));
 
@@ -35,7 +55,7 @@ public class ForceUpdater {
         } else {
             MoreAppsLifecycleObserver moreAppsLifecycleObserver = new MoreAppsLifecycleObserver(context, lifecycleOwner, updateDialogType, listener);
             if (listener != null) listener.showingDialog();
-            ForceUpdater.showUpdateDialogs(context, () -> {
+            ForceUpdater.showUpdateDialogs(context, styleRes, () -> {
                 moreAppsLifecycleObserver.removeObserver();
                 if (listener != null) listener.onComplete();
             });
@@ -45,7 +65,8 @@ public class ForceUpdater {
     /**
      * to know which type of dialog is needed to show
      *
-     * @param moreAppsDetails {@link MoreAppsDetails} of current app, get this by calling {@link MoreAppsUtils#getCurrentAppModel}
+     * @param moreAppsDetails {@link MoreAppsDetails} of current app,
+     *                        get this by calling {@link MoreAppsUtils#getCurrentAppModel}
      * @return {@link UpdateDialogType}
      */
     public static UpdateDialogType dialogToShow(Context context,
@@ -79,11 +100,14 @@ public class ForceUpdater {
      * <p>
      * NOTE : call {@link MoreAppsBuilder#build()} first to load the data in {@link SharedPreferences}
      *
-     * @param context                      {@link Context} of Activity or Fragment
-     * @param moreAppsUpdateDialogListener to listen for dialog close events
+     * @param context  {@link Context} of Activity or Fragment
+     * @param styleRes Style resource to change style of alert dialog style.
+     *                 It must extend instances of Theme.MaterialComponents.Dialog.Alert
+     * @param listener to listen for dialog close events
      */
     public static void showUpdateDialogs(Context context,
-                                         MoreAppsUpdateDialogListener moreAppsUpdateDialogListener) {
+                                         @StyleRes int styleRes,
+                                         MoreAppsUpdateDialogListener listener) {
         try {
             int versionCode = getVersionCode(context);
 
@@ -92,14 +116,14 @@ public class ForceUpdater {
             if (moreAppsDetails != null) {
                 if (moreAppsDetails.redirectDetails != null && moreAppsDetails.redirectDetails.enable) {
                     //redirection called
-                    showRedirectDialog(context, moreAppsDetails, moreAppsUpdateDialogListener);
+                    showRedirectDialog(context, moreAppsDetails, styleRes, listener);
                 } else if (moreAppsDetails.hardUpdateDetails != null && moreAppsDetails.hardUpdateDetails.enable && moreAppsDetails.minVersion > versionCode) {
                     //hard update called
-                    showHardUpdateDialog(context, moreAppsDetails);
+                    showHardUpdateDialog(context, moreAppsDetails, styleRes);
                 } else if (moreAppsDetails.softUpdateDetails != null && moreAppsDetails.softUpdateDetails.enable) {
                     if (moreAppsDetails.currentVersion > versionCode || moreAppsDetails.minVersion > versionCode) {
                         //soft update called
-                        showSoftUpdateDialog(context, moreAppsDetails, moreAppsUpdateDialogListener);
+                        showSoftUpdateDialog(context, moreAppsDetails, styleRes, listener);
                     }
                 }
             }
@@ -115,19 +139,153 @@ public class ForceUpdater {
     /**
      * @param context         {@link Context} of Activity or Fragment
      * @param moreAppsDetails {@link MoreAppsDetails}
+     * @param styleRes        Style resource to change style of alert dialog style.
+     *                        It must extend instances of Theme.MaterialComponents.Dialog.Alert
+     * @param listener        {@link MoreAppsUpdateDialogListener} to know when dialog is closed
+     */
+    private static void showRedirectDialog(final Context context,
+                                           final MoreAppsDetails moreAppsDetails,
+                                           @StyleRes int styleRes,
+                                           final MoreAppsUpdateDialogListener listener) {
+        if (moreAppsDetails != null && moreAppsDetails.redirectDetails != null &&
+                moreAppsDetails.redirectDetails.enable) {
+            if (moreAppsDetails.redirectDetails.hardRedirect) {
+                showHardRedirectDialog(context, moreAppsDetails, styleRes);
+            } else {
+                showSoftRedirectDialog(context, moreAppsDetails, styleRes, listener);
+            }
+        }
+    }
+
+    /**
+     * @param context         {@link Context} of Activity or Fragment
+     * @param moreAppsDetails {@link MoreAppsDetails}
+     * @param styleRes        Style resource to change style of alert dialog style.
+     *                        It must extend instances of Theme.MaterialComponents.Dialog.Alert
+     */
+    public static void showHardUpdateDialog(final Context context,
+                                            final MoreAppsDetails moreAppsDetails,
+                                            @StyleRes int styleRes) {
+        if (moreAppsDetails != null && moreAppsDetails.hardUpdateDetails != null && moreAppsDetails.hardUpdateDetails.enable) {
+            HardUpdateDetails hardUpdateDetails = moreAppsDetails.hardUpdateDetails;
+            getThemedDialog(context, styleRes)
+                    .setTitle(hardUpdateDetails.dialogTitle)
+                    .setMessage(hardUpdateDetails.dialogMessage)
+                    .setPositiveButton(hardUpdateDetails.positiveButton, (dialog, which) -> MoreAppsUtils.openBrowser(context, moreAppsDetails.appLink))
+                    .setCancelable(false)
+                    .show();
+        }
+    }
+
+    /**
+     * @param context         {@link Context} of Activity or Fragment
+     * @param moreAppsDetails {@link MoreAppsDetails}
+     * @param styleRes        Style resource to change style of alert dialog style.
+     *                        It must extend instances of Theme.MaterialComponents.Dialog.Alert
+     * @param listener        {@link MoreAppsUpdateDialogListener} to know when dialog is closed
+     */
+    public static void showSoftUpdateDialog(final Context context,
+                                            final MoreAppsDetails moreAppsDetails,
+                                            @StyleRes int styleRes,
+                                            final MoreAppsUpdateDialogListener listener) {
+        if (moreAppsDetails != null && moreAppsDetails.softUpdateDetails != null && moreAppsDetails.softUpdateDetails.enable) {
+            SoftUpdateDetails softUpdateDetails = moreAppsDetails.softUpdateDetails;
+            if (MoreAppsPrefUtil.shouldShowSoftUpdate(context, softUpdateDetails.dialogShowCount, moreAppsDetails.currentVersion)) {
+                getThemedDialog(context, styleRes)
+                        .setTitle(softUpdateDetails.dialogTitle)
+                        .setMessage(softUpdateDetails.dialogMessage)
+                        .setPositiveButton(softUpdateDetails.positiveButton, (dialog, which) -> MoreAppsUtils.openBrowser(context, moreAppsDetails.appLink))
+                        .setNegativeButton(softUpdateDetails.negativeButton, (dialog, which) -> {
+                            dialog.dismiss();
+                            if (listener != null) listener.onClose();
+                        })
+                        .setCancelable(true)
+                        .show();
+                MoreAppsPrefUtil.increaseSoftUpdateShownTimes(context);
+            }
+        }
+    }
+
+    /**
+     * @param context         {@link Context} of Activity or Fragment
+     * @param moreAppsDetails {@link MoreAppsDetails}
+     * @param styleRes        Style resource to change style of alert dialog style.
+     *                        It must extend instances of Theme.MaterialComponents.Dialog.Alert
+     */
+    public static void showHardRedirectDialog(final Context context,
+                                              final MoreAppsDetails moreAppsDetails,
+                                              @StyleRes int styleRes) {
+        if (moreAppsDetails != null && moreAppsDetails.redirectDetails != null &&
+                moreAppsDetails.redirectDetails.enable && moreAppsDetails.redirectDetails.hardRedirect) {
+            final RedirectDetails redirectDetails = moreAppsDetails.redirectDetails;
+            getThemedDialog(context, styleRes)
+                    .setTitle(redirectDetails.dialogTitle)
+                    .setMessage(redirectDetails.dialogMessage)
+                    .setPositiveButton(redirectDetails.positiveButton, (dialog, which) -> MoreAppsUtils.openBrowser(context, redirectDetails.appLink))
+                    .setCancelable(false)
+                    .show();
+        }
+    }
+
+    /**
+     * @param context         {@link Context} of Activity or Fragment
+     * @param moreAppsDetails {@link MoreAppsDetails}
+     * @param styleRes        Style resource to change style of alert dialog style.
+     *                        It must extend instances of Theme.MaterialComponents.Dialog.Alert
+     * @param listener        {@link MoreAppsUpdateDialogListener} to know when dialog is closed
+     */
+    public static void showSoftRedirectDialog(final Context context,
+                                              MoreAppsDetails moreAppsDetails,
+                                              @StyleRes int styleRes,
+                                              final MoreAppsUpdateDialogListener listener) {
+        if (moreAppsDetails != null && moreAppsDetails.redirectDetails != null &&
+                moreAppsDetails.redirectDetails.enable && !moreAppsDetails.redirectDetails.hardRedirect) {
+            final RedirectDetails redirectDetails = moreAppsDetails.redirectDetails;
+            getThemedDialog(context, styleRes)
+                    .setTitle(redirectDetails.dialogTitle)
+                    .setMessage(redirectDetails.dialogMessage)
+                    .setPositiveButton(redirectDetails.positiveButton, (dialog, which) -> MoreAppsUtils.openBrowser(context, redirectDetails.appLink))
+                    .setNegativeButton(redirectDetails.negativeButton, (dialog, which) -> {
+                        if (listener != null) listener.onClose();
+                    })
+                    .setCancelable(true)
+                    .show();
+        }
+    }
+
+    /**
+     * @param styleRes Style resource to change style of alert dialog style.
+     *                 It must extend instances of Theme.MaterialComponents.Dialog.Alert
+     * @return {@link MaterialAlertDialogBuilder}
+     */
+    private static MaterialAlertDialogBuilder getThemedDialog(Context context, int styleRes) {
+        return styleRes == 0 ? new MaterialAlertDialogBuilder(context) : new MaterialAlertDialogBuilder(context, styleRes);
+    }
+
+    /**
+     * call this method to show the update dialogs
+     * <p>
+     * This method will check {@link SharedPreferences} for the already stored data
+     * <p>
+     * NOTE : call {@link MoreAppsBuilder#build()} first to load the data in {@link SharedPreferences}
+     *
+     * @param context  {@link Context} of Activity or Fragment
+     * @param listener to listen for dialog close events
+     */
+    public static void showUpdateDialogs(Context context,
+                                         MoreAppsUpdateDialogListener listener) {
+        showUpdateDialogs(context, 0, listener);
+    }
+
+    /**
+     * @param context         {@link Context} of Activity or Fragment
+     * @param moreAppsDetails {@link MoreAppsDetails}
      * @param listener        {@link MoreAppsUpdateDialogListener} to know when dialog is closed
      */
     private static void showRedirectDialog(final Context context,
                                            final MoreAppsDetails moreAppsDetails,
                                            final MoreAppsUpdateDialogListener listener) {
-        if (moreAppsDetails != null && moreAppsDetails.redirectDetails != null &&
-                moreAppsDetails.redirectDetails.enable) {
-            if (moreAppsDetails.redirectDetails.hardRedirect) {
-                showHardRedirectDialog(context, moreAppsDetails);
-            } else {
-                showSoftRedirectDialog(context, moreAppsDetails, listener);
-            }
-        }
+        showRedirectDialog(context, moreAppsDetails, 0, listener);
     }
 
     /**
@@ -136,16 +294,7 @@ public class ForceUpdater {
      */
     public static void showHardUpdateDialog(final Context context,
                                             final MoreAppsDetails moreAppsDetails) {
-        if (moreAppsDetails != null && moreAppsDetails.hardUpdateDetails != null && moreAppsDetails.hardUpdateDetails.enable) {
-            HardUpdateDetails hardUpdateDetails = moreAppsDetails.hardUpdateDetails;
-            new MaterialAlertDialogBuilder(context)
-                    .setTitle(hardUpdateDetails.dialogTitle)
-                    .setMessage(hardUpdateDetails.dialogMessage)
-                    .setPositiveButton(hardUpdateDetails.positiveButton, (dialog, which) -> MoreAppsUtils.openBrowser(context, moreAppsDetails.appLink))
-                    .setCancelable(false)
-                    .create()
-                    .show();
-        }
+        showHardUpdateDialog(context, moreAppsDetails, 0);
     }
 
     /**
@@ -156,23 +305,7 @@ public class ForceUpdater {
     public static void showSoftUpdateDialog(final Context context,
                                             final MoreAppsDetails moreAppsDetails,
                                             final MoreAppsUpdateDialogListener listener) {
-        if (moreAppsDetails != null && moreAppsDetails.softUpdateDetails != null && moreAppsDetails.softUpdateDetails.enable) {
-            SoftUpdateDetails softUpdateDetails = moreAppsDetails.softUpdateDetails;
-            if (MoreAppsPrefUtil.shouldShowSoftUpdate(context, softUpdateDetails.dialogShowCount, moreAppsDetails.currentVersion)) {
-                new MaterialAlertDialogBuilder(context)
-                        .setTitle(softUpdateDetails.dialogTitle)
-                        .setMessage(softUpdateDetails.dialogMessage)
-                        .setPositiveButton(softUpdateDetails.positiveButton, (dialog, which) -> MoreAppsUtils.openBrowser(context, moreAppsDetails.appLink))
-                        .setNegativeButton(softUpdateDetails.negativeButton, (dialog, which) -> {
-                            dialog.dismiss();
-                            if (listener != null) listener.onClose();
-                        })
-                        .setCancelable(true)
-                        .create()
-                        .show();
-                MoreAppsPrefUtil.increaseSoftUpdateShownTimes(context);
-            }
-        }
+        showSoftUpdateDialog(context, moreAppsDetails, 0, listener);
     }
 
     /**
@@ -181,17 +314,7 @@ public class ForceUpdater {
      */
     public static void showHardRedirectDialog(final Context context,
                                               final MoreAppsDetails moreAppsDetails) {
-        if (moreAppsDetails != null && moreAppsDetails.redirectDetails != null &&
-                moreAppsDetails.redirectDetails.enable && moreAppsDetails.redirectDetails.hardRedirect) {
-            final RedirectDetails redirectDetails = moreAppsDetails.redirectDetails;
-            new MaterialAlertDialogBuilder(context)
-                    .setTitle(redirectDetails.dialogTitle)
-                    .setMessage(redirectDetails.dialogMessage)
-                    .setPositiveButton(redirectDetails.positiveButton, (dialog, which) -> MoreAppsUtils.openBrowser(context, redirectDetails.appLink))
-                    .setCancelable(false)
-                    .create()
-                    .show();
-        }
+        showHardRedirectDialog(context, moreAppsDetails, 0);
     }
 
     /**
@@ -202,20 +325,7 @@ public class ForceUpdater {
     public static void showSoftRedirectDialog(final Context context,
                                               MoreAppsDetails moreAppsDetails,
                                               final MoreAppsUpdateDialogListener listener) {
-        if (moreAppsDetails != null && moreAppsDetails.redirectDetails != null &&
-                moreAppsDetails.redirectDetails.enable && !moreAppsDetails.redirectDetails.hardRedirect) {
-            final RedirectDetails redirectDetails = moreAppsDetails.redirectDetails;
-            new MaterialAlertDialogBuilder(context)
-                    .setTitle(redirectDetails.dialogTitle)
-                    .setMessage(redirectDetails.dialogMessage)
-                    .setPositiveButton(redirectDetails.positiveButton, (dialog, which) -> MoreAppsUtils.openBrowser(context, redirectDetails.appLink))
-                    .setNegativeButton(redirectDetails.negativeButton, (dialog, which) -> {
-                        if (listener != null) listener.onClose();
-                    })
-                    .setCancelable(true)
-                    .create()
-                    .show();
-        }
+        showSoftRedirectDialog(context, moreAppsDetails, 0, listener);
     }
 
     /**

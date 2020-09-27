@@ -36,16 +36,13 @@ public class UpdaterExampleFragment extends Fragment implements View.OnClickList
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.btn_1:
-                option1();
-                break;
-            case R.id.btn_2:
-                option2();
-                break;
-            case R.id.btn_3:
-                option3();
-                break;
+        int id = view.getId();
+        if (id == R.id.btn_1) {
+            option1();
+        } else if (id == R.id.btn_2) {
+            option2();
+        } else if (id == R.id.btn_3) {
+            option3();
         }
     }
 
@@ -63,23 +60,26 @@ public class UpdaterExampleFragment extends Fragment implements View.OnClickList
     }
 
     private void option2() {
-        ForceUpdater.showDialogLive(getContext(), this, new MoreAppsLifecycleListener() {
-            @Override
-            public void onStart() {
-            }
+        ForceUpdater.showDialogLive(getContext(),
+                this,
+                R.style.CustomDialog,
+                new MoreAppsLifecycleListener() {
+                    @Override
+                    public void onStart() {
+                    }
 
-            @Override
-            public void onStop() {
-            }
+                    @Override
+                    public void onStop() {
+                    }
 
-            @Override
-            public void showingDialog() {
-            }
+                    @Override
+                    public void showingDialog() {
+                    }
 
-            @Override
-            public void onComplete() {
-            }
-        });
+                    @Override
+                    public void onComplete() {
+                    }
+                });
     }
 
     /**
