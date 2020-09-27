@@ -28,8 +28,8 @@
     "app_link": "https://play.google.com/store/apps/details?id=com.rocky.moreapps.example",
     "package_name": "com.rocky.moreapps.example",
     "description": "Showcase your other apps in a beautiful way. This library also includes force updater.",
-    "min_version": 6,
-    "current_version": 7,
+    "min_version": 14,
+    "current_version": 15,
     "show_in_dialog": true,
     "redirect_details": {
       "enable": false,

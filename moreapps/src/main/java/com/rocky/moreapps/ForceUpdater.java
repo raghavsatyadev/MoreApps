@@ -7,8 +7,6 @@ import android.content.pm.PackageManager;
 import android.util.Log;
 
 import androidx.annotation.StyleRes;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -27,7 +25,7 @@ public class ForceUpdater {
      * shows dialog if needed and keeps check of lifecycle
      *
      * @param context        {@link Context} of Activity or Fragment
-     * @param lifecycleOwner Provide {@link AppCompatActivity} or {@link Fragment} Object
+     * @param lifecycleOwner Provide AppCompatActivity or Fragment Object
      * @param listener       {@link MoreAppsLifecycleListener}
      */
     public static void showDialogLive(Context context,
