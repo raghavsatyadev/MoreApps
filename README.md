@@ -20,6 +20,22 @@ dependencies {
 }
 ```
 
+# Initial Setup
+
+**Manifest.xml**
+```
+<application
+...
+ <provider
+    android:name="androidx.work.impl.WorkManagerInitializer"
+    android:authorities="${applicationId}.workmanager-init"
+    android:exported="false"
+    tools:node="remove"
+    />
+...
+</application>
+```
+
 # Example (More Apps Dialog)
 
 **Basic**
