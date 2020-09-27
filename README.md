@@ -36,6 +36,28 @@ dependencies {
 </application>
 ```
 
+**Application Class**
+
+```
+public class CoreApp extends Application implements androidx.work.Configuration.Provider {
+    @NonNull
+    @Override
+    public Configuration getWorkManagerConfiguration() {
+        return new Configuration.Builder()
+                .setMinimumLoggingLevel(BuildConfig.DEBUG ? Log.DEBUG : Log.ERROR)
+                .build();
+    }
+}
+```
+
+**Build.Gradle App Module**
+```
+dependencies {
+    implementation "androidx.work:work-runtime:2.5.0-alpha02"
+    implementation "androidx.work:work-rxjava2:2.5.0-alpha02"
+}
+```
+
 # Example (More Apps Dialog)
 
 **Basic**
