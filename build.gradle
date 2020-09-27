@@ -3,7 +3,7 @@ buildscript {
         APK_NAME = "MoreApps"
         targetSdk = 29
         minSdk = 19
-        libraryVersion = "2.0.5"
+        libraryVersion = "2.0.6"
         libraryVersionCode = 14
         renameOutputs = { variant, output, outputName ->
             outputFullName = "${outputName}-${variant.name}-${new Date().format('dd-MM-yy_HH-mm')}"

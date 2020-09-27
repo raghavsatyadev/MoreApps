@@ -89,7 +89,9 @@ public class UpdaterExampleFragment extends Fragment implements View.OnClickList
         MoreAppsDetails currentAppModel = MoreAppsUtils.getCurrentAppModel(getContext());
         switch (ForceUpdater.dialogToShow(getContext(), currentAppModel)) {
             case HARD_REDIRECT:
-                ForceUpdater.showHardRedirectDialog(getContext(), currentAppModel);
+                ForceUpdater.showHardRedirectDialog(getContext(), currentAppModel, () -> {
+
+                });
                 break;
             case SOFT_REDIRECT:
                 ForceUpdater.showSoftRedirectDialog(getContext(), currentAppModel, () -> {
@@ -97,7 +99,8 @@ public class UpdaterExampleFragment extends Fragment implements View.OnClickList
                 });
                 break;
             case HARD_UPDATE:
-                ForceUpdater.showHardUpdateDialog(getContext(), currentAppModel);
+                ForceUpdater.showHardUpdateDialog(getContext(), currentAppModel, () -> {
+                });
                 break;
             case SOFT_UPDATE:
                 ForceUpdater.showSoftUpdateDialog(getContext(), currentAppModel, () -> {

@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.util.Log;
+import android.widget.Button;
 
 import androidx.annotation.StyleRes;
+import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -51,10 +53,11 @@ public class ForceUpdater {
         if (updateDialogType == UpdateDialogType.NONE) {
             if (listener != null) listener.onComplete();
         } else {
-            MoreAppsLifecycleObserver moreAppsLifecycleObserver = new MoreAppsLifecycleObserver(context, lifecycleOwner, updateDialogType, listener);
+            MoreAppsLifecycleObserver observer = new MoreAppsLifecycleObserver(context, lifecycleOwner, updateDialogType, styleRes, listener);
             if (listener != null) listener.showingDialog();
+            observer.setShowing(true);
             ForceUpdater.showUpdateDialogs(context, styleRes, () -> {
-                moreAppsLifecycleObserver.removeObserver();
+                observer.removeObserver();
                 if (listener != null) listener.onComplete();
             });
         }
@@ -117,7 +120,7 @@ public class ForceUpdater {
                     showRedirectDialog(context, moreAppsDetails, styleRes, listener);
                 } else if (moreAppsDetails.hardUpdateDetails != null && moreAppsDetails.hardUpdateDetails.enable && moreAppsDetails.minVersion > versionCode) {
                     //hard update called
-                    showHardUpdateDialog(context, moreAppsDetails, styleRes);
+                    showHardUpdateDialog(context, moreAppsDetails, styleRes, listener);
                 } else if (moreAppsDetails.softUpdateDetails != null && moreAppsDetails.softUpdateDetails.enable) {
                     if (moreAppsDetails.currentVersion > versionCode || moreAppsDetails.minVersion > versionCode) {
                         //soft update called
@@ -148,7 +151,7 @@ public class ForceUpdater {
         if (moreAppsDetails != null && moreAppsDetails.redirectDetails != null &&
                 moreAppsDetails.redirectDetails.enable) {
             if (moreAppsDetails.redirectDetails.hardRedirect) {
-                showHardRedirectDialog(context, moreAppsDetails, styleRes);
+                showHardRedirectDialog(context, moreAppsDetails, styleRes, listener);
             } else {
                 showSoftRedirectDialog(context, moreAppsDetails, styleRes, listener);
             }
@@ -159,19 +162,28 @@ public class ForceUpdater {
      * @param context         {@link Context} of Activity or Fragment
      * @param moreAppsDetails {@link MoreAppsDetails}
      * @param styleRes        Style resource to change style of alert dialog style.
-     *                        It must extend instances of Theme.MaterialComponents.Dialog.Alert
+     * @param listener
      */
     public static void showHardUpdateDialog(final Context context,
                                             final MoreAppsDetails moreAppsDetails,
-                                            @StyleRes int styleRes) {
+                                            @StyleRes int styleRes,
+                                            MoreAppsUpdateDialogListener listener) {
         if (moreAppsDetails != null && moreAppsDetails.hardUpdateDetails != null && moreAppsDetails.hardUpdateDetails.enable) {
             HardUpdateDetails hardUpdateDetails = moreAppsDetails.hardUpdateDetails;
-            getThemedDialog(context, styleRes)
+            AlertDialog alertDialog = getThemedDialog(context, styleRes)
                     .setTitle(hardUpdateDetails.dialogTitle)
                     .setMessage(hardUpdateDetails.dialogMessage)
-                    .setPositiveButton(hardUpdateDetails.positiveButton, (dialog, which) -> MoreAppsUtils.openBrowser(context, moreAppsDetails.appLink))
+                    .setPositiveButton(hardUpdateDetails.positiveButton, null)
                     .setCancelable(false)
-                    .show();
+                    .setOnDismissListener(dialog -> {
+                        if (listener != null) listener.onClose();
+                    })
+                    .create();
+            alertDialog.setOnShowListener(dialog -> {
+                Button button = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                button.setOnClickListener(view -> MoreAppsUtils.openBrowser(context, moreAppsDetails.appLink));
+            });
+            alertDialog.show();
         }
     }
 
@@ -208,20 +220,28 @@ public class ForceUpdater {
      * @param context         {@link Context} of Activity or Fragment
      * @param moreAppsDetails {@link MoreAppsDetails}
      * @param styleRes        Style resource to change style of alert dialog style.
-     *                        It must extend instances of Theme.MaterialComponents.Dialog.Alert
+     * @param listener
      */
     public static void showHardRedirectDialog(final Context context,
                                               final MoreAppsDetails moreAppsDetails,
-                                              @StyleRes int styleRes) {
+                                              @StyleRes int styleRes, MoreAppsUpdateDialogListener listener) {
         if (moreAppsDetails != null && moreAppsDetails.redirectDetails != null &&
                 moreAppsDetails.redirectDetails.enable && moreAppsDetails.redirectDetails.hardRedirect) {
             final RedirectDetails redirectDetails = moreAppsDetails.redirectDetails;
-            getThemedDialog(context, styleRes)
+            AlertDialog alertDialog = getThemedDialog(context, styleRes)
                     .setTitle(redirectDetails.dialogTitle)
                     .setMessage(redirectDetails.dialogMessage)
-                    .setPositiveButton(redirectDetails.positiveButton, (dialog, which) -> MoreAppsUtils.openBrowser(context, redirectDetails.appLink))
+                    .setPositiveButton(redirectDetails.positiveButton, null)
+                    .setOnDismissListener(dialog -> {
+                        if (listener != null) listener.onClose();
+                    })
                     .setCancelable(false)
-                    .show();
+                    .create();
+            alertDialog.setOnShowListener(dialog -> {
+                Button button = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                button.setOnClickListener(view -> MoreAppsUtils.openBrowser(context, redirectDetails.appLink));
+            });
+            alertDialog.show();
         }
     }
 
@@ -291,8 +311,9 @@ public class ForceUpdater {
      * @param moreAppsDetails {@link MoreAppsDetails}
      */
     public static void showHardUpdateDialog(final Context context,
-                                            final MoreAppsDetails moreAppsDetails) {
-        showHardUpdateDialog(context, moreAppsDetails, 0);
+                                            final MoreAppsDetails moreAppsDetails,
+                                            MoreAppsUpdateDialogListener listener) {
+        showHardUpdateDialog(context, moreAppsDetails, 0, listener);
     }
 
     /**
@@ -309,10 +330,12 @@ public class ForceUpdater {
     /**
      * @param context         {@link Context} of Activity or Fragment
      * @param moreAppsDetails {@link MoreAppsDetails}
+     * @param listener
      */
     public static void showHardRedirectDialog(final Context context,
-                                              final MoreAppsDetails moreAppsDetails) {
-        showHardRedirectDialog(context, moreAppsDetails, 0);
+                                              final MoreAppsDetails moreAppsDetails,
+                                              MoreAppsUpdateDialogListener listener) {
+        showHardRedirectDialog(context, moreAppsDetails, 0, listener);
     }
 
     /**

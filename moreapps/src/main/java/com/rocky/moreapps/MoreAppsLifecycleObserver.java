@@ -18,20 +18,31 @@ public class MoreAppsLifecycleObserver implements LifecycleObserver {
 
     private ForceUpdater.UpdateDialogType updateDialogType;
 
+    private int styleRes;
+
     private MoreAppsLifecycleListener listener;
+
+    private boolean isShowing = false;
 
     public MoreAppsLifecycleObserver(@NonNull Context context,
                                      @NonNull LifecycleOwner lifecycleOwner,
                                      @NonNull ForceUpdater.UpdateDialogType updateDialogType,
+                                     int styleRes,
                                      MoreAppsLifecycleListener listener) {
         super();
         this.context = context;
         this.lifecycleOwner = lifecycleOwner;
         this.updateDialogType = updateDialogType;
+        this.styleRes = styleRes;
         this.listener = listener;
-        lifecycleOwner.getLifecycle().addObserver(this);
 
         isFirstStart = true;
+
+        lifecycleOwner.getLifecycle().addObserver(this);
+    }
+
+    public void setShowing(boolean showing) {
+        isShowing = showing;
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
@@ -39,10 +50,13 @@ public class MoreAppsLifecycleObserver implements LifecycleObserver {
         if (!isFirstStart) {
             if (listener != null) listener.onStart();
             if (updateDialogType == ForceUpdater.UpdateDialogType.HARD_UPDATE || updateDialogType == ForceUpdater.UpdateDialogType.HARD_REDIRECT) {
-                ForceUpdater.showUpdateDialogs(context, () -> {
-
-                });
-                if (listener != null) listener.showingDialog();
+                if (!isShowing) {
+                    isShowing = true;
+                    ForceUpdater.showUpdateDialogs(context, styleRes, () -> {
+                        isShowing = false;
+                    });
+                    if (listener != null) listener.showingDialog();
+                }
             } else {
                 removeObserver();
                 if (listener != null) listener.onComplete();
