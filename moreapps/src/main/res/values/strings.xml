@@ -1,7 +1,0 @@
-<resources>
-    <string name="more_apps">More Apps</string>
-
-    <string name="channel_id">app_update</string>
-    <string name="channel_name">App Update</string>
-    <string name="channel_description">Periodic app update notifications</string>
-</resources>
