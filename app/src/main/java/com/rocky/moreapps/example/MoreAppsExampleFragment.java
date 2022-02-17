@@ -9,12 +9,12 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import java.util.Collections;
+import java.util.concurrent.TimeUnit;
+
 import io.github.raghavsatyadev.moreapps.MoreAppsBuilder;
 import io.github.raghavsatyadev.moreapps.listener.MoreAppsDialogListener;
 import io.github.raghavsatyadev.moreapps.model.MoreAppsDetails;
-
-import java.util.Collections;
-import java.util.concurrent.TimeUnit;
 
 public class MoreAppsExampleFragment extends Fragment implements View.OnClickListener {
 
@@ -37,13 +37,11 @@ public class MoreAppsExampleFragment extends Fragment implements View.OnClickLis
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.btn_1:
-                option1();
-                break;
-            case R.id.btn_2:
-                option2();
-                break;
+        int id = view.getId();
+        if (id == R.id.btn_1) {
+            option1();
+        } else if (id == R.id.btn_2) {
+            option2();
         }
     }
 
@@ -52,7 +50,7 @@ public class MoreAppsExampleFragment extends Fragment implements View.OnClickLis
      */
     public void option1() {
 
-        new MoreAppsBuilder(this.getContext(), CoreApp.JSON_FILE_URL)
+        new MoreAppsBuilder(requireContext(), CoreApp.JSON_FILE_URL)
                 .removeApplicationFromList("com.appdroidtechnologies.whatscut") // to remove an application from the list, give package name here
                 .removeApplicationFromList(Collections.singletonList("com.appdroidtechnologies.whatscut")) // to remove applications from the list, give package names here
                 .dialogTitle(R.string.more_apps) // custom dialog title
@@ -83,8 +81,7 @@ public class MoreAppsExampleFragment extends Fragment implements View.OnClickLis
      * call {@link MoreAppsBuilder#build()} first
      */
     public void option2() {
-        CoreApp.getInstance().getMoreAppsDialog().show(this.getContext()
-                ,
+        CoreApp.getInstance().getMoreAppsDialog().show(requireContext(),
                 new MoreAppsDialogListener() {
                     @Override
                     public void onClose() {

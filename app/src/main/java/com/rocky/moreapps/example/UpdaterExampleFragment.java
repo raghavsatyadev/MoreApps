@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import io.github.raghavsatyadev.moreapps.ForceUpdater;
+import io.github.raghavsatyadev.moreapps.MoreAppsBuilder;
 import io.github.raghavsatyadev.moreapps.MoreAppsLifecycleListener;
 import io.github.raghavsatyadev.moreapps.model.MoreAppsDetails;
 import io.github.raghavsatyadev.moreapps.utils.MoreAppsUtils;
@@ -60,7 +61,7 @@ public class UpdaterExampleFragment extends Fragment implements View.OnClickList
     }
 
     private void option2() {
-        ForceUpdater.showDialogLive(getContext(),
+        ForceUpdater.showDialogLive(requireContext(),
                 this,
                 R.style.CustomDialog,
                 new MoreAppsLifecycleListener() {

@@ -26,7 +26,6 @@ public class MoreAppsLifecycleObserver implements DefaultLifecycleObserver {
                                      @NonNull ForceUpdater.UpdateDialogType updateDialogType,
                                      int styleRes,
                                      MoreAppsLifecycleListener listener) {
-        super();
         this.context = context;
         this.lifecycleOwner = lifecycleOwner;
         this.updateDialogType = updateDialogType;

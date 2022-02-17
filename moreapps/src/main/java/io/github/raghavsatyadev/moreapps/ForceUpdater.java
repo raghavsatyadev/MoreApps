@@ -11,6 +11,8 @@ import androidx.annotation.StyleRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.LifecycleOwner;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import io.github.raghavsatyadev.moreapps.listener.MoreAppsUpdateDialogListener;
 import io.github.raghavsatyadev.moreapps.model.HardUpdateDetails;
 import io.github.raghavsatyadev.moreapps.model.MoreAppsDetails;
@@ -18,7 +20,6 @@ import io.github.raghavsatyadev.moreapps.model.RedirectDetails;
 import io.github.raghavsatyadev.moreapps.model.SoftUpdateDetails;
 import io.github.raghavsatyadev.moreapps.utils.MoreAppsPrefUtil;
 import io.github.raghavsatyadev.moreapps.utils.MoreAppsUtils;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 @SuppressWarnings("unused")
 public class ForceUpdater {
@@ -154,7 +155,7 @@ public class ForceUpdater {
                                            @StyleRes int styleRes,
                                            final MoreAppsUpdateDialogListener listener) {
         if (moreAppsDetails != null && moreAppsDetails.redirectDetails != null &&
-                moreAppsDetails.redirectDetails.enable) {
+                    moreAppsDetails.redirectDetails.enable) {
             if (moreAppsDetails.redirectDetails.hardRedirect) {
                 showHardRedirectDialog(context, moreAppsDetails, styleRes, listener);
             } else {
@@ -213,6 +214,9 @@ public class ForceUpdater {
                             dialog.dismiss();
                             if (listener != null) listener.onClose();
                         })
+                        .setOnDismissListener(dialogInterface -> {
+                            if (listener != null) listener.onClose();
+                        })
                         .setCancelable(true)
                         .show();
                 MoreAppsPrefUtil.increaseSoftUpdateShownTimes(context);
@@ -229,7 +233,7 @@ public class ForceUpdater {
                                               final MoreAppsDetails moreAppsDetails,
                                               @StyleRes int styleRes, MoreAppsUpdateDialogListener listener) {
         if (moreAppsDetails != null && moreAppsDetails.redirectDetails != null &&
-                moreAppsDetails.redirectDetails.enable && moreAppsDetails.redirectDetails.hardRedirect) {
+                    moreAppsDetails.redirectDetails.enable && moreAppsDetails.redirectDetails.hardRedirect) {
             final RedirectDetails redirectDetails = moreAppsDetails.redirectDetails;
             AlertDialog alertDialog = getThemedDialog(context, styleRes)
                     .setTitle(redirectDetails.dialogTitle)
@@ -260,13 +264,16 @@ public class ForceUpdater {
                                               @StyleRes int styleRes,
                                               final MoreAppsUpdateDialogListener listener) {
         if (moreAppsDetails != null && moreAppsDetails.redirectDetails != null &&
-                moreAppsDetails.redirectDetails.enable && !moreAppsDetails.redirectDetails.hardRedirect) {
+                    moreAppsDetails.redirectDetails.enable && !moreAppsDetails.redirectDetails.hardRedirect) {
             final RedirectDetails redirectDetails = moreAppsDetails.redirectDetails;
             getThemedDialog(context, styleRes)
                     .setTitle(redirectDetails.dialogTitle)
                     .setMessage(redirectDetails.dialogMessage)
                     .setPositiveButton(redirectDetails.positiveButton, (dialog, which) -> MoreAppsUtils.openBrowser(context, redirectDetails.appLink))
                     .setNegativeButton(redirectDetails.negativeButton, (dialog, which) -> {
+                        if (listener != null) listener.onClose();
+                    })
+                    .setOnDismissListener(dialogInterface -> {
                         if (listener != null) listener.onClose();
                     })
                     .setCancelable(true)

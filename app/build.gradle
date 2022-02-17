@@ -1,7 +1,10 @@
 apply plugin: 'com.android.application'
-if (file('D:\\Work\\Android\\Library\\config.gradle').exists()) {
-    apply from: file('D:\\Work\\Android\\Library\\config.gradle')
+def props = new Properties()
+def credsFile = file("${rootProject.projectDir}/credentials.properties")
+if (credsFile.exists()) {
+    credsFile.withInputStream { props.load(it) }
 }
+
 android {
     compileSdkVersion project.targetSdk
     defaultConfig {
@@ -18,15 +21,28 @@ android {
         multiDexEnabled true
     }
 
+    signingConfigs {
+        moreapps {
+            if (credsFile.exists()) {
+                storeFile file("${rootProject.projectDir}/scripts/keystore.jks")
+                storePassword = props.getProperty("keystorePass")
+                keyPassword = props.getProperty("keyPass")
+                keyAlias = props.getProperty("keystoreAlias")
+            } else {
+                storeFile file("${rootProject.projectDir}/scripts/keystore.jks")
+                storePassword = System.getenv('KEYSTORE_PASS')
+                keyPassword = System.getenv("KEY_PASS")
+                keyAlias = System.getenv("KEYSTORE_ALIAS")
+            }
+        }
+    }
     buildTypes {
         release {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             versionNameSuffix = '-release'
-            if (file('D:\\Work\\Android\\Library\\config.gradle').exists()) {
-                signingConfig signingConfigs.moreapps
-            }
+            signingConfig signingConfigs.moreapps
         }
         debug {
             versionNameSuffix = '-debug'
@@ -46,7 +62,7 @@ android {
 
 dependencies {
     implementation project(path: ':moreapps')
-    implementation fileTree(dir: 'libs', include: ['*.jar','*.aar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.6.0-alpha02'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
