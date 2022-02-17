@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import io.github.raghavsatyadev.moreapps.ForceUpdater;
-import io.github.raghavsatyadev.moreapps.MoreAppsBuilder;
 import io.github.raghavsatyadev.moreapps.MoreAppsLifecycleListener;
 import io.github.raghavsatyadev.moreapps.model.MoreAppsDetails;
 import io.github.raghavsatyadev.moreapps.utils.MoreAppsUtils;
