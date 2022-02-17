@@ -29,7 +29,7 @@ ext {
     bintrayRepo = 'Maven'
     bintrayName = 'MoreApps'
 
-    publishedGroupId = 'com.rocky.moreapps'
+    publishedGroupId = 'io.github.raghavsatyadev'
     libraryName = 'MoreApps'
     artifact = 'moreapps'
 

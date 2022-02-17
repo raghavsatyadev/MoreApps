@@ -1,4 +1,4 @@
-package com.rocky.moreapps.settings;
+package io.github.raghavsatyadev.moreapps.settings;
 
 import androidx.annotation.DrawableRes;
 

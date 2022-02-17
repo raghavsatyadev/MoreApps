@@ -1,4 +1,4 @@
-package com.rocky.moreapps.utils;
+package io.github.raghavsatyadev.moreapps.utils;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import com.rocky.moreapps.model.MoreAppsDetails;
+import io.github.raghavsatyadev.moreapps.model.MoreAppsDetails;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;

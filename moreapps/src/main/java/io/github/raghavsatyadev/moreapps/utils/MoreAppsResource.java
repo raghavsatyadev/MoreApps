@@ -1,4 +1,4 @@
-package com.rocky.moreapps.utils;
+package io.github.raghavsatyadev.moreapps.utils;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;

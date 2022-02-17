@@ -1,4 +1,4 @@
-package com.rocky.moreapps;
+package io.github.raghavsatyadev.moreapps;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -19,15 +19,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.transition.TransitionManager;
 
+import io.github.raghavsatyadev.moreapps.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.rocky.moreapps.adapter.MoreAppsListAdapter;
-import com.rocky.moreapps.listener.MoreAppsDialogListener;
-import com.rocky.moreapps.listener.MoreAppsDownloadListener;
-import com.rocky.moreapps.model.MoreAppsDetails;
-import com.rocky.moreapps.settings.MoreAppsDesignSettings;
-import com.rocky.moreapps.settings.PeriodicUpdateSettings;
-import com.rocky.moreapps.utils.MoreAppsPrefUtil;
-import com.rocky.moreapps.utils.MoreAppsUtils;
+import io.github.raghavsatyadev.moreapps.adapter.MoreAppsListAdapter;
+import io.github.raghavsatyadev.moreapps.listener.MoreAppsDialogListener;
+import io.github.raghavsatyadev.moreapps.listener.MoreAppsDownloadListener;
+import io.github.raghavsatyadev.moreapps.model.MoreAppsDetails;
+import io.github.raghavsatyadev.moreapps.settings.MoreAppsDesignSettings;
+import io.github.raghavsatyadev.moreapps.settings.PeriodicUpdateSettings;
+import io.github.raghavsatyadev.moreapps.utils.MoreAppsPrefUtil;
+import io.github.raghavsatyadev.moreapps.utils.MoreAppsUtils;
 
 import java.util.ArrayList;
 import java.util.List;

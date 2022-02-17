@@ -1,4 +1,4 @@
-package com.rocky.moreapps;
+package io.github.raghavsatyadev.moreapps;
 
 import android.app.PendingIntent;
 import android.content.Context;
@@ -26,12 +26,12 @@ import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import com.rocky.moreapps.listener.MoreAppsDownloadListener;
-import com.rocky.moreapps.model.MoreAppsDetails;
-import com.rocky.moreapps.settings.PeriodicUpdateSettings;
-import com.rocky.moreapps.utils.MoreAppsNotifyUtil;
-import com.rocky.moreapps.utils.MoreAppsPrefUtil;
-import com.rocky.moreapps.utils.MoreAppsUtils;
+import io.github.raghavsatyadev.moreapps.listener.MoreAppsDownloadListener;
+import io.github.raghavsatyadev.moreapps.model.MoreAppsDetails;
+import io.github.raghavsatyadev.moreapps.settings.PeriodicUpdateSettings;
+import io.github.raghavsatyadev.moreapps.utils.MoreAppsNotifyUtil;
+import io.github.raghavsatyadev.moreapps.utils.MoreAppsPrefUtil;
+import io.github.raghavsatyadev.moreapps.utils.MoreAppsUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;

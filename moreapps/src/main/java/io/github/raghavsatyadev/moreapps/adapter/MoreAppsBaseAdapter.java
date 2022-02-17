@@ -1,4 +1,4 @@
-package com.rocky.moreapps.adapter;
+package io.github.raghavsatyadev.moreapps.adapter;
 
 import android.view.View;
 import android.view.ViewGroup;

@@ -1,4 +1,4 @@
-package com.rocky.moreapps.model;
+package io.github.raghavsatyadev.moreapps.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

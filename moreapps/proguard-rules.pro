@@ -1,4 +1,4 @@
--keep public class com.rocky.moreapps.** { *;}
+-keep public class com.github.raghavsatyadev.moreapps.** { *;}
 
 -dontwarn rx.**
 -dontwarn javax.annotation.**

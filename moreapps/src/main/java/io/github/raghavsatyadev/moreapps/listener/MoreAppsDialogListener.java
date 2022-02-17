@@ -1,6 +1,6 @@
-package com.rocky.moreapps.listener;
+package io.github.raghavsatyadev.moreapps.listener;
 
-import com.rocky.moreapps.model.MoreAppsDetails;
+import io.github.raghavsatyadev.moreapps.model.MoreAppsDetails;
 
 public interface MoreAppsDialogListener {
     void onClose();

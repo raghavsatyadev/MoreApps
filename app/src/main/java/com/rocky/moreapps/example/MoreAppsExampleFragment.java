@@ -9,9 +9,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.rocky.moreapps.MoreAppsBuilder;
-import com.rocky.moreapps.listener.MoreAppsDialogListener;
-import com.rocky.moreapps.model.MoreAppsDetails;
+import io.github.raghavsatyadev.moreapps.MoreAppsBuilder;
+import io.github.raghavsatyadev.moreapps.listener.MoreAppsDialogListener;
+import io.github.raghavsatyadev.moreapps.model.MoreAppsDetails;
 
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;

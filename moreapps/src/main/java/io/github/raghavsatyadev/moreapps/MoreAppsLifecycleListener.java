@@ -1,4 +1,4 @@
-package com.rocky.moreapps;
+package io.github.raghavsatyadev.moreapps;
 
 public interface MoreAppsLifecycleListener {
     /**

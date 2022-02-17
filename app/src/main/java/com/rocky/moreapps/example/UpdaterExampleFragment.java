@@ -8,10 +8,11 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.rocky.moreapps.ForceUpdater;
-import com.rocky.moreapps.MoreAppsLifecycleListener;
-import com.rocky.moreapps.model.MoreAppsDetails;
-import com.rocky.moreapps.utils.MoreAppsUtils;
+import io.github.raghavsatyadev.moreapps.ForceUpdater;
+import io.github.raghavsatyadev.moreapps.MoreAppsBuilder;
+import io.github.raghavsatyadev.moreapps.MoreAppsLifecycleListener;
+import io.github.raghavsatyadev.moreapps.model.MoreAppsDetails;
+import io.github.raghavsatyadev.moreapps.utils.MoreAppsUtils;
 
 public class UpdaterExampleFragment extends Fragment implements View.OnClickListener {
 
@@ -47,7 +48,7 @@ public class UpdaterExampleFragment extends Fragment implements View.OnClickList
     }
 
     /**
-     * call {@link com.rocky.moreapps.MoreAppsBuilder#build()} first
+     * call {@link MoreAppsBuilder#build()} first
      */
     public void option1() {
         if (ForceUpdater.shouldShowUpdateDialogs(getContext())) {
@@ -83,7 +84,7 @@ public class UpdaterExampleFragment extends Fragment implements View.OnClickList
     }
 
     /**
-     * call {@link com.rocky.moreapps.MoreAppsBuilder#build()} first
+     * call {@link MoreAppsBuilder#build()} first
      */
     public void option3() {
         MoreAppsDetails currentAppModel = MoreAppsUtils.getCurrentAppModel(getContext());

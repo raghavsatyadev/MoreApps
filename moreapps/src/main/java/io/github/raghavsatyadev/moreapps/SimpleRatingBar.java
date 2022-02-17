@@ -1,4 +1,4 @@
-package com.rocky.moreapps;
+package io.github.raghavsatyadev.moreapps;
 
 import static android.util.TypedValue.COMPLEX_UNIT_DIP;
 import static android.util.TypedValue.COMPLEX_UNIT_SP;
@@ -32,6 +32,8 @@ import android.view.animation.Interpolator;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.Dimension;
+
+import io.github.raghavsatyadev.moreapps.R;
 
 /**
  * A simple RatingBar for Android.

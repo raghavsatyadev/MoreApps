@@ -1,4 +1,4 @@
-package com.rocky.moreapps.utils;
+package io.github.raghavsatyadev.moreapps.utils;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,8 +7,8 @@ import android.util.TypedValue;
 
 import androidx.annotation.NonNull;
 
-import com.rocky.moreapps.MoreAppsBuilder;
-import com.rocky.moreapps.model.MoreAppsDetails;
+import io.github.raghavsatyadev.moreapps.MoreAppsBuilder;
+import io.github.raghavsatyadev.moreapps.model.MoreAppsDetails;
 
 import java.util.ArrayList;
 

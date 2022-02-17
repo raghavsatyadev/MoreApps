@@ -1,4 +1,4 @@
-package com.rocky.moreapps.adapter;
+package io.github.raghavsatyadev.moreapps.adapter;
 
 import android.graphics.Typeface;
 import android.text.TextUtils;
@@ -13,9 +13,9 @@ import androidx.annotation.LayoutRes;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.rocky.moreapps.R;
-import com.rocky.moreapps.SimpleRatingBar;
-import com.rocky.moreapps.model.MoreAppsDetails;
+import io.github.raghavsatyadev.moreapps.R;
+import io.github.raghavsatyadev.moreapps.SimpleRatingBar;
+import io.github.raghavsatyadev.moreapps.model.MoreAppsDetails;
 
 import java.util.ArrayList;
 

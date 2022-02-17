@@ -1,4 +1,4 @@
-package com.rocky.moreapps.settings;
+package io.github.raghavsatyadev.moreapps.settings;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -7,26 +7,34 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.FontRes;
 import androidx.annotation.LayoutRes;
 
-import com.rocky.moreapps.R;
-import com.rocky.moreapps.utils.MoreAppsUtils;
+import io.github.raghavsatyadev.moreapps.R;
+import io.github.raghavsatyadev.moreapps.utils.MoreAppsUtils;
 
 import java.util.HashSet;
 import java.util.List;
 
 public class MoreAppsDesignSettings {
     private boolean shouldOpenInPlayStore = true;
+
     @LayoutRes
     private int dialogLayout = R.layout.more_apps_view;
+
     @LayoutRes
     private int dialogRowLayout = R.layout.row_more_apps;
+
     private String dialogTitle = "";
+
     private HashSet<String> ignoredPackageNames = new HashSet<>();
+
     @ColorInt
     private int primaryColor = 0, accentColor = 0;
+
     @FontRes
     private int font;
+
     @ColorInt
     private int rowTitleColor;
+
     @ColorInt
     private int rowDescriptionColor;
 

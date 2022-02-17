@@ -6,8 +6,8 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.work.Configuration;
 
-import com.rocky.moreapps.MoreAppsBuilder;
-import com.rocky.moreapps.MoreAppsDialog;
+import io.github.raghavsatyadev.moreapps.MoreAppsBuilder;
+import io.github.raghavsatyadev.moreapps.MoreAppsDialog;
 
 import java.util.concurrent.TimeUnit;
 

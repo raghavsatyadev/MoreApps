@@ -1,5 +1,5 @@
 
-package com.rocky.moreapps;
+package io.github.raghavsatyadev.moreapps;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,14 +11,14 @@ import androidx.annotation.StyleRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.LifecycleOwner;
 
+import io.github.raghavsatyadev.moreapps.listener.MoreAppsUpdateDialogListener;
+import io.github.raghavsatyadev.moreapps.model.HardUpdateDetails;
+import io.github.raghavsatyadev.moreapps.model.MoreAppsDetails;
+import io.github.raghavsatyadev.moreapps.model.RedirectDetails;
+import io.github.raghavsatyadev.moreapps.model.SoftUpdateDetails;
+import io.github.raghavsatyadev.moreapps.utils.MoreAppsPrefUtil;
+import io.github.raghavsatyadev.moreapps.utils.MoreAppsUtils;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.rocky.moreapps.listener.MoreAppsUpdateDialogListener;
-import com.rocky.moreapps.model.HardUpdateDetails;
-import com.rocky.moreapps.model.MoreAppsDetails;
-import com.rocky.moreapps.model.RedirectDetails;
-import com.rocky.moreapps.model.SoftUpdateDetails;
-import com.rocky.moreapps.utils.MoreAppsPrefUtil;
-import com.rocky.moreapps.utils.MoreAppsUtils;
 
 @SuppressWarnings("unused")
 public class ForceUpdater {

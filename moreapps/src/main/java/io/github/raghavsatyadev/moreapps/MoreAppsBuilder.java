@@ -1,4 +1,4 @@
-package com.rocky.moreapps;
+package io.github.raghavsatyadev.moreapps;
 
 import android.content.Context;
 
@@ -9,10 +9,10 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 
-import com.rocky.moreapps.listener.MoreAppsDialogListener;
-import com.rocky.moreapps.listener.MoreAppsDownloadListener;
-import com.rocky.moreapps.settings.MoreAppsDesignSettings;
-import com.rocky.moreapps.settings.PeriodicUpdateSettings;
+import io.github.raghavsatyadev.moreapps.listener.MoreAppsDialogListener;
+import io.github.raghavsatyadev.moreapps.listener.MoreAppsDownloadListener;
+import io.github.raghavsatyadev.moreapps.settings.MoreAppsDesignSettings;
+import io.github.raghavsatyadev.moreapps.settings.PeriodicUpdateSettings;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;

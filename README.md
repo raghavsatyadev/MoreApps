@@ -1,7 +1,7 @@
 [![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/I2I8ZPRJ)
 
 # Notice
-- moving library to mavenCentral required it to change groupId. now it will be renamed to **com.github.raghavsatyadev.moreapps** from previous id **com.rocky.moreapps**
+- moving library to mavenCentral required it to change groupId. now it will be renamed to **io.github.raghavsatyadev.moreapps** from previous id **com.rocky.moreapps**
 
 # MoreApps
 Showcase your other apps in a beautiful way. This library also includes force updater.
@@ -14,7 +14,7 @@ To use this library your **minSdkVersion** must be >= 19.
 In the build.gradle of your app module add:
 ```gradle
 dependencies {
-    implementation 'com.github.raghavsatyadev.moreapps:moreapps:x.x.x'
+    implementation 'io.github.raghavsatyadev:moreapps:x.x.x'
 }
 ```
 

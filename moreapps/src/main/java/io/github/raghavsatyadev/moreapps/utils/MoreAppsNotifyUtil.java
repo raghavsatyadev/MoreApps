@@ -1,4 +1,4 @@
-package com.rocky.moreapps.utils;
+package io.github.raghavsatyadev.moreapps.utils;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -21,7 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
-import com.rocky.moreapps.R;
+import io.github.raghavsatyadev.moreapps.R;
 
 import java.io.IOException;
 import java.io.InputStream;

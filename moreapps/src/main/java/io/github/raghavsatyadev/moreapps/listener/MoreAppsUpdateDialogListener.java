@@ -1,4 +1,4 @@
-package com.rocky.moreapps.listener;
+package io.github.raghavsatyadev.moreapps.listener;
 
 public interface MoreAppsUpdateDialogListener {
     void onClose();

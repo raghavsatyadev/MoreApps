@@ -68,5 +68,6 @@
         app:elevation="0dp"
         app:fabSize="normal"
         app:srcCompat="@drawable/ic_more_apps_close"
-        app:tint="@android:color/white" />
+        app:tint="@android:color/white"
+        android:contentDescription="@string/close" />
 </LinearLayout>
