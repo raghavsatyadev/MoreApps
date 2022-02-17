@@ -28,11 +28,9 @@ android {
             }
         }
         debug {
-//            applicationIdSuffix = ".beta"
             versionNameSuffix = '-debug'
         }
         client {
-//            applicationIdSuffix = ".beta"
             minifyEnabled = true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
