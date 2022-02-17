@@ -19,7 +19,7 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Release build
-        run: ./gradlew assembleRelease -x :moreapps:assembleRelease
+        run: ./gradlew :moreapps:assembleRelease
       - name: Source jar and dokka
         run: ./gradlew androidSourcesJar javadocJar
       - name: Publish to MavenCentral
