@@ -50,3 +50,22 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+task downloadKeystore(type: MyDownload) {
+    sourceUrl = 'http://www.someurl.com/my.zip'
+    target = new File('keystore.jks')
+}
+
+//someOtherTask.dependsOn downloadSomething
+
+class MyDownload extends DefaultTask {
+    @Input
+    String sourceUrl
+
+    @OutputFile
+    File target
+
+    @TaskAction
+    void download() {
+        ant.get(src: sourceUrl, dest: target)
+    }
+}
