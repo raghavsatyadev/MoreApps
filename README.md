@@ -9,7 +9,17 @@ Showcase your other apps in a beautiful way. This library also includes force up
 # Setup
 To use this library your **minSdkVersion** must be >= 19.
 
-**Current version:**  <a href='https://bintray.com/raghavsatyadev/Maven/MoreApps/_latestVersion'><img src='https://api.bintray.com/packages/raghavsatyadev/Maven/MoreApps/images/download.svg'></a>
+**Current version:**  [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.raghavsatyadev/moreapps/badge.svg)](https://search.maven.org/artifact/io.github.raghavsatyadev/moreapps) 
+
+In the **root** build.gradle add 
+```gradle
+allprojects {
+    repositories {
+        mavenCentral()
+        /* ... */
+    }
+}
+```
 
 In the build.gradle of your app module add:
 ```gradle
