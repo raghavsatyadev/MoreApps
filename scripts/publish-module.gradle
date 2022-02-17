@@ -85,7 +85,6 @@ afterEvaluate {
 }
 
 signing {
-    System.out.println(libraryDescription)
     useInMemoryPgpKeys(
             rootProject.ext["signing.keyId"],
             rootProject.ext["signing.key"],
