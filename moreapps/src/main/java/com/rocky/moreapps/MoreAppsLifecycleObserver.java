@@ -3,13 +3,10 @@ package com.rocky.moreapps;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.OnLifecycleEvent;
 
-public class MoreAppsLifecycleObserver implements LifecycleObserver {
-
+public class MoreAppsLifecycleObserver implements DefaultLifecycleObserver {
     private boolean isFirstStart;
 
     private Context context;
@@ -45,16 +42,15 @@ public class MoreAppsLifecycleObserver implements LifecycleObserver {
         isShowing = showing;
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    public void onStart() {
+    @Override
+    public void onStart(@NonNull LifecycleOwner owner) {
+        DefaultLifecycleObserver.super.onStart(owner);
         if (!isFirstStart) {
             if (listener != null) listener.onStart();
             if (updateDialogType == ForceUpdater.UpdateDialogType.HARD_UPDATE || updateDialogType == ForceUpdater.UpdateDialogType.HARD_REDIRECT) {
                 if (!isShowing) {
                     isShowing = true;
-                    ForceUpdater.showUpdateDialogs(context, styleRes, () -> {
-                        isShowing = false;
-                    });
+                    ForceUpdater.showUpdateDialogs(context, styleRes, () -> isShowing = false);
                     if (listener != null) listener.showingDialog();
                 }
             } else {
@@ -70,13 +66,15 @@ public class MoreAppsLifecycleObserver implements LifecycleObserver {
         lifecycleOwner.getLifecycle().removeObserver(this);
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    public void onStop() {
+    @Override
+    public void onStop(@NonNull LifecycleOwner owner) {
         if (listener != null) listener.onStop();
+        DefaultLifecycleObserver.super.onStop(owner);
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    public void onDestroy() {
+    @Override
+    public void onDestroy(@NonNull LifecycleOwner owner) {
         lifecycleOwner.getLifecycle().removeObserver(this);
+        DefaultLifecycleObserver.super.onDestroy(owner);
     }
 }

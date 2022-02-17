@@ -1,10 +1,10 @@
 buildscript {
     ext {
         APK_NAME = "MoreApps"
-        targetSdk = 29
+        targetSdk = 32
         minSdk = 19
-        libraryVersion = "2.0.6"
-        libraryVersionCode = 15
+        libraryVersion = "2.2.0"
+        libraryVersionCode = 17
         renameOutputs = { variant, output, outputName ->
             outputFullName = "${outputName}-${variant.name}-${new Date().format('dd-MM-yy_HH-mm')}"
             if (!variant.getName().equals("debug")) {
@@ -29,26 +29,16 @@ buildscript {
     repositories {
         google()
         jcenter()
-        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
-        maven { url 'https://storage.googleapis.com/r8-releases/raw' }
     }
     dependencies {
-        classpath 'com.android.tools:r8:2.1.67'
-        classpath 'com.android.tools.build:gradle:4.0.1'
-
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5'
+        classpath 'com.android.tools.build:gradle:7.3.0-alpha03'
     }
 }
-//wrapper {
-//    distributionType = Wrapper.DistributionType.ALL
-//}
+
 allprojects {
     repositories {
         google()
         jcenter()
-        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
-        maven { url 'https://storage.googleapis.com/r8-releases/raw' }
     }
 }
 task clean(type: Delete) {

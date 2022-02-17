@@ -20,6 +20,7 @@ import com.rocky.moreapps.model.SoftUpdateDetails;
 import com.rocky.moreapps.utils.MoreAppsPrefUtil;
 import com.rocky.moreapps.utils.MoreAppsUtils;
 
+@SuppressWarnings("unused")
 public class ForceUpdater {
     public static final String TAG = ForceUpdater.class.getSimpleName();
 
@@ -53,7 +54,11 @@ public class ForceUpdater {
         if (updateDialogType == UpdateDialogType.NONE) {
             if (listener != null) listener.onComplete();
         } else {
-            MoreAppsLifecycleObserver observer = new MoreAppsLifecycleObserver(context, lifecycleOwner, updateDialogType, styleRes, listener);
+            MoreAppsLifecycleObserver observer = new MoreAppsLifecycleObserver(context,
+                    lifecycleOwner,
+                    updateDialogType,
+                    styleRes,
+                    listener);
             if (listener != null) listener.showingDialog();
             observer.setShowing(true);
             ForceUpdater.showUpdateDialogs(context, styleRes, () -> {
@@ -162,7 +167,6 @@ public class ForceUpdater {
      * @param context         {@link Context} of Activity or Fragment
      * @param moreAppsDetails {@link MoreAppsDetails}
      * @param styleRes        Style resource to change style of alert dialog style.
-     * @param listener
      */
     public static void showHardUpdateDialog(final Context context,
                                             final MoreAppsDetails moreAppsDetails,
@@ -220,7 +224,6 @@ public class ForceUpdater {
      * @param context         {@link Context} of Activity or Fragment
      * @param moreAppsDetails {@link MoreAppsDetails}
      * @param styleRes        Style resource to change style of alert dialog style.
-     * @param listener
      */
     public static void showHardRedirectDialog(final Context context,
                                               final MoreAppsDetails moreAppsDetails,
@@ -330,7 +333,6 @@ public class ForceUpdater {
     /**
      * @param context         {@link Context} of Activity or Fragment
      * @param moreAppsDetails {@link MoreAppsDetails}
-     * @param listener
      */
     public static void showHardRedirectDialog(final Context context,
                                               final MoreAppsDetails moreAppsDetails,

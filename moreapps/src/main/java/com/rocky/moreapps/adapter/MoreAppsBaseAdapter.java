@@ -8,10 +8,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("unused")
 public abstract class MoreAppsBaseAdapter
         <ViewHolder extends RecyclerView.ViewHolder, Model>
         extends RecyclerView.Adapter<ViewHolder> {
     private ArrayList<Model> models;
+
     private MoreAppsBaseAdapter.MyClickListener myClickListener;
 
     MoreAppsBaseAdapter(ArrayList<Model> models) {
@@ -54,14 +56,33 @@ public abstract class MoreAppsBaseAdapter
     }
 
     public void deleteAll() {
+        int itemCount = getItemCount();
         getModels().clear();
-        notifyDataSetChanged();
+        notifyItemRangeRemoved(0, itemCount);
     }
 
     public void replaceAll(ArrayList<Model> models) {
-        getModels().clear();
-        getModels().addAll(models);
-        notifyDataSetChanged();
+        if (models != null) {
+            int oldItemCount = getItemCount();
+            int newItemCount = models.size();
+
+            getModels().clear();
+            getModels().addAll(models);
+
+            if (oldItemCount == 0) {
+                notifyItemRangeInserted(oldItemCount, newItemCount - oldItemCount);
+            } else if (newItemCount < oldItemCount) {
+                notifyItemRangeChanged(0, newItemCount);
+                notifyItemRangeRemoved(newItemCount, oldItemCount - newItemCount);
+            } else {
+                notifyItemRangeChanged(0, oldItemCount);
+                notifyItemRangeInserted(oldItemCount, newItemCount - oldItemCount);
+            }
+        } else {
+            int oldItemCount = getItemCount();
+            getModels().clear();
+            notifyItemRangeRemoved(0, oldItemCount);
+        }
     }
 
     public Model getItem(int index) {

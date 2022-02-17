@@ -1,5 +1,9 @@
 package com.rocky.moreapps;
 
+import static android.util.TypedValue.COMPLEX_UNIT_DIP;
+import static android.util.TypedValue.COMPLEX_UNIT_SP;
+import static android.util.TypedValue.applyDimension;
+
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.ValueAnimator;
@@ -29,60 +33,92 @@ import android.view.animation.Interpolator;
 import androidx.annotation.ColorInt;
 import androidx.annotation.Dimension;
 
-import static android.util.TypedValue.COMPLEX_UNIT_DIP;
-import static android.util.TypedValue.COMPLEX_UNIT_SP;
-import static android.util.TypedValue.applyDimension;
-
 /**
  * A simple RatingBar for Android.
  */
+@SuppressWarnings("unused")
 public class SimpleRatingBar extends View {
 
     // Configurable variables
     private @ColorInt
     int borderColor;
+
     private @ColorInt
     int fillColor;
+
     private @ColorInt
     int backgroundColor;
+
     private @ColorInt
     int starBackgroundColor;
+
     private @ColorInt
     int pressedBorderColor;
+
     private @ColorInt
     int pressedFillColor;
+
     private @ColorInt
     int pressedBackgroundColor;
+
     private @ColorInt
     int pressedStarBackgroundColor;
+
     private int numberOfStars;
+
     private float starsSeparation;
+
     private float desiredStarSize;
+
     private float maxStarSize;
+
     private float stepSize;
+
     private float rating;
+
     private boolean isIndicator;
+
     private Gravity gravity;
+
     private float starBorderWidth;
+
     private float starCornerRadius;
+
     private boolean drawBorderEnabled;
+
     // Internal variables
     private float currentStarSize;
+
     private float defaultStarSize;
+
     private Paint paintStarOutline;
+
     private Paint paintStarBorder;
+
     private Paint paintStarFill;
+
     private Paint paintStarBackground;
+
     private CornerPathEffect cornerPathEffect;
+
     private Path starPath;
+
     private ValueAnimator ratingAnimator;
+
     private OnRatingBarChangeListener ratingListener;
+
     private OnClickListener clickListener;
+
     private boolean touchInProgress;
+
     private float[] starVertex;
+
     private RectF starsDrawingSpace;
+
     private RectF starsTouchSpace;
+
     private Canvas internalCanvas;
+
     private Bitmap internalBitmap;
 
     public SimpleRatingBar(Context context) {
@@ -186,7 +222,7 @@ public class SimpleRatingBar extends View {
             throw new IllegalArgumentException(String.format("SimpleRatingBar initialized with invalid value for numberOfStars. Found %d, but should be greater than 0", numberOfStars));
         }
         if (desiredStarSize != Integer.MAX_VALUE && maxStarSize != Integer.MAX_VALUE && desiredStarSize
-                > maxStarSize) {
+                                                                                                > maxStarSize) {
             Log.w("SimpleRatingBar", String.format("Initialized with conflicting values: starSize is greater than maxStarSize (%f > %f). I will ignore maxStarSize", desiredStarSize, maxStarSize));
         }
         if (stepSize <= 0) {
@@ -363,7 +399,7 @@ public class SimpleRatingBar extends View {
      */
     private int calculateTotalWidth(float starSize, int numberOfStars, float starsSeparation, boolean padding) {
         return Math.round(starSize * numberOfStars + starsSeparation * (numberOfStars - 1))
-                + (padding ? getPaddingLeft() + getPaddingRight() : 0);
+                       + (padding ? getPaddingLeft() + getPaddingRight() : 0);
     }
 
     /**
@@ -1132,7 +1168,7 @@ public class SimpleRatingBar extends View {
          */
         Right(1);
 
-        int id;
+        final int id;
 
         Gravity(int id) {
             this.id = id;
@@ -1167,6 +1203,7 @@ public class SimpleRatingBar extends View {
 
     }
 
+    @SuppressWarnings("unused")
     private static class SavedState extends BaseSavedState {
         public static final Parcelable.Creator<SavedState> CREATOR = new Creator<SavedState>() {
             @Override
@@ -1179,6 +1216,7 @@ public class SimpleRatingBar extends View {
                 return new SavedState[size];
             }
         };
+
         private float rating = 0.0f;
 
         SavedState(Parcel source) {

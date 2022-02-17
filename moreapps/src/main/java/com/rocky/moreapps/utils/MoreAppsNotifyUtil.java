@@ -73,10 +73,8 @@ public class MoreAppsNotifyUtil {
         return (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
-    // TODO: 20-Feb-19 update small icon as required
-    private static int getSmallIcon(@DrawableRes int bigIconID, @DrawableRes int smallIconID) {
-        boolean useWhiteIcon = (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT);
-        return useWhiteIcon ? smallIconID : bigIconID;
+    private static int getSmallIcon(@DrawableRes int smallIconID) {
+        return smallIconID;
     }
 
     private static NotificationCompat.Builder getNotificationBuilder(Context context,
@@ -93,7 +91,7 @@ public class MoreAppsNotifyUtil {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelID)
                 .setAutoCancel(true)
-                .setSmallIcon(getSmallIcon(bigIconID, smallIconID))
+                .setSmallIcon(getSmallIcon(smallIconID))
                 .setLargeIcon(getBitmapFromDrawable(MoreAppsResource.getDrawable(context, bigIconID)))
                 .setSound(defaultSoundUri)
                 .setColor(notificationColor)
@@ -122,7 +120,7 @@ public class MoreAppsNotifyUtil {
 
         NotificationManager notificationManager = getNotificationManager(context);
 
-        String channelID = MoreAppsResource.getString(context, R.string.channel_id);
+        String channelID = MoreAppsResource.getString(context, R.string.more_apps_channel_id);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             getNotificationChannel(context, notificationManager, channelID);
@@ -138,17 +136,15 @@ public class MoreAppsNotifyUtil {
                 bigIconID,
                 smallIconID,
                 notificationColor);
-        if (builder != null) {
-            notificationManager.notify(NOTIFICATION_ID, builder.build());
-        }
+        notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private static void getNotificationChannel(Context context, NotificationManager notificationManager, String channelID) {
 
-        String channelName = MoreAppsResource.getString(context, R.string.channel_name);
+        String channelName = MoreAppsResource.getString(context, R.string.more_apps_channel_name);
 
-        String channelDescription = MoreAppsResource.getString(context, R.string.channel_description);
+        String channelDescription = MoreAppsResource.getString(context, R.string.more_apps_channel_description);
 
         int importance = NotificationManager.IMPORTANCE_DEFAULT;
 

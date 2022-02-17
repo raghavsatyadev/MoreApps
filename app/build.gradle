@@ -6,11 +6,16 @@ android {
     compileSdkVersion project.targetSdk
     defaultConfig {
         applicationId "com.rocky.moreapps.example"
+
         minSdkVersion project.minSdk
         targetSdkVersion project.targetSdk
+
         versionCode project.libraryVersionCode
         versionName project.libraryVersion
+
         vectorDrawables.useSupportLibrary = true
+
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -38,8 +43,9 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = 1.8
-        targetCompatibility = 1.8
+        coreLibraryDesugaringEnabled true
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     applicationVariants.all { variant ->
         variant.outputs.each { output ->
@@ -51,8 +57,10 @@ android {
 dependencies {
     implementation project(path: ':moreapps')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.3.0-alpha02'
-    implementation 'com.google.android.material:material:1.3.0-alpha02'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
-    implementation 'androidx.work:work-runtime:2.5.0-alpha02'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'com.google.android.material:material:1.6.0-alpha02'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation 'androidx.work:work-runtime:2.8.0-alpha01'
+
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
 }

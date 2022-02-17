@@ -34,18 +34,6 @@ public class MoreAppsDetails implements Parcelable {
     public MoreAppsDetails() {
     }
 
-    public static final Creator<MoreAppsDetails> CREATOR = new Creator<MoreAppsDetails>() {
-        @Override
-        public MoreAppsDetails createFromParcel(Parcel in) {
-            return new MoreAppsDetails(in);
-        }
-
-        @Override
-        public MoreAppsDetails[] newArray(int size) {
-            return new MoreAppsDetails[size];
-        }
-    };
-
     protected MoreAppsDetails(Parcel in) {
         imageLink = in.readString();
         name = in.readString();
@@ -59,11 +47,6 @@ public class MoreAppsDetails implements Parcelable {
         hardUpdateDetails = in.readParcelable(HardUpdateDetails.class.getClassLoader());
         appLink = in.readString();
         showInDialog = in.readByte() != 0;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
     }
 
     @Override
@@ -81,4 +64,21 @@ public class MoreAppsDetails implements Parcelable {
         dest.writeString(appLink);
         dest.writeByte((byte) (showInDialog ? 1 : 0));
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<MoreAppsDetails> CREATOR = new Creator<MoreAppsDetails>() {
+        @Override
+        public MoreAppsDetails createFromParcel(Parcel in) {
+            return new MoreAppsDetails(in);
+        }
+
+        @Override
+        public MoreAppsDetails[] newArray(int size) {
+            return new MoreAppsDetails[size];
+        }
+    };
 }

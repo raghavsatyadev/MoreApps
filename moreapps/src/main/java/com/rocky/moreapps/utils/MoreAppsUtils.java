@@ -5,11 +5,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.TypedValue;
 
-import androidx.annotation.AttrRes;
 import androidx.annotation.NonNull;
 
 import com.rocky.moreapps.MoreAppsBuilder;
-import com.rocky.moreapps.R;
 import com.rocky.moreapps.model.MoreAppsDetails;
 
 import java.util.ArrayList;
@@ -42,19 +40,18 @@ public class MoreAppsUtils {
         return null;
     }
 
-    public static String getAttrColorString(Context context, @AttrRes int attrID, String attributeName) {
+    public static String getAttrColorString(Context context, String attributeName) {
         TypedValue outValue = new TypedValue();
         int appCompatAttribute = context.getResources().getIdentifier(attributeName, "attr", context.getPackageName());
         context.getTheme().resolveAttribute(appCompatAttribute, outValue, true);
-//        }
         return String.format("#%06X", (0xFFFFFF & outValue.data));
     }
 
     public static String getColorPrimaryInHex(@NonNull Context context) {
-        return getAttrColorString(context, R.attr.colorPrimary, "colorPrimary");
+        return getAttrColorString(context, "colorPrimary");
     }
 
     public static String getColorOnPrimaryColorInHex(@NonNull Context context) {
-        return getAttrColorString(context, R.attr.colorOnPrimary, "colorOnPrimary");
+        return getAttrColorString(context, "colorOnPrimary");
     }
 }

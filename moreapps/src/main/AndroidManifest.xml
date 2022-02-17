@@ -11,7 +11,7 @@
         >
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="@string/channel_id"
+            android:value="@string/more_apps_channel_id"
             />
     </application>
 </manifest>

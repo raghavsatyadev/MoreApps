@@ -79,21 +79,19 @@ public class MoreAppsListAdapter extends MoreAppsBaseAdapter<MoreAppsListAdapter
 
         DataObjectHolder(View view) {
             super(view);
-            if (view != null) {
-                imgMoreApps = view.findViewById(R.id.img_more_apps);
-                txtMoreAppsName = view.findViewById(R.id.txt_more_apps_name);
-                ratingMoreApps = view.findViewById(R.id.rating_more_apps);
-                txtMoreAppsDescription = view.findViewById(R.id.txt_more_apps_description);
-                if (themeColor != 0) ratingMoreApps.setFillColor(themeColor);
-                if (rowTitleColor != 0) txtMoreAppsName.setTextColor(rowTitleColor);
-                if (rowDescriptionColor != 0)
-                    txtMoreAppsDescription.setTextColor(rowDescriptionColor);
-                if (fontFace != null) {
-                    txtMoreAppsName.setTypeface(fontFace);
-                    txtMoreAppsDescription.setTypeface(fontFace);
-                }
-                view.setOnClickListener(this);
+            imgMoreApps = view.findViewById(R.id.img_more_apps);
+            txtMoreAppsName = view.findViewById(R.id.txt_more_apps_name);
+            ratingMoreApps = view.findViewById(R.id.rating_more_apps);
+            txtMoreAppsDescription = view.findViewById(R.id.txt_more_apps_description);
+            if (themeColor != 0) ratingMoreApps.setFillColor(themeColor);
+            if (rowTitleColor != 0) txtMoreAppsName.setTextColor(rowTitleColor);
+            if (rowDescriptionColor != 0)
+                txtMoreAppsDescription.setTextColor(rowDescriptionColor);
+            if (fontFace != null) {
+                txtMoreAppsName.setTypeface(fontFace);
+                txtMoreAppsDescription.setTypeface(fontFace);
             }
+            view.setOnClickListener(this);
         }
 
         @Override

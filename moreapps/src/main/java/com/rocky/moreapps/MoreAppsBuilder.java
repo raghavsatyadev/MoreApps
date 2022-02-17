@@ -17,6 +17,7 @@ import com.rocky.moreapps.settings.PeriodicUpdateSettings;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+@SuppressWarnings("unused")
 public class MoreAppsBuilder {
     private MoreAppsDesignSettings designSettings;
     private Context context;

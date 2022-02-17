@@ -12,7 +12,6 @@ import android.util.Log;
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.work.Constraints;
@@ -109,8 +108,17 @@ public class MoreAppsWorker extends Worker {
                 final LiveData<List<WorkInfo>> workInfo = instance.getWorkInfosForUniqueWorkLiveData(WORKER_TAG_ONE_TIME);
                 Observer<List<WorkInfo>> observer = new Observer<List<WorkInfo>>() {
                     @Override
-                    public void onChanged(@Nullable List<WorkInfo> workInfos) {
-                        handleResult(context, moreAppsDialog, workInfos, workInfo, this, listener, constraints, dataBuilder, updateSettings, instance);
+                    public void onChanged(List<WorkInfo> workInfos) {
+                        handleResult(context,
+                                moreAppsDialog,
+                                workInfos,
+                                workInfo,
+                                this,
+                                listener,
+                                constraints,
+                                dataBuilder,
+                                updateSettings,
+                                instance);
                     }
                 };
                 workInfo.observeForever(observer);
@@ -242,8 +250,8 @@ public class MoreAppsWorker extends Worker {
             int smallIconID = smallIconData == 0 ? bigIconID : smallIconData;
 
             int notificationColor = getInputData().getInt(THEME_COLOR, 0) == 0 ?
-                    Color.parseColor(MoreAppsUtils.getColorPrimaryInHex(context)) :
-                    getInputData().getInt(THEME_COLOR, 0);
+                                            Color.parseColor(MoreAppsUtils.getColorPrimaryInHex(context)) :
+                                            getInputData().getInt(THEME_COLOR, 0);
 
             prepareNotification(context, bigIconID, smallIconID, notificationColor);
         }
@@ -252,7 +260,7 @@ public class MoreAppsWorker extends Worker {
     private void prepareNotification(Context context,
                                      @DrawableRes int bigIconID,
                                      @DrawableRes int smallIconID,
-                                     @ColorInt int notificationColor) throws PackageManager.NameNotFoundException {
+                                     @ColorInt int notificationColor) {
         MoreAppsDetails currentAppModel = MoreAppsUtils.getCurrentAppModel(context, MoreAppsPrefUtil.getMoreApps(context));
         ForceUpdater.UpdateDialogType updateDialogType = ForceUpdater.dialogToShow(context, currentAppModel);
 
