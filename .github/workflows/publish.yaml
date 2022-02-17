@@ -1,9 +1,10 @@
 name: Publish
 
 on:
-  release:
-    # We'll run this workflow when a new GitHub release is created
-    types: [released]
+  workflow_run:
+    workflows: ["Releases"]
+    types:
+      - completed
 
 jobs:
   publish:
@@ -17,16 +18,10 @@ jobs:
         with:
           distribution: adopt
           java-version: 11
-
-        # Builds the release artifacts of the library
       - name: Release build
-        run: ./gradlew :moreapps:assembleRelease
-
-        # Generates other artifacts (javadocJar is optional)
+        run: ./gradlew assembleRelease -x :moreapps:assembleRelease
       - name: Source jar and dokka
         run: ./gradlew androidSourcesJar javadocJar
-
-        # Runs upload, and then closes & releases the repository
       - name: Publish to MavenCentral
         run: ./gradlew publishReleasePublicationToSonatypeRepository --max-workers 1 closeAndReleaseSonatypeStagingRepository
         env:
