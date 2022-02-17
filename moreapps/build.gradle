@@ -62,7 +62,4 @@ dependencies {
 
     dokkaHtmlPlugin "org.jetbrains.dokka:kotlin-as-java-plugin:1.6.10"
 }
-//if (file('D:\\Work\\Android\\Projects\\Library\\Bintray\\credentials.properties').exists()) {
-//    apply from: file('D:\\Work\\Android\\Projects\\Library\\Bintray\\bintray.gradle')
-//}
 apply from: "${rootProject.projectDir}/scripts/publish-module.gradle"

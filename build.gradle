@@ -3,7 +3,7 @@ buildscript {
         APK_NAME = "MoreApps"
         targetSdk = 32
         minSdk = 19
-        libraryVersion = "2.2.1"
+        libraryVersion = "2.2.2"
         libraryVersionCode = 17
         renameOutputs = { variant, output, outputName ->
             outputFullName = "${outputName}-${variant.name}-${new Date().format('dd-MM-yy_HH-mm')}"
@@ -49,23 +49,4 @@ allprojects {
 }
 task clean(type: Delete) {
     delete rootProject.buildDir
-}
-task downloadKeystore(type: MyDownload) {
-    sourceUrl = 'http://www.someurl.com/my.zip'
-    target = new File('keystore.jks')
-}
-
-//someOtherTask.dependsOn downloadSomething
-
-class MyDownload extends DefaultTask {
-    @Input
-    String sourceUrl
-
-    @OutputFile
-    File target
-
-    @TaskAction
-    void download() {
-        ant.get(src: sourceUrl, dest: target)
-    }
 }
