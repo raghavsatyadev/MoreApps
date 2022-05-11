@@ -38,7 +38,16 @@ buildscript {
 }
 plugins {
     id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
+    id "org.sonarqube" version "3.3"
 }
+sonarqube {
+  properties {
+    property "sonar.projectKey", "raghavsatyadev_MoreApps"
+    property "sonar.organization", "raghavsatyadev"
+    property "sonar.host.url", "https://sonarcloud.io"
+  }
+}
+
 apply from: "${rootDir}/scripts/publish-root.gradle"
 allprojects {
     repositories {
