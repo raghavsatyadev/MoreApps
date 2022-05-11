@@ -1,5 +1,14 @@
-apply plugin: 'com.android.application'
-
+plugins {
+    id "org.sonarqube" version "3.3"
+    id "com.android.application"
+}
+sonarqube {
+  properties {
+    property "sonar.projectKey", "raghavsatyadev_MoreApps"
+    property "sonar.organization", "raghavsatyadev"
+    property "sonar.host.url", "https://sonarcloud.io"
+  }
+}
 def props = new Properties()
 def credsFile = file("${rootProject.projectDir}/credentials.properties")
 if (credsFile.exists()) {
