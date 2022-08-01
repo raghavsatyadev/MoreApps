@@ -1,23 +1,23 @@
-package io.github.raghavsatyadev.moreapps;
+package io.github.raghavsatyadev.moreapps
 
-public interface MoreAppsLifecycleListener {
+interface MoreAppsLifecycleListener {
     /**
      * AppCompatActivity or Fragment onStart LifeCycle Method
      */
-    void onStart();
+    fun onStart()
 
     /**
      * AppCompatActivity or Fragment onStop LifeCycle Method
      */
-    void onStop();
+    fun onStop()
 
     /**
      * updater dialog is showing, stop other works
      */
-    void showingDialog();
+    fun showingDialog()
 
     /**
      * on completing all processes regarding updater, continue other work
      */
-    void onComplete();
+    fun onComplete()
 }

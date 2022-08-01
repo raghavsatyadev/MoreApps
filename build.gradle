@@ -4,8 +4,8 @@ buildscript {
 
         kotlin_version = "1.7.20-Beta"
 
-        targetSdk = 33
-        minSdk = 19
+        TARGET_SDK = 33
+        MIN_SDK = 19
 
         libraryVersion = "2.2.2"
         libraryVersionCode = 17

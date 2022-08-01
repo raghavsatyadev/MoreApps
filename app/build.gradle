@@ -11,12 +11,12 @@ if (credsFile.exists()) {
 }
 
 android {
-    compileSdkVersion targetSdk
+    compileSdk TARGET_SDK
     defaultConfig {
         applicationId "com.rocky.moreapps.example"
 
-        minSdkVersion minSdk
-        targetSdkVersion targetSdk
+        minSdk MIN_SDK
+        targetSdk TARGET_SDK
 
         versionCode libraryVersionCode
         versionName libraryVersion
@@ -58,6 +58,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
+    kotlinOptions {
+        jvmTarget = "11"
+        freeCompilerArgs += "-Xjvm-default=all"
+    }
     applicationVariants.all { variant ->
         variant.outputs.each { output ->
             renameOutputs(variant, output, APK_NAME)
@@ -77,5 +81,6 @@ dependencies {
     implementation 'androidx.work:work-runtime:2.8.0-alpha02'
 //    implementation "io.github.raghavsatyadev:moreapps:${libraryVersion}"
 
+    implementation("androidx.multidex:multidex:2.0.1")
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.0'
 }
