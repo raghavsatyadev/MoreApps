@@ -3,8 +3,7 @@
 
 # Notice
 
-- moving library to mavenCentral required it to change groupId. now it will be renamed to **
-  io.github.raghavsatyadev.moreapps** from previous id **com.rocky.moreapps**
+- moving library to mavenCentral required it to change groupId. now it will be renamed to **io.github.raghavsatyadev.moreapps** from previous id **com.rocky.moreapps**
 
 # MoreApps
 
