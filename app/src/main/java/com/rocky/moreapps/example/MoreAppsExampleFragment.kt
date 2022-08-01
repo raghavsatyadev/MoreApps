@@ -45,8 +45,8 @@ class MoreAppsExampleFragment : Fragment(), OnClickListener {
             .removeApplicationFromList("com.appdroidtechnologies.whatscut") // to remove an application from the list, give package name here
             .removeApplicationFromList(listOf("com.appdroidtechnologies.whatscut")) // to remove applications from the list, give package names here
             .dialogTitle(string.more_apps) // custom dialog title
-            .dialogLayout(layout.more_apps_view) // custom dialog layout, read more instructions in it's javadoc
-            .dialogRowLayout(layout.row_more_apps) // custom list item layout, read more instructions in it's javadoc
+            .dialogLayout(io.github.raghavsatyadev.moreapps.R.layout.more_apps_view) // custom dialog layout, read more instructions in it's javadoc
+            .dialogRowLayout(io.github.raghavsatyadev.moreapps.R.layout.row_more_apps) // custom list item layout, read more instructions in it's javadoc
             .openAppsInPlayStore(true) // on clicking the item, should it open in the play store
             .font(font.sans_bold) // custom font
             .theme(
