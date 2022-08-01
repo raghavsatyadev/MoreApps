@@ -7,8 +7,8 @@ buildscript {
         TARGET_SDK = 33
         MIN_SDK = 19
 
-        libraryVersion = "2.2.2"
-        libraryVersionCode = 17
+        libraryVersion = "2.2.3"
+        libraryVersionCode = 18
 
         renameOutputs = { variant, output, outputName ->
             outputFullName = "${outputName}-${variant.name}-${new Date().format('dd-MM-yy_HH-mm')}"
@@ -47,11 +47,11 @@ plugins {
     id "org.sonarqube" version "3.4.0.2513"
 }
 sonarqube {
-  properties {
-      property "sonar.projectKey", "MoreApps"
-    property "sonar.organization", "raghavsatyadev"
-    property "sonar.host.url", "https://sonarcloud.io"
-  }
+    properties {
+        property "sonar.projectKey", "MoreApps"
+        property "sonar.organization", "raghavsatyadev"
+        property "sonar.host.url", "https://sonarcloud.io"
+    }
 }
 
 apply from: "${rootDir}/scripts/publish-root.gradle"
