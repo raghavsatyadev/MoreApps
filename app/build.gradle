@@ -35,7 +35,7 @@ android {
                 keyAlias = props.getProperty("keystoreAlias")
             } else {
                 storeFile file("${rootProject.projectDir}/scripts/keystore.jks")
-                storePassword = System.getenv('KEYSTORE_PASS')
+                storePassword = System.getenv("KEYSTORE_PASS")
                 keyPassword = System.getenv("KEY_PASS")
                 keyAlias = System.getenv("KEYSTORE_ALIAS")
             }
@@ -45,12 +45,12 @@ android {
         release {
             minifyEnabled true
             shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            versionNameSuffix = '-release'
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+            versionNameSuffix = "-release"
             signingConfig signingConfigs.moreapps
         }
         debug {
-            versionNameSuffix = '-debug'
+            versionNameSuffix = "-debug"
         }
     }
     compileOptions {
@@ -70,17 +70,17 @@ android {
 }
 
 dependencies {
-    implementation project(path: ':moreapps')
-    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+    implementation project(path: ":moreapps")
+    implementation fileTree(dir: "libs", include: ["*.jar", "*.aar"])
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version")
 
-    implementation 'androidx.appcompat:appcompat:1.6.0-alpha05'
-    implementation 'com.google.android.material:material:1.7.0-alpha03'
-    implementation 'androidx.constraintlayout:constraintlayout:2.2.0-alpha03'
-    implementation 'androidx.work:work-runtime:2.8.0-alpha02'
+    implementation "androidx.appcompat:appcompat:1.6.0-alpha05"
+    implementation "com.google.android.material:material:1.7.0-alpha03"
+    implementation "androidx.constraintlayout:constraintlayout:2.2.0-alpha03"
+    implementation "androidx.work:work-runtime:2.8.0-alpha02"
 //    implementation "io.github.raghavsatyadev:moreapps:${libraryVersion}"
 
     implementation("androidx.multidex:multidex:2.0.1")
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.0'
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:1.2.0"
 }

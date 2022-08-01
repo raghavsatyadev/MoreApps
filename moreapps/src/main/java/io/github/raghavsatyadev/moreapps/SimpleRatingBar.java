@@ -345,7 +345,7 @@ public class SimpleRatingBar extends View {
             if (desiredTotalWidth >= width || desiredTotalHeight >= height) {
                 // we need to shrink the size of the stars
                 float sizeBasedOnWidth = (width - getPaddingLeft() - getPaddingRight() - starsSeparation * (numberOfStars - 1)) / numberOfStars;
-                float sizeBasedOnHeight = height - getPaddingTop() - getPaddingBottom();
+                float sizeBasedOnHeight = (height - getPaddingTop() - getPaddingBottom());
                 return Math.min(sizeBasedOnWidth, sizeBasedOnHeight);
             } else {
                 return maxStarSize;
@@ -353,7 +353,7 @@ public class SimpleRatingBar extends View {
         } else {
             // expand the most we can
             float sizeBasedOnWidth = (width - getPaddingLeft() - getPaddingRight() - starsSeparation * (numberOfStars - 1)) / numberOfStars;
-            float sizeBasedOnHeight = height - getPaddingTop() - getPaddingBottom();
+            float sizeBasedOnHeight = (height - getPaddingTop() - getPaddingBottom());
             return Math.min(sizeBasedOnWidth, sizeBasedOnHeight);
         }
     }
@@ -612,6 +612,11 @@ public class SimpleRatingBar extends View {
                 if (clickListener != null) {
                     clickListener.onClick(this);
                 }
+                if (ratingListener != null) {
+                    ratingListener.onRatingChanged(this, rating, true);
+                }
+                touchInProgress = false;
+                break;
             case MotionEvent.ACTION_CANCEL:
                 if (ratingListener != null) {
                     ratingListener.onRatingChanged(this, rating, true);
@@ -629,7 +634,7 @@ public class SimpleRatingBar extends View {
      * Assigns a rating to the touch event.
      */
     private void setNewRatingFromTouch(float x, float y) {
-        // normalize x to inside starsDrawinSpace
+        // normalize x to inside starsDrawingSpace
         if (gravity != Gravity.Left) {
             x = getWidth() - x;
         }
@@ -645,7 +650,7 @@ public class SimpleRatingBar extends View {
 
         x = x - starsDrawingSpace.left;
         // reduce the width to allow the user reach the top and bottom values of rating (0 and numberOfStars)
-        rating = (float) numberOfStars / starsDrawingSpace.width() * x;
+        rating = numberOfStars / starsDrawingSpace.width() * x;
 
         // correct rating in case step size is present
         float mod = rating % stepSize;
