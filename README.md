@@ -220,7 +220,7 @@ File is available at : https://github.com/raghavsatyadev/MoreApps/blob/master/Re
 
 # Preview
 
-<img src="Resources/Option-1.png" width="30%" />
+<img src="Resources/Option.png" width="30%" />
 
 This library uses 
 
