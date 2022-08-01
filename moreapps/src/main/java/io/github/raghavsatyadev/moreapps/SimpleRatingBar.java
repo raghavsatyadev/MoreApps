@@ -33,8 +33,6 @@ import android.view.animation.Interpolator;
 import androidx.annotation.ColorInt;
 import androidx.annotation.Dimension;
 
-import io.github.raghavsatyadev.moreapps.R;
-
 /**
  * A simple RatingBar for Android.
  */
@@ -1207,7 +1205,7 @@ public class SimpleRatingBar extends View {
 
     @SuppressWarnings("unused")
     private static class SavedState extends BaseSavedState {
-        public static final Parcelable.Creator<SavedState> CREATOR = new Creator<SavedState>() {
+        public static final Parcelable.Creator<SavedState> CREATOR = new Creator<>() {
             @Override
             public SavedState createFromParcel(Parcel parcel) {
                 return new SavedState(parcel);
@@ -1250,7 +1248,7 @@ public class SimpleRatingBar extends View {
      * - Duration: 2s
      */
     public static class AnimationBuilder {
-        private SimpleRatingBar ratingBar;
+        private final SimpleRatingBar ratingBar;
 
         private long duration;
 

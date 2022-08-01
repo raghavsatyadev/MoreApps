@@ -50,7 +50,7 @@ public class SoftUpdateDetails implements Parcelable {
         return 0;
     }
 
-    public static final Creator<SoftUpdateDetails> CREATOR = new Creator<SoftUpdateDetails>() {
+    public static final Creator<SoftUpdateDetails> CREATOR = new Creator<>() {
         @Override
         public SoftUpdateDetails createFromParcel(Parcel in) {
             return new SoftUpdateDetails(in);

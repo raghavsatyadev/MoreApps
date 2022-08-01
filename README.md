@@ -1,17 +1,23 @@
 [![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/I2I8ZPRJ)
 
 # Notice
-- moving library to mavenCentral required it to change groupId. now it will be renamed to **io.github.raghavsatyadev.moreapps** from previous id **com.rocky.moreapps**
+
+- moving library to mavenCentral required it to change groupId. now it will be renamed to **
+  io.github.raghavsatyadev.moreapps** from previous id **com.rocky.moreapps**
 
 # MoreApps
+
 Showcase your other apps in a beautiful way. This library also includes force updater.
 
 # Setup
+
 To use this library your **minSdkVersion** must be >= 19.
 
-**Current version:**  [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.raghavsatyadev/moreapps/badge.svg)](https://search.maven.org/artifact/io.github.raghavsatyadev/moreapps) 
+**Current
+version:**  [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.raghavsatyadev/moreapps/badge.svg)](https://search.maven.org/artifact/io.github.raghavsatyadev/moreapps)
 
-In the **root** build.gradle add 
+In the **root** build.gradle add
+
 ```gradle
 allprojects {
     repositories {
@@ -22,6 +28,7 @@ allprojects {
 ```
 
 In the build.gradle of your app module add:
+
 ```gradle
 dependencies {
     implementation 'io.github.raghavsatyadev:moreapps:x.x.x'
@@ -30,7 +37,8 @@ dependencies {
 
 # Initial Setup
 
-**Manifest.xml**	
+**Manifest.xml**
+
 ```	
 <application	
 ...	
@@ -59,6 +67,7 @@ public class CoreApp extends Application implements androidx.work.Configuration.
 ```
 
 **Build.Gradle App Module**
+
 ```
 dependencies {
     implementation "androidx.work:work-runtime:2.5.0-alpha02"
@@ -158,61 +167,64 @@ ForceUpdater.showDialogLive(getContext(),
 
 **Json File Format**
 
-***NOTE*** : redirect_details, soft_update_details, hard_update_details are only required for Force Updater.
+***NOTE*** : redirect_details, soft_update_details, hard_update_details are only required for Force
+Updater.
 
 ```json
 [
-    {
-      "image_link": "https://lh3.googleusercontent.com/DdGcPVh9kkUSdL2dKAUcGmejPXaNwnfbS5y5XtMFsXVST-GThQVzlwGgwwj7yOpII6-T=s180-rw",
-      "name": "More Apps",
-      "rating": 5,
-      "app_link": "https://play.google.com/store/apps/details?id=com.rocky.moreapps.example",
-      "package_name": "com.rocky.moreapps.example",
-      "description": "Showcase your other apps in a beautiful way. This library also includes force updater.",
-      "min_version": 6,
-      "current_version": 7,
-      "show_in_dialog": true,
-      "redirect_details": {
-        "enable": false,
-        "hard_redirect": false,
-        "dialog_title": "Redirect Notice",
-        "dialog_message": "We have uploaded our app to new location",
-        "positive_button": "Redirect",
-        "negative_button": "Cancel",
-        "app_link": "https://play.google.com/store/apps/details?id=com.rocky.moreapps.example"
-      },
-      "soft_update_details": {
-        "enable": true,
-        "dialog_show_count": 3,
-        "notification_show_count": 3,
-        "dialog_title": "Update Required!",
-        "dialog_message": "Soft Update is required",
-        "positive_button": "Update",
-        "negative_button": "Cancel"
-      },
-      "hard_update_details": {
-        "enable": true,
-        "dialog_title": "Update Required!",
-        "dialog_message": "Hard Update is required",
-        "positive_button": "Update"
-      }
+  {
+    "image_link": "https://lh3.googleusercontent.com/DdGcPVh9kkUSdL2dKAUcGmejPXaNwnfbS5y5XtMFsXVST-GThQVzlwGgwwj7yOpII6-T=s180-rw",
+    "name": "More Apps",
+    "rating": 5,
+    "app_link": "https://play.google.com/store/apps/details?id=com.rocky.moreapps.example",
+    "package_name": "com.rocky.moreapps.example",
+    "description": "Showcase your other apps in a beautiful way. This library also includes force updater.",
+    "min_version": 6,
+    "current_version": 7,
+    "show_in_dialog": true,
+    "redirect_details": {
+      "enable": false,
+      "hard_redirect": false,
+      "dialog_title": "Redirect Notice",
+      "dialog_message": "We have uploaded our app to new location",
+      "positive_button": "Redirect",
+      "negative_button": "Cancel",
+      "app_link": "https://play.google.com/store/apps/details?id=com.rocky.moreapps.example"
+    },
+    "soft_update_details": {
+      "enable": true,
+      "dialog_show_count": 3,
+      "notification_show_count": 3,
+      "dialog_title": "Update Required!",
+      "dialog_message": "Soft Update is required",
+      "positive_button": "Update",
+      "negative_button": "Cancel"
+    },
+    "hard_update_details": {
+      "enable": true,
+      "dialog_title": "Update Required!",
+      "dialog_message": "Hard Update is required",
+      "positive_button": "Update"
     }
+  }
 ]
 ```
+
 **Understanding JSON fields**
 
-| Field | Description |
-| --- | --- |
-| show_in_dialog | if false this app will not show up in more apps dialog |
-| redirect_details | enable this to point users to download the app from new location (helpful when google removes the app from playstore) |
-| redirect_details->hard_redirect | won't let the user go into the app |
-| redirect_details->app_link | new location of APK |
-| soft_update_details | to show that there is a new version available for downloading |
-| soft_update_details->dialog_show_count | how many times the soft update dialog should show up for current update(updating current version in json will reset the counter) |
+| Field                                        | Description                                                                                                                            |
+|----------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|
+| show_in_dialog                               | if false this app will not show up in more apps dialog                                                                                 |
+| redirect_details                             | enable this to point users to download the app from new location (helpful when google removes the app from playstore)                  |
+| redirect_details->hard_redirect              | won't let the user go into the app                                                                                                     |
+| redirect_details->app_link                   | new location of APK                                                                                                                    |
+| soft_update_details                          | to show that there is a new version available for downloading                                                                          |
+| soft_update_details->dialog_show_count       | how many times the soft update dialog should show up for current update(updating current version in json will reset the counter)       |
 | soft_update_details->notification_show_count | how many times the soft update notification should show up for current update(updating current version in json will reset the counter) |
-| hard_update_details | to show that this update of the app is no longer useful, user has to download new update |
+| hard_update_details                          | to show that this update of the app is no longer useful, user has to download new update                                               |
 
-File is available at : https://github.com/raghavsatyadev/MoreApps/blob/master/Resources/more_apps.json
+File is available
+at : https://github.com/raghavsatyadev/MoreApps/blob/master/Resources/more_apps.json
 
 # Example Application
 
@@ -222,7 +234,7 @@ File is available at : https://github.com/raghavsatyadev/MoreApps/blob/master/Re
 
 <img src="Resources/Option.png" width="30%" />
 
-This library uses 
+This library uses
 
 - **SimpleRatingBar** :  https://github.com/FlyingPumba/SimpleRatingBar
 - **Retrofit** : https://github.com/square/retrofit
@@ -230,18 +242,18 @@ This library uses
 
 <div>Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" 			    title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" 			    title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
 
-
 # Licence
+
 Copyright 2020 Raghav Satyadev
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
        http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.

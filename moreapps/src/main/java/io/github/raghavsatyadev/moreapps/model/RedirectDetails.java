@@ -50,7 +50,7 @@ public class RedirectDetails implements Parcelable {
         return 0;
     }
 
-    public static final Creator<RedirectDetails> CREATOR = new Creator<RedirectDetails>() {
+    public static final Creator<RedirectDetails> CREATOR = new Creator<>() {
         @Override
         public RedirectDetails createFromParcel(Parcel in) {
             return new RedirectDetails(in);

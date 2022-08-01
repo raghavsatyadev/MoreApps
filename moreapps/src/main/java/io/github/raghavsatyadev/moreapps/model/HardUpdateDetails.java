@@ -38,7 +38,7 @@ public class HardUpdateDetails implements Parcelable {
         return 0;
     }
 
-    public static final Creator<HardUpdateDetails> CREATOR = new Creator<HardUpdateDetails>() {
+    public static final Creator<HardUpdateDetails> CREATOR = new Creator<>() {
         @Override
         public HardUpdateDetails createFromParcel(Parcel in) {
             return new HardUpdateDetails(in);

@@ -26,13 +26,6 @@ import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import io.github.raghavsatyadev.moreapps.listener.MoreAppsDownloadListener;
-import io.github.raghavsatyadev.moreapps.model.MoreAppsDetails;
-import io.github.raghavsatyadev.moreapps.settings.PeriodicUpdateSettings;
-import io.github.raghavsatyadev.moreapps.utils.MoreAppsNotifyUtil;
-import io.github.raghavsatyadev.moreapps.utils.MoreAppsPrefUtil;
-import io.github.raghavsatyadev.moreapps.utils.MoreAppsUtils;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -42,6 +35,13 @@ import java.util.List;
 import java.util.Random;
 
 import javax.net.ssl.HttpsURLConnection;
+
+import io.github.raghavsatyadev.moreapps.listener.MoreAppsDownloadListener;
+import io.github.raghavsatyadev.moreapps.model.MoreAppsDetails;
+import io.github.raghavsatyadev.moreapps.settings.PeriodicUpdateSettings;
+import io.github.raghavsatyadev.moreapps.utils.MoreAppsNotifyUtil;
+import io.github.raghavsatyadev.moreapps.utils.MoreAppsPrefUtil;
+import io.github.raghavsatyadev.moreapps.utils.MoreAppsUtils;
 
 public class MoreAppsWorker extends Worker {
 
@@ -63,7 +63,7 @@ public class MoreAppsWorker extends Worker {
 
     private static final String IS_PERIODIC = "IS_PERIODIC";
 
-    private Context context;
+    private final Context context;
 
     public MoreAppsWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
@@ -106,7 +106,7 @@ public class MoreAppsWorker extends Worker {
 
             if (listener != null) {
                 final LiveData<List<WorkInfo>> workInfo = instance.getWorkInfosForUniqueWorkLiveData(WORKER_TAG_ONE_TIME);
-                Observer<List<WorkInfo>> observer = new Observer<List<WorkInfo>>() {
+                Observer<List<WorkInfo>> observer = new Observer<>() {
                     @Override
                     public void onChanged(List<WorkInfo> workInfos) {
                         handleResult(context,

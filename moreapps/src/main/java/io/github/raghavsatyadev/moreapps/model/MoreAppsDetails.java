@@ -70,7 +70,7 @@ public class MoreAppsDetails implements Parcelable {
         return 0;
     }
 
-    public static final Creator<MoreAppsDetails> CREATOR = new Creator<MoreAppsDetails>() {
+    public static final Creator<MoreAppsDetails> CREATOR = new Creator<>() {
         @Override
         public MoreAppsDetails createFromParcel(Parcel in) {
             return new MoreAppsDetails(in);
