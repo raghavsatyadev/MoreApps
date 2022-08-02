@@ -1,5 +1,5 @@
 [![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/I2I8ZPRJ)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=MoreApps&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=MoreApps)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=MoreApps&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=MoreApps)
 
 # Notice
 
