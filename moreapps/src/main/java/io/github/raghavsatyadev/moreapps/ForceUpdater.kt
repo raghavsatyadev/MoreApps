@@ -6,9 +6,13 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.content.pm.PackageManager.NameNotFoundException
+import android.content.pm.PackageManager.PackageInfoFlags
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
 import android.util.Log
 import androidx.annotation.StyleRes
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.pm.PackageInfoCompat
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.github.raghavsatyadev.moreapps.ForceUpdater.UpdateDialogType.HARD_REDIRECT
@@ -152,10 +156,20 @@ object ForceUpdater {
 
     @Throws(NameNotFoundException::class)
     private fun getVersionCode(context: Context): Int {
-        return context.packageManager.getPackageInfo(
-            context.packageName,
-            PackageManager.GET_ACTIVITIES
-        ).versionCode
+        return PackageInfoCompat.getLongVersionCode(
+            if (VERSION.SDK_INT >= VERSION_CODES.TIRAMISU) {
+                context.packageManager.getPackageInfo(
+                    context.packageName,
+                    PackageInfoFlags.of(PackageManager.GET_ACTIVITIES.toLong())
+
+                )
+            } else {
+                context.packageManager.getPackageInfo(
+                    context.packageName,
+                    PackageManager.GET_ACTIVITIES
+                )
+            }
+        ).toInt()
     }
 
     /**
