@@ -29,15 +29,15 @@ android {
     signingConfigs {
         moreapps {
             if (credsFile.exists()) {
-                storeFile file("${rootProject.projectDir}/scripts/keystore.jks")
+                storeFile file("${rootProject.projectDir}/../../keystore.jks")
                 storePassword = props.getProperty("keystorePass")
                 keyPassword = props.getProperty("keyPass")
                 keyAlias = props.getProperty("keystoreAlias")
             } else {
-                storeFile file("${rootProject.projectDir}/scripts/keystore.jks")
-                storePassword = System.getenv("KEYSTORE_PASS")
-                keyPassword = System.getenv("KEY_PASS")
-                keyAlias = System.getenv("KEYSTORE_ALIAS")
+                storeFile file("${rootProject.projectDir}/scripts/demo_keystore.jks")
+                storePassword = "000000"
+                keyPassword = "000000"
+                keyAlias = "moreapps"
             }
         }
     }

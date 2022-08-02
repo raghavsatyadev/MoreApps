@@ -7,8 +7,8 @@ buildscript {
         TARGET_SDK = 33
         MIN_SDK = 19
 
-        libraryVersion = "2.2.3"
-        libraryVersionCode = 18
+        libraryVersion = "2.2.4"
+        libraryVersionCode = 19
 
         renameOutputs = { variant, output, outputName ->
             outputFullName = "${outputName}-${variant.name}-${new Date().format('dd-MM-yy_HH-mm')}"
