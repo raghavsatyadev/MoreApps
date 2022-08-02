@@ -9,7 +9,6 @@ import android.content.pm.PackageManager.NameNotFoundException
 import android.content.pm.PackageManager.PackageInfoFlags
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
-import android.util.Log
 import androidx.annotation.StyleRes
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.pm.PackageInfoCompat
@@ -22,6 +21,7 @@ import io.github.raghavsatyadev.moreapps.ForceUpdater.UpdateDialogType.SOFT_REDI
 import io.github.raghavsatyadev.moreapps.ForceUpdater.UpdateDialogType.SOFT_UPDATE
 import io.github.raghavsatyadev.moreapps.listener.MoreAppsUpdateDialogListener
 import io.github.raghavsatyadev.moreapps.model.MoreAppsDetails
+import io.github.raghavsatyadev.moreapps.utils.AppLog
 import io.github.raghavsatyadev.moreapps.utils.MoreAppsPrefUtil
 import io.github.raghavsatyadev.moreapps.utils.MoreAppsUtils
 
@@ -106,7 +106,7 @@ object ForceUpdater {
                 }
             }
         } catch (e: NameNotFoundException) {
-            Log.e(TAG, "dialogToShow: ", e)
+            AppLog.loge(false, kotlinFileName, "dialogToShow", e, Exception())
         }
         return NONE
     }
@@ -150,7 +150,7 @@ object ForceUpdater {
                 }
             }
         } catch (e: NameNotFoundException) {
-            Log.e(TAG, "showUpdateDialogs: ", e)
+            AppLog.loge(false, kotlinFileName, "showUpdateDialogs", e, Exception())
         }
     }
 
@@ -161,7 +161,6 @@ object ForceUpdater {
                 context.packageManager.getPackageInfo(
                     context.packageName,
                     PackageInfoFlags.of(PackageManager.GET_ACTIVITIES.toLong())
-
                 )
             } else {
                 context.packageManager.getPackageInfo(
@@ -476,7 +475,7 @@ object ForceUpdater {
                 }
             }
         } catch (e: NameNotFoundException) {
-            Log.e(TAG, "shouldShowUpdateDialogs: ", e)
+            AppLog.loge(false, kotlinFileName, "shouldShowUpdateDialogs", e, Exception())
         }
         return false
     }

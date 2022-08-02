@@ -7,7 +7,6 @@ import android.content.pm.PackageManager.NameNotFoundException
 import android.graphics.Color
 import android.net.Uri
 import android.text.TextUtils
-import android.util.Log
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.LiveData
@@ -34,6 +33,7 @@ import io.github.raghavsatyadev.moreapps.ForceUpdater.UpdateDialogType.SOFT_REDI
 import io.github.raghavsatyadev.moreapps.ForceUpdater.UpdateDialogType.SOFT_UPDATE
 import io.github.raghavsatyadev.moreapps.listener.MoreAppsDownloadListener
 import io.github.raghavsatyadev.moreapps.settings.PeriodicUpdateSettings
+import io.github.raghavsatyadev.moreapps.utils.AppLog
 import io.github.raghavsatyadev.moreapps.utils.MoreAppsNotifyUtil
 import io.github.raghavsatyadev.moreapps.utils.MoreAppsPrefUtil
 import io.github.raghavsatyadev.moreapps.utils.MoreAppsUtils
@@ -55,10 +55,16 @@ class MoreAppsWorker(private val context: Context, workerParams: WorkerParameter
         con.setRequestProperty("User-Agent", USER_AGENT)
         val responseCode = con.responseCode
         if (responseCode == HttpURLConnection.HTTP_OK) { // success
-            val `in` = BufferedReader(InputStreamReader(con.inputStream))
-            return getMoreAppsResponse(`in`)
+            val reader = BufferedReader(InputStreamReader(con.inputStream))
+            return getMoreAppsResponse(reader)
         } else {
-            Log.d(TAG, "updateAppsNew: GET request not worked")
+            AppLog.loge(
+                true,
+                kotlinFileName,
+                "setConnectionProperties",
+                "GET request did not work",
+                Exception()
+            )
         }
         return null
     }
@@ -69,22 +75,28 @@ class MoreAppsWorker(private val context: Context, workerParams: WorkerParameter
         con.setRequestProperty("User-Agent", USER_AGENT)
         val responseCode = con.responseCode
         if (responseCode == HttpsURLConnection.HTTP_OK) { // success
-            val `in` = BufferedReader(InputStreamReader(con.inputStream))
-            return getMoreAppsResponse(`in`)
+            val reader = BufferedReader(InputStreamReader(con.inputStream))
+            return getMoreAppsResponse(reader)
         } else {
-            Log.d(TAG, "updateAppsNew: GET request not worked")
+            AppLog.loge(
+                true,
+                kotlinFileName,
+                "setConnectionProperties",
+                "GET request di not work",
+                Exception()
+            )
         }
         return null
     }
 
     @Throws(IOException::class)
-    private fun getMoreAppsResponse(`in`: BufferedReader): String {
+    private fun getMoreAppsResponse(reader: BufferedReader): String {
         var inputLine: String?
         val response = StringBuilder()
-        while (`in`.readLine().also { inputLine = it } != null) {
+        while (reader.readLine().also { inputLine = it } != null) {
             response.append(inputLine)
         }
-        `in`.close()
+        reader.close()
         return response.toString()
     }
 
@@ -97,7 +109,7 @@ class MoreAppsWorker(private val context: Context, workerParams: WorkerParameter
                     try {
                         handleNotification(applicationContext)
                     } catch (e: NameNotFoundException) {
-                        Log.e(TAG, "doWork: ", e)
+                        AppLog.loge(false, kotlinFileName, "doWork", e, Exception())
                     }
                 } else {
                     MoreAppsPrefUtil.setFirstTimePeriodic(context, false)
@@ -212,7 +224,7 @@ class MoreAppsWorker(private val context: Context, workerParams: WorkerParameter
                 setConnectionProperties(con)
             }
         } catch (e: IOException) {
-            Log.e(TAG, "callMoreAppsAPI: ", e)
+            AppLog.loge(false, kotlinFileName, "callMoreAppsAPI", e, Exception())
         }
         return response
     }

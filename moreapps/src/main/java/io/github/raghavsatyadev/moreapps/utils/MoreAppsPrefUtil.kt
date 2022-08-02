@@ -4,10 +4,10 @@ package io.github.raghavsatyadev.moreapps.utils
 
 import android.content.Context
 import android.text.TextUtils
-import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
+import io.github.raghavsatyadev.moreapps.kotlinFileName
 import io.github.raghavsatyadev.moreapps.model.MoreAppsDetails
 
 object MoreAppsPrefUtil {
@@ -31,7 +31,7 @@ object MoreAppsPrefUtil {
                 moreAppsDetails.addAll(moreAppsModelsTemp)
             }
         } catch (e: JsonSyntaxException) {
-            Log.e(TAG, "getMoreApps: ", e)
+            AppLog.loge(false, kotlinFileName, "convertStringToModel", e, Exception())
         }
         return moreAppsDetails
     }

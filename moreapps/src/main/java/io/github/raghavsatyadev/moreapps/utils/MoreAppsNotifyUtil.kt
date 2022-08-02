@@ -14,7 +14,6 @@ import android.media.RingtoneManager
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.text.TextUtils
-import android.util.Log
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.annotation.RequiresApi
@@ -22,6 +21,7 @@ import androidx.core.app.NotificationCompat.BigPictureStyle
 import androidx.core.app.NotificationCompat.BigTextStyle
 import androidx.core.app.NotificationCompat.Builder
 import io.github.raghavsatyadev.moreapps.R.string
+import io.github.raghavsatyadev.moreapps.kotlinFileName
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
@@ -62,7 +62,7 @@ object MoreAppsNotifyUtil {
             val input = connection.inputStream
             BitmapFactory.decodeStream(input)
         } catch (e: IOException) {
-            Log.e(TAG, "getBitmapFromUrl: ", e)
+            AppLog.loge(false, kotlinFileName, "getBitmapFromUrl", e, Exception())
             null
         }
     }

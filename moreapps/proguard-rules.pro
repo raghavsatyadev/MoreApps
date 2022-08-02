@@ -4,7 +4,6 @@
 -dontwarn javax.annotation.**
 -dontwarn okio.**
 -dontwarn okhttp3.**
--dontwarn javax.annotation.Nullable
 
 #retrofit models
 
@@ -35,3 +34,14 @@
 }
 #RXJava
 -dontwarn io.reactivex.**
+
+-assumenosideeffects class android.util.Log {
+    public static boolean isLoggable(java.lang.String, int);
+    public static int v(...);
+    public static int i(...);
+    public static int w(...);
+    public static int d(...);
+    public static int e(...);
+}
+
+-dontwarn java.lang.invoke.StringConcatFactory

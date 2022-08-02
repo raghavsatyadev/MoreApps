@@ -40,8 +40,9 @@ class MoreAppsListAdapter(
         if (holder.imgMoreApps != null) Glide.with(holder.imgMoreApps.context)
             .load(appModel.imageLink).into(holder.imgMoreApps)
         if (holder.txtMoreAppsName != null) holder.txtMoreAppsName.text = appModel.name
-        if (holder.ratingMoreApps != null) holder.ratingMoreApps.rating =
+        if (holder.ratingMoreApps != null) holder.ratingMoreApps.setRating(
             appModel.rating.toFloat()
+        )
         if (holder.txtMoreAppsDescription != null) {
             if (!TextUtils.isEmpty(appModel.description)) {
                 holder.txtMoreAppsDescription.visibility = View.VISIBLE
@@ -63,7 +64,7 @@ class MoreAppsListAdapter(
             txtMoreAppsName = view.findViewById(id.txt_more_apps_name)
             ratingMoreApps = view.findViewById(id.rating_more_apps)
             txtMoreAppsDescription = view.findViewById(id.txt_more_apps_description)
-            if (themeColor != 0) ratingMoreApps.fillColor = themeColor
+            if (themeColor != 0) ratingMoreApps.setFillColor(themeColor)
             if (rowTitleColor != 0) txtMoreAppsName.setTextColor(rowTitleColor)
             if (rowDescriptionColor != 0) txtMoreAppsDescription.setTextColor(rowDescriptionColor)
             txtMoreAppsName.typeface = fontFace
