@@ -237,14 +237,24 @@ at : https://github.com/raghavsatyadev/MoreApps/blob/master/Resources/more_apps.
 This library uses
 
 - **SimpleRatingBar** :  https://github.com/FlyingPumba/SimpleRatingBar
-- **Retrofit** : https://github.com/square/retrofit
 - **Glide** : https://github.com/bumptech/glide
 
-<div>Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" 			    title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" 			    title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+<div>Icons made by 
+<a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">
+Smashicons
+</a> from 
+<a href="https://www.flaticon.com/" title="Flaticon">
+www.flaticon.com
+</a>
+is licensed by 
+<a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">
+CC 3.0 BY
+</a>
+</div>
 
 # Licence
 
-Copyright 2020 Raghav Satyadev
+Copyright 2022 Raghav Satyadev
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

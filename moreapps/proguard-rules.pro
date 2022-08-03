@@ -5,7 +5,7 @@
 -dontwarn okio.**
 -dontwarn okhttp3.**
 
-#retrofit models
+#models
 
 -keepattributes InnerClasses
 -keepattributes Deprecated
