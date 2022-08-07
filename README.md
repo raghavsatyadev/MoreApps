@@ -16,18 +16,17 @@ version:**  [![Maven Central](https://maven-badges.herokuapp.com/maven-central/i
 
 In the **root** build.gradle add
 
-```gradle
+```groovy
 allprojects {
     repositories {
         mavenCentral()
-        /* ... */
     }
 }
 ```
 
 In the build.gradle of your app module add:
 
-```gradle
+```groovy
 dependencies {
     implementation 'io.github.raghavsatyadev:moreapps:x.x.x'
 }
@@ -37,22 +36,20 @@ dependencies {
 
 **Manifest.xml**
 
-```	
-<application	
-...	
+```xml
+<application>
  <provider	
     android:name="androidx.work.impl.WorkManagerInitializer"	
     android:authorities="${applicationId}.workmanager-init"	
     android:exported="false"	
     tools:node="remove"	
     />	
-...	
 </application>
 ```
 
 **Application Class**
 
-```
+```java
 public class CoreApp extends Application implements androidx.work.Configuration.Provider {
     @NonNull
     @Override
@@ -66,7 +63,7 @@ public class CoreApp extends Application implements androidx.work.Configuration.
 
 **Build.Gradle App Module**
 
-```
+```groovy
 dependencies {
     implementation "androidx.work:work-runtime:2.5.0-alpha02"
     implementation "androidx.work:work-rxjava2:2.5.0-alpha02"
@@ -77,7 +74,7 @@ dependencies {
 
 **Basic**
 
-```method
+```java
 new MoreAppsBuilder(this, CoreApp.JSON_FILE_URL)
     .buildAndShow(new MoreAppsDialogListener() {
         @Override
@@ -94,7 +91,7 @@ new MoreAppsBuilder(this, CoreApp.JSON_FILE_URL)
 
 **Customization**
 
-```method
+```java
 new MoreAppsBuilder(this.getContext(), CoreApp.JSON_FILE_URL)
     .removeApplicationFromList("com.appdroidtechnologies.whatscut") // to remove an application from the list, give package name here
     .removeApplicationFromList(Arrays.asList("com.appdroidtechnologies.whatscut")) // to remove applications from the list, give package names here
@@ -127,7 +124,7 @@ new MoreAppsBuilder(this.getContext(), CoreApp.JSON_FILE_URL)
 
 **Application Class**
 
-```method
+```java
 new MoreAppsBuilder(this, JSON_FILE_URL)
     .setPeriodicSettings(15, TimeUnit.DAYS, // set interval of detail updating and showing notifications as required, default is 7 days
     R.mipmap.ic_launcher, R.drawable.ic_small_icon) // launcher icon and small icon (small icon is optional, small icon should be of single color)
@@ -136,7 +133,7 @@ new MoreAppsBuilder(this, JSON_FILE_URL)
 
 **Calling Method (Writing in Launcher Activity's onCreate method is recommended)**
 
-```method
+```java
 ForceUpdater.showDialogLive(getContext(),
         this,
         R.style.CustomDialog, //optional to change styling of alertdialog. Theme must extend instances of Theme.MaterialComponents.Dialog.Alert
