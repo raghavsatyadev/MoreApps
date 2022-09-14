@@ -3,6 +3,8 @@ plugins {
 
     id "org.jetbrains.kotlin.android"
     id "kotlin-parcelize"
+
+    id "com.google.gms.google-services"
 }
 def props = new Properties()
 def credsFile = file("${rootProject.projectDir}/credentials.properties")
@@ -12,6 +14,7 @@ if (credsFile.exists()) {
 
 android {
     compileSdk TARGET_SDK
+    buildToolsVersion "33.0.0"
     defaultConfig {
         applicationId "com.rocky.moreapps.example"
 
@@ -62,9 +65,10 @@ android {
         jvmTarget = "11"
         freeCompilerArgs += "-Xjvm-default=all"
     }
+
     applicationVariants.all { variant ->
-        variant.outputs.each { output ->
-            renameOutputs(variant, output, APK_NAME)
+        variant.outputs.all { output ->
+            renameOutputs(variant, output)
         }
     }
 }
@@ -75,12 +79,15 @@ dependencies {
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version")
 
-    implementation "androidx.appcompat:appcompat:1.6.0-alpha05"
-    implementation "com.google.android.material:material:1.7.0-alpha03"
+    implementation "androidx.appcompat:appcompat:1.6.0-rc01"
+    implementation "com.google.android.material:material:1.8.0-alpha01"
     implementation "androidx.constraintlayout:constraintlayout:2.2.0-alpha03"
-    implementation "androidx.work:work-runtime:2.8.0-alpha02"
+    implementation "androidx.work:work-runtime:2.8.0-alpha04"
 //    implementation "io.github.raghavsatyadev:moreapps:${libraryVersion}"
 
+    implementation platform("com.google.firebase:firebase-bom:30.4.1")
+    implementation "com.google.firebase:firebase-analytics-ktx"
+
     implementation("androidx.multidex:multidex:2.0.1")
-    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:1.2.0"
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:1.2.2"
 }

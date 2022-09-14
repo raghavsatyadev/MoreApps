@@ -8,6 +8,7 @@ plugins {
 }
 android {
     compileSdk TARGET_SDK
+    buildToolsVersion "33.0.0"
     defaultConfig {
         minSdk MIN_SDK
         targetSdk TARGET_SDK
@@ -30,6 +31,8 @@ android {
         jvmTarget = "11"
         freeCompilerArgs += "-Xjvm-default=all"
     }
+    buildToolsVersion "33.0.0"
+    ndkVersion "25.1.8937393"
 }
 
 ext {
@@ -61,18 +64,18 @@ dependencies {
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version")
 
-    implementation "androidx.appcompat:appcompat:1.6.0-alpha05"
-    implementation "com.google.android.material:material:1.7.0-alpha03"
+    implementation "androidx.appcompat:appcompat:1.6.0-rc01"
+    implementation "com.google.android.material:material:1.8.0-alpha01"
     implementation "androidx.constraintlayout:constraintlayout:2.2.0-alpha03"
 
     implementation "com.squareup.retrofit2:converter-gson:2.9.0"
 
     implementation "com.github.bumptech.glide:glide:4.13.2"
 
-    implementation "androidx.work:work-runtime:2.8.0-alpha02"
+    implementation "androidx.work:work-runtime:2.8.0-alpha04"
 
     implementation("androidx.multidex:multidex:2.0.1")
-    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:1.2.0"
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:1.2.2"
 
     dokkaHtmlPlugin "org.jetbrains.dokka:kotlin-as-java-plugin:1.7.10"
 }
