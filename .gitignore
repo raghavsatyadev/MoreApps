@@ -8,3 +8,4 @@ build
 .externalNativeBuild
 /credentials.properties
 google-services.json
+/Builds
