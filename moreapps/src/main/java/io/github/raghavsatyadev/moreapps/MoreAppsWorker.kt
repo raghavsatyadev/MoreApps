@@ -210,7 +210,7 @@ class MoreAppsWorker(private val context: Context, workerParams: WorkerParameter
         )
     }
 
-    private fun callMoreAppsAPI(): String? {
+    private fun callMoreAppsAPI(): String {
         var response: String? = null
         try {
             val inputData = inputData
@@ -226,7 +226,7 @@ class MoreAppsWorker(private val context: Context, workerParams: WorkerParameter
         } catch (e: IOException) {
             AppLog.loge(false, kotlinFileName, "callMoreAppsAPI", e, Exception())
         }
-        return response
+        return response!!
     }
 
     companion object {

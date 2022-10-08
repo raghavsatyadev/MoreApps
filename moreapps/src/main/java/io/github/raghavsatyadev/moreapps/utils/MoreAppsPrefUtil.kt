@@ -11,17 +11,15 @@ import io.github.raghavsatyadev.moreapps.kotlinFileName
 import io.github.raghavsatyadev.moreapps.model.MoreAppsDetails
 
 object MoreAppsPrefUtil {
-    private val TAG = MoreAppsPrefUtil::class.java.simpleName
-
     fun getMoreApps(context: Context): ArrayList<MoreAppsDetails> {
         return convertStringToModel(getMoreAppsString(context))
     }
 
-    fun getMoreAppsString(context: Context?): String {
-        return MoreAppsPrefHelper.getInstance(context!!)!![AppPrefStrings.MORE_APPS, ""]
+    fun getMoreAppsString(context: Context): String {
+        return MoreAppsPrefHelper.getInstance(context)!![AppPrefStrings.MORE_APPS, ""]
     }
 
-    fun convertStringToModel(json: String?): ArrayList<MoreAppsDetails> {
+    fun convertStringToModel(json: String): ArrayList<MoreAppsDetails> {
         val gson = Gson()
         val moreAppsDetails = ArrayList<MoreAppsDetails>()
         try {
@@ -45,7 +43,7 @@ object MoreAppsPrefUtil {
         }
     }
 
-    fun setMoreApps(context: Context, moreAppsJSON: String?) {
+    fun setMoreApps(context: Context, moreAppsJSON: String) {
         if (!TextUtils.isEmpty(moreAppsJSON)) {
             MoreAppsPrefHelper.getInstance(context)!!
                 .save(AppPrefStrings.MORE_APPS, moreAppsJSON)
@@ -61,10 +59,10 @@ object MoreAppsPrefUtil {
             .save(AppPrefStrings.IS_FIRST_TIME_PERIODIC, status)
     }
 
-    fun saveCurrentVersion(context: Context?, currentVersion: Int) {
+    fun saveCurrentVersion(context: Context, currentVersion: Int) {
         saveSoftUpdateShownTimes(context, 0)
         saveSoftUpdateNotificationShownTimes(context, 0)
-        MoreAppsPrefHelper.getInstance(context!!)!!
+        MoreAppsPrefHelper.getInstance(context)!!
             .save(AppPrefStrings.CURRENT_VERSION, currentVersion)
     }
 
