@@ -2,13 +2,13 @@ buildscript {
     ext {
         APK_NAME = "MoreApps"
 
-        kotlin_version = "1.7.20-RC"
+        kotlin_version = "1.7.20"
 
         TARGET_SDK = 33
         MIN_SDK = 19
 
-        libraryVersion = "2.2.4"
-        libraryVersionCode = 19
+        libraryVersion = "2.2.5"
+        libraryVersionCode = 20
 
         getAPKName = { variant ->
             return "${APK_NAME}-${variant.getName()}-${new Date().format("dd-MM-yy_HH-mm")}"
@@ -39,7 +39,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:7.4.0-alpha10"
+        classpath("com.android.tools.build:gradle:8.0.0-alpha03")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlin_version}")
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:1.7.10"
         classpath "com.google.gms:google-services:4.3.13"

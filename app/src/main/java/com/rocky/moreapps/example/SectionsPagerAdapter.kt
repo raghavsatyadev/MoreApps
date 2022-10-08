@@ -11,11 +11,9 @@ import com.rocky.moreapps.example.R.string
 
 class SectionsPagerAdapter internal constructor(
     private val context: Context,
-    lifecycle: LifecycleOwner,
-    fm: FragmentManager?,
-) : FragmentStateAdapter(
-    fm!!, lifecycle.lifecycle
-) {
+    lifecycleOwner: LifecycleOwner,
+    fm: FragmentManager,
+) : FragmentStateAdapter(fm, lifecycleOwner.lifecycle) {
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             1 -> UpdaterExampleFragment.instance

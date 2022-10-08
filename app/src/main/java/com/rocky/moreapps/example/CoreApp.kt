@@ -5,8 +5,6 @@ import android.util.Log
 import androidx.work.Configuration
 import androidx.work.Configuration.Builder
 import androidx.work.Configuration.Provider
-import com.rocky.moreapps.example.R.drawable
-import com.rocky.moreapps.example.R.mipmap
 import io.github.raghavsatyadev.moreapps.MoreAppsBuilder
 import io.github.raghavsatyadev.moreapps.MoreAppsDialog
 import java.util.concurrent.TimeUnit.MINUTES
@@ -28,8 +26,13 @@ class CoreApp : Application(), Provider {
 
     private fun createMoreAppDialog() {
         moreAppsDialog = MoreAppsBuilder(this, JSON_FILE_URL)
-            .setPeriodicSettings(15, MINUTES, mipmap.ic_launcher, drawable.ic_small_icon)
-            .build()
+            .setPeriodicSettings(
+                15,
+                MINUTES, // set interval of detail updating and showing notifications as required, default is 7 days
+                R.mipmap.ic_launcher,
+                R.drawable.ic_small_icon // launcher icon and small icon (small icon is optional, small icon should be of single color)
+            )
+            .build() //calling this method in application class would be recommended
     }
 
     override fun getWorkManagerConfiguration(): Configuration {

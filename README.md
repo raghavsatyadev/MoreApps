@@ -49,14 +49,12 @@ dependencies {
 
 **Application Class**
 
-```java
-public class CoreApp extends Application implements androidx.work.Configuration.Provider {
-    @NonNull
-    @Override
-    public Configuration getWorkManagerConfiguration() {
-        return new Configuration.Builder()
-                .setMinimumLoggingLevel(BuildConfig.DEBUG ? Log.DEBUG : Log.ERROR)
-                .build();
+```kotlin
+class CoreApp : Application(), Provider {
+    override fun getWorkManagerConfiguration(): Configuration {
+        return Builder()
+            .setMinimumLoggingLevel(if (BuildConfig.DEBUG) Log.DEBUG else Log.ERROR)
+            .build()
     }
 }
 ```
@@ -65,8 +63,7 @@ public class CoreApp extends Application implements androidx.work.Configuration.
 
 ```groovy
 dependencies {
-    implementation "androidx.work:work-runtime:2.5.0-alpha02"
-    implementation "androidx.work:work-rxjava2:2.5.0-alpha02"
+    implementation "androidx.work:work-runtime:2.8.0-beta01"
 }
 ```
 
@@ -74,90 +71,90 @@ dependencies {
 
 **Basic**
 
-```java
-new MoreAppsBuilder(this, CoreApp.JSON_FILE_URL)
-    .buildAndShow(new MoreAppsDialogListener() {
-        @Override
-        public void onClose() {
+```kotlin
+MoreAppsBuilder(requireContext(), CoreApp.JSON_FILE_URL)
+    .buildAndShow(object : MoreAppsDialogListener {
+        override fun onClose() {
             // on dialog close
         }
 
-        @Override
-        public void onAppClicked(MoreAppsModel appsModel) {
+        override fun onAppClicked(appsModel: MoreAppsDetails) {
             // on item click
         }
-    });
+    })
 ```
 
 **Customization**
 
-```java
-new MoreAppsBuilder(this.getContext(), CoreApp.JSON_FILE_URL)
+```kotlin
+MoreAppsBuilder(requireContext(), CoreApp.JSON_FILE_URL)
     .removeApplicationFromList("com.appdroidtechnologies.whatscut") // to remove an application from the list, give package name here
-    .removeApplicationFromList(Arrays.asList("com.appdroidtechnologies.whatscut")) // to remove applications from the list, give package names here
-    .dialogTitle(R.string.more_apps) // custom dialog title
-    .dialogLayout(R.layout.more_apps_view) // custom dialog layout, read more instructions in it's javadoc
-    .dialogRowLayout(R.layout.row_more_apps) // custom list item layout, read more instructions in it's javadoc
+    .removeApplicationFromList(listOf("com.appdroidtechnologies.whatscut")) // to remove applications from the list, give package names here
+    .dialogTitle(string.more_apps) // custom dialog title
+    .dialogLayout(io.github.raghavsatyadev.moreapps.R.layout.more_apps_view) // custom dialog layout, read more instructions in it's javadoc
+    .dialogRowLayout(io.github.raghavsatyadev.moreapps.R.layout.row_more_apps) // custom list item layout, read more instructions in it's javadoc
     .openAppsInPlayStore(true) // on clicking the item, should it open in the play store
-    .font(R.font.sans_bold) // custom font
-    .theme(Color.parseColor("#F44336"), Color.parseColor("#FFFFFF")) // custom theme color, read more in javadoc,
+    .font(font.sans_bold) // custom font
+    .theme(
+        Color.parseColor("#F44336"),
+        Color.parseColor("#FFFFFF")
+    ) // custom theme color, read more in javadoc,
     // default colorPrimary-colorOnPrimary of theme
     .rowTitleColor(Color.parseColor("#000000")) // custom list item title color
     .rowDescriptionColor(Color.parseColor("#888888")) // custom list item description color
-    .setPeriodicSettings(15, TimeUnit.MINUTES, // set interval of detail updating and showing notifications as required, default is 7 days
-            R.mipmap.ic_launcher, R.drawable.ic_small_icon) // launcher icon and small icon (small icon is optional, small icon should be of single color)
-    .buildAndShow(new MoreAppsDialogListener() {
-        @Override
-        public void onClose() {
+    .setPeriodicSettings(
+        15,
+        TimeUnit.MINUTES,  // set interval of detail updating and showing notifications as required, default is 7 days
+        mipmap.ic_launcher,
+        drawable.ic_small_icon
+    ) // launcher icon and small icon (small icon is optional, small icon should be of single color)
+    .buildAndShow(object : MoreAppsDialogListener {
+        override fun onClose() {
             // on dialog close
         }
 
-        @Override
-        public void onAppClicked(MoreAppsDetails appsModel) {
+        override fun onAppClicked(appsModel: MoreAppsDetails) {
             // on item click
         }
-    });
-
+    })
 ```
 
 # Example (Force Updater)
 
 **Application Class**
 
-```java
-new MoreAppsBuilder(this, JSON_FILE_URL)
-    .setPeriodicSettings(15, TimeUnit.DAYS, // set interval of detail updating and showing notifications as required, default is 7 days
-    R.mipmap.ic_launcher, R.drawable.ic_small_icon) // launcher icon and small icon (small icon is optional, small icon should be of single color)
-    .build(); //calling this method in application class would be recommended
+```kotlin
+moreAppsDialog = MoreAppsBuilder(this, JSON_FILE_URL)
+    .setPeriodicSettings(
+        15,
+        MINUTES, // set interval of detail updating and showing notifications as required, default is 7 days
+        R.mipmap.ic_launcher,
+        R.drawable.ic_small_icon // launcher icon and small icon (small icon is optional, small icon should be of single color)
+    )
+    .build() //calling this method in application class would be recommended
 ```
 
 **Calling Method (Writing in Launcher Activity's onCreate method is recommended)**
 
-```java
-ForceUpdater.showDialogLive(getContext(),
-        this,
-        R.style.CustomDialog, //optional to change styling of alertdialog. Theme must extend instances of Theme.MaterialComponents.Dialog.Alert
-        new MoreAppsLifecycleListener() {
-            @Override
-            public void onStart() {
-                // Activity or Fragment's onStart LifeCycle Method
-            }
+```kotlin
+ForceUpdater.showDialogLive(
+        requireContext(), this, style.CustomDialog, object : MoreAppsLifecycleListener {
+        override fun onStart() {
+        // Activity or Fragment's onStart LifeCycle Method
+        }
 
-            @Override
-            public void onStop() {
-                // Activity or Fragment's onStop LifeCycle Method
-            }
+        override fun onStop() {
+        // Activity or Fragment's onStop LifeCycle Method
+        }
 
-            @Override
-            public void showingDialog() {
-                // stop other work till this dialog is showing
-            }
+        override fun showingDialog() {
+        // stop other work till this dialog is showing
+        }
 
-            @Override
-            public void onComplete() {
-                // do other work
-            }
-        });
+        override fun onComplete() {
+        // do other work
+        }
+        })
 ```
 
 **Json File Format**

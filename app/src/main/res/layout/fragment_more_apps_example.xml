@@ -6,16 +6,16 @@
     android:id="@+id/root_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.rocky.moreapps.example.MoreAppsExampleFragment"
+    tools:context=".MoreAppsExampleFragment"
     >
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_1"
+        android:id="@+id/btn_more_apps_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/option_1"
         android:textColor="@android:color/white"
-        app:layout_constraintBottom_toTopOf="@+id/btn_2"
+        app:layout_constraintBottom_toTopOf="@+id/btn_more_apps_2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,16 +23,29 @@
         />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_2"
+        android:id="@+id/btn_more_apps_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/option_2"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@id/btn_more_apps_3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_more_apps_1"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_more_apps_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/option_3"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_1"
+        app:layout_constraintTop_toBottomOf="@+id/btn_more_apps_2"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

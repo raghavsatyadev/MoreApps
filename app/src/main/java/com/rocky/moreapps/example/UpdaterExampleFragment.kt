@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.rocky.moreapps.example.R.layout
 import com.rocky.moreapps.example.R.style
+import io.github.raghavsatyadev.moreapps.ForceUpdater
 import io.github.raghavsatyadev.moreapps.ForceUpdater.UpdateDialogType.HARD_REDIRECT
 import io.github.raghavsatyadev.moreapps.ForceUpdater.UpdateDialogType.HARD_UPDATE
 import io.github.raghavsatyadev.moreapps.ForceUpdater.UpdateDialogType.NONE
@@ -15,12 +16,10 @@ import io.github.raghavsatyadev.moreapps.ForceUpdater.UpdateDialogType.SOFT_REDI
 import io.github.raghavsatyadev.moreapps.ForceUpdater.UpdateDialogType.SOFT_UPDATE
 import io.github.raghavsatyadev.moreapps.ForceUpdater.dialogToShow
 import io.github.raghavsatyadev.moreapps.ForceUpdater.shouldShowUpdateDialogs
-import io.github.raghavsatyadev.moreapps.ForceUpdater.showDialogLive
 import io.github.raghavsatyadev.moreapps.ForceUpdater.showHardRedirectDialog
 import io.github.raghavsatyadev.moreapps.ForceUpdater.showHardUpdateDialog
 import io.github.raghavsatyadev.moreapps.ForceUpdater.showSoftRedirectDialog
 import io.github.raghavsatyadev.moreapps.ForceUpdater.showSoftUpdateDialog
-import io.github.raghavsatyadev.moreapps.ForceUpdater.showUpdateDialogs
 import io.github.raghavsatyadev.moreapps.MoreAppsLifecycleListener
 import io.github.raghavsatyadev.moreapps.listener.MoreAppsUpdateDialogListener
 import io.github.raghavsatyadev.moreapps.utils.MoreAppsUtils.getCurrentAppModel
@@ -31,86 +30,93 @@ class UpdaterExampleFragment : Fragment(), OnClickListener {
         savedInstanceState: Bundle?,
     ): View? {
         val view = inflater.inflate(layout.fragment_updater_example, container, false)
-        view.findViewById<View>(R.id.btn_1).setOnClickListener(this)
-        view.findViewById<View>(R.id.btn_2).setOnClickListener(this)
-        view.findViewById<View>(R.id.btn_3).setOnClickListener(this)
+        view.findViewById<View>(R.id.btn_updater_1).setOnClickListener(this)
+        view.findViewById<View>(R.id.btn_updater_2).setOnClickListener(this)
+        view.findViewById<View>(R.id.btn_updater_3).setOnClickListener(this)
         return view
     }
 
     override fun onClick(view: View) {
-        val id = view.id
-        if (id == R.id.btn_1) {
-            option1()
-        } else if (id == R.id.btn_2) {
-            option2()
-        } else if (id == R.id.btn_3) {
-            option3()
+        when (view.id) {
+            R.id.btn_updater_1 -> {
+                option1()
+            }
+
+            R.id.btn_updater_2 -> {
+                option2()
+            }
+
+            R.id.btn_updater_3 -> {
+                option3()
+            }
         }
     }
 
-    /**
-     * call [MoreAppsBuilder.build] first
-     */
-    fun option1() {
+    /** call [io.github.raghavsatyadev.moreapps.MoreAppsBuilder.build] first */
+    private fun option1() {
         if (shouldShowUpdateDialogs(requireContext())) {
-            showUpdateDialogs(requireContext(), object : MoreAppsUpdateDialogListener {
-                override fun onClose() {
-                }
-            })
+            ForceUpdater.showUpdateDialogs(requireContext()) {
+                // on close
+            }
         }
 
 //        call moreAppsDialog.removeUpdateListener(); in onStop() or onDestroy() or onDestroyView()
     }
 
     private fun option2() {
-        showDialogLive(requireContext(),
+        ForceUpdater.showDialogLive(requireContext(),
             this,
             style.CustomDialog,
             object : MoreAppsLifecycleListener {
-                override fun onStart() {}
-                override fun onStop() {}
-                override fun showingDialog() {}
-                override fun onComplete() {}
+                override fun onStart() {
+                    // Activity or Fragment's onStart LifeCycle Method
+                }
+
+                override fun onStop() {
+                    // Activity or Fragment's onStop LifeCycle Method
+                }
+
+                override fun showingDialog() {
+                    // stop other work till this dialog is showing
+                }
+
+                override fun onComplete() {
+                    // do other work
+                }
             })
     }
 
-    /**
-     * call [MoreAppsBuilder.build] first
-     */
-    fun option3() {
+    /** call [io.github.raghavsatyadev.moreapps.MoreAppsBuilder.build] first */
+    private fun option3() {
         val currentAppModel = getCurrentAppModel(requireContext())
         when (dialogToShow(requireContext(), currentAppModel)) {
-            HARD_REDIRECT -> showHardRedirectDialog(
-                requireContext(), currentAppModel, object : MoreAppsUpdateDialogListener {
-                    override fun onClose() {
-
-                    }
-                })
-            SOFT_REDIRECT -> showSoftRedirectDialog(
-                requireContext(),
+            HARD_REDIRECT -> showHardRedirectDialog(requireContext(),
                 currentAppModel,
-                object : MoreAppsUpdateDialogListener {
-                    override fun onClose() {
-
-                    }
+                MoreAppsUpdateDialogListener {
+                    // on close
                 })
-            HARD_UPDATE -> showHardUpdateDialog(
-                requireContext(),
+
+            SOFT_REDIRECT -> showSoftRedirectDialog(requireContext(),
                 currentAppModel,
-                object : MoreAppsUpdateDialogListener {
-                    override fun onClose() {
-
-                    }
+                MoreAppsUpdateDialogListener {
+                    // on close
                 })
-            SOFT_UPDATE -> showSoftUpdateDialog(
-                requireContext(),
+
+            HARD_UPDATE -> showHardUpdateDialog(requireContext(),
                 currentAppModel,
-                object : MoreAppsUpdateDialogListener {
-                    override fun onClose() {
-
-                    }
+                MoreAppsUpdateDialogListener {
+                    // on close
                 })
-            NONE -> {}
+
+            SOFT_UPDATE -> showSoftUpdateDialog(requireContext(),
+                currentAppModel,
+                MoreAppsUpdateDialogListener {
+                    // on close
+                })
+
+            NONE -> {
+                // nothing to update
+            }
         }
     }
 

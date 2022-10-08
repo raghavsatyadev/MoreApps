@@ -17,30 +17,37 @@ import io.github.raghavsatyadev.moreapps.listener.MoreAppsDialogListener
 import io.github.raghavsatyadev.moreapps.model.MoreAppsDetails
 import java.util.concurrent.TimeUnit
 
+
 class MoreAppsExampleFragment : Fragment(), OnClickListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
         val view = inflater.inflate(layout.fragment_more_apps_example, container, false)
-        view.findViewById<View>(R.id.btn_1).setOnClickListener(this)
-        view.findViewById<View>(R.id.btn_2).setOnClickListener(this)
+        view.findViewById<View>(R.id.btn_more_apps_1).setOnClickListener(this)
+        view.findViewById<View>(R.id.btn_more_apps_2).setOnClickListener(this)
+        view.findViewById<View>(R.id.btn_more_apps_3).setOnClickListener(this)
         return view
     }
 
     override fun onClick(view: View) {
-        val id = view.id
-        if (id == R.id.btn_1) {
-            option1()
-        } else if (id == R.id.btn_2) {
-            option2()
+        when (view.id) {
+            R.id.btn_more_apps_1 -> {
+                option1()
+            }
+
+            R.id.btn_more_apps_2 -> {
+                option2()
+            }
+
+            R.id.btn_more_apps_3 -> {
+                option3()
+            }
         }
     }
 
-    /**
-     * This method shows almost all the options available
-     */
-    fun option1() {
+    /** This method shows almost all the options available */
+    private fun option1() {
         MoreAppsBuilder(requireContext(), CoreApp.JSON_FILE_URL)
             .removeApplicationFromList("com.appdroidtechnologies.whatscut") // to remove an application from the list, give package name here
             .removeApplicationFromList(listOf("com.appdroidtechnologies.whatscut")) // to remove applications from the list, give package names here
@@ -73,19 +80,34 @@ class MoreAppsExampleFragment : Fragment(), OnClickListener {
             })
     }
 
-    /**
-     * call [MoreAppsBuilder.build] first
-     */
-    fun option2() {
+    /** call [MoreAppsBuilder.build] first */
+    private fun option2() {
         CoreApp.instance.getMoreAppsDialog()?.show(requireContext(),
             object : MoreAppsDialogListener {
-                override fun onClose() {}
-                override fun onAppClicked(appsModel: MoreAppsDetails) {}
+                override fun onClose() {
+                    // on dialog close
+                }
+
+                override fun onAppClicked(appsModel: MoreAppsDetails) {
+                    // on item click
+                }
+            })
+    }
+
+    private fun option3() {
+        MoreAppsBuilder(requireContext(), CoreApp.JSON_FILE_URL)
+            .buildAndShow(object : MoreAppsDialogListener {
+                override fun onClose() {
+                    // on dialog close
+                }
+
+                override fun onAppClicked(appsModel: MoreAppsDetails) {
+                    // on item click
+                }
             })
     }
 
     companion object {
-        @JvmStatic
         val instance: MoreAppsExampleFragment
             get() {
                 val fragment = MoreAppsExampleFragment()
