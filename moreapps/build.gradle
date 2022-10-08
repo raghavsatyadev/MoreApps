@@ -5,6 +5,14 @@ plugins {
     id "kotlin-parcelize"
 
     id "org.jetbrains.dokka"
+    id "org.sonarqube" version "3.4.0.2513"
+}
+sonarqube {
+    properties {
+        property "sonar.projectKey", "MoreApps"
+        property "sonar.organization", "raghavsatyadev"
+        property "sonar.host.url", "https://sonarcloud.io"
+    }
 }
 android {
     compileSdk TARGET_SDK

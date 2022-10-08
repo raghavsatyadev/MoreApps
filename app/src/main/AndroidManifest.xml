@@ -48,7 +48,6 @@
                     android:path="/raghavsatyadev/MoreApps"
                     android:scheme="https"
                     />
-                />
             </intent-filter>
         </activity>
     </application>
