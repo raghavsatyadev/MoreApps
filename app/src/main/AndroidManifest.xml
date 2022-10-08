@@ -18,11 +18,31 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+        <activity
+            android:name=".LinkHandlerActivity"
+            android:exported="true"
+            android:theme="@style/AppTheme.NoActionBar"
+            >
+            <tools:validation testUrl="https://opensourceprojectsraghav.page.link/github" />
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="opensourceprojectsraghav.page.link"
+                    android:scheme="https"
+                    />
             </intent-filter>
         </activity>
     </application>

@@ -13,9 +13,15 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(layout.activity_main)
+
+        setupViewPager()
+    }
+
+    private fun setupViewPager() {
         val sectionsPagerAdapter = SectionsPagerAdapter(this, this, supportFragmentManager)
         val viewPager = findViewById<ViewPager2>(id.view_pager)
         viewPager.adapter = sectionsPagerAdapter
+
         val tabs = findViewById<TabLayout>(id.tabs)
         TabLayoutMediator(
             tabs, viewPager
