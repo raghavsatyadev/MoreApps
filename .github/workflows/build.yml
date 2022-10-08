@@ -18,9 +18,7 @@ jobs:
         with:
           java-version: 11
       - name: Create file & putting data
-        env:
-          DATA: ${{ secrets.GOOGLE_SERVICES_JSON }}
-        run: touch ./app/google-services.json && echo DATA | base64 -d > ./app/google-services.json
+        run: touch ./app/google-services.json && echo $GOOGLE_SERVICES_JSON | base64 -d > ./app/google-services.json
       - name: Cache SonarCloud packages
         uses: actions/cache@v1
         with:
