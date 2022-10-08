@@ -1,5 +1,6 @@
 package com.rocky.moreapps.example
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textview.MaterialTextView
@@ -12,6 +13,11 @@ class LinkHandlerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_link_handler)
 
+        handleDynamicLink()
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
         handleDynamicLink()
     }
 

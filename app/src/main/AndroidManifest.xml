@@ -25,14 +25,13 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".LinkHandlerActivity"
             android:exported="true"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar"
             >
-            <tools:validation testUrl="https://opensourceprojectsraghav.page.link/github" />
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -42,7 +41,14 @@
                 <data
                     android:host="opensourceprojectsraghav.page.link"
                     android:scheme="https"
+                    android:path="/github"
                     />
+                <data
+                    android:host="github.com"
+                    android:path="/raghavsatyadev/MoreApps"
+                    android:scheme="https"
+                    />
+                />
             </intent-filter>
         </activity>
     </application>
