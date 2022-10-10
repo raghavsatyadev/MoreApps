@@ -41,11 +41,10 @@
                 <data
                     android:host="opensourceprojectsraghav.page.link"
                     android:scheme="https"
-                    android:path="/github"
                     />
                 <data
-                    android:host="github.com"
-                    android:path="/raghavsatyadev/MoreApps"
+                    android:host="infoserve.lexmark.com"
+                    android:path="/ids/idv/video.aspx"
                     android:scheme="https"
                     />
             </intent-filter>

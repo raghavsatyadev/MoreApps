@@ -7,7 +7,10 @@
     <string name="option_1">Option 1</string>
     <string name="option_2">Option 2</string>
     <string name="option_3">Option 3</string>
-    <string name="first_name">First Name</string>
-    <string name="last_name">Last Name</string>
-    <string name="profession">Profession</string>
+
+    <string name="model">Model Name</string>
+    <string name="serial">Serial Number</string>
+    <string name="ssid">SSID</string>
+    <string name="password">Password</string>
+    <string name="open_tutorial">Open Tutorial</string>
 </resources>
