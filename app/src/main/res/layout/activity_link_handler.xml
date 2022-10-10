@@ -9,6 +9,32 @@
     >
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/label_manufacturer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/manufacturer"
+        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+        app:layout_constraintBottom_toTopOf="@+id/label_model"
+        app:layout_constraintEnd_toStartOf="@+id/txt_manufacturer"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/txt_manufacturer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+        app:layout_constraintBottom_toTopOf="@+id/txt_model"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/label_manufacturer"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/manufacturer"
+        />
+
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/label_model"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -18,7 +44,7 @@
         app:layout_constraintEnd_toStartOf="@+id/txt_model"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/label_manufacturer"
         />
 
     <com.google.android.material.textview.MaterialTextView
@@ -27,11 +53,11 @@
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
         app:layout_constraintBottom_toTopOf="@+id/txt_serial"
-        app:layout_constraintStart_toEndOf="@+id/label_model"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/label_model"
+        app:layout_constraintTop_toBottomOf="@id/txt_manufacturer"
         tools:text="@string/model"
-        app:layout_constraintTop_toTopOf="parent"
         />
 
     <com.google.android.material.textview.MaterialTextView

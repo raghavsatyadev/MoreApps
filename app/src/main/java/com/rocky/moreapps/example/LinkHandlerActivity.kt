@@ -30,6 +30,8 @@ class LinkHandlerActivity : AppCompatActivity() {
                 this
             ) { pendingDynamicLinkData ->
                 pendingDynamicLinkData?.link?.let {
+                    findViewById<MaterialTextView>(R.id.txt_manufacturer).text =
+                        it.getQueryParameter("manufacturer")
                     findViewById<MaterialTextView>(R.id.txt_model).text =
                         it.getQueryParameter("model")
                     findViewById<MaterialTextView>(R.id.txt_serial).text =
