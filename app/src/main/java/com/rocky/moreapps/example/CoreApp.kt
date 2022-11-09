@@ -2,6 +2,7 @@ package com.rocky.moreapps.example
 
 import android.app.Application
 import android.util.Log
+import androidx.multidex.MultiDex
 import androidx.work.Configuration
 import androidx.work.Configuration.Builder
 import androidx.work.Configuration.Provider
@@ -15,8 +16,10 @@ class CoreApp : Application(), Provider {
         super.onCreate()
         instance = this
 
+        MultiDex.install(instance)
 //        this pattern is part of option-2
         createMoreAppDialog()
+
     }
 
     fun getMoreAppsDialog(): MoreAppsDialog? {
