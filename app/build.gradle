@@ -26,6 +26,7 @@ android {
         versionName libraryVersion
 
         vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
     }
 
     signingConfigs {
@@ -85,4 +86,5 @@ dependencies {
 
     implementation "com.google.firebase:firebase-analytics-ktx:21.2.0"
     implementation "com.google.firebase:firebase-dynamic-links-ktx:21.1.0"
+    implementation("androidx.multidex:multidex:2.0.1")
 }
