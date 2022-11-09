@@ -17,7 +17,7 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - name: Create file & putting data
+      - name: Create Google Services file & putting data
         env:
           DATA: ${{ secrets.GOOGLE_SERVICES_JSON }}
         run: echo $DATA > ./app/google-services.json

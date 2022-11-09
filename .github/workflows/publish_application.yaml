@@ -1,4 +1,4 @@
-name: Publish Library and App
+name: Build, Sign and Publish Application to Play Store
 
 on:
   release:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   publish:
-    name: Release build and publish
+    name: Build, Sign and Publish Application to Play Store
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -18,20 +18,13 @@ jobs:
           java-version: 11
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+      - name: Create Google Services file & putting data
+        env:
+          DATA: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: echo $DATA > ./app/google-services.json
       - name: Build Release AAB
         id: buildRelease
         run: ./gradlew bundleRelease
-      - name: Source jar and dokka
-        run: ./gradlew androidSourcesJar javadocJar dokkaHtmlJar
-      - name: Publish to MavenCentral
-        run: ./gradlew publishReleasePublicationToSonatypeRepository --max-workers 1 closeAndReleaseSonatypeStagingRepository
-        env:
-          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-          SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
-          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
-          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
-          SONATYPE_STAGING_PROFILE_ID: ${{ secrets.SONATYPE_STAGING_PROFILE_ID }}
       - name: Sign AAB
         id: sign
         uses: r0adkll/sign-android-release@v1
