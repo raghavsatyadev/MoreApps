@@ -46,9 +46,7 @@ jobs:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
           packageName: com.rocky.moreapps.example
           releaseFiles: app/build/outputs/bundle/release/app-release.aab
-          track: beta
+          track: internal
           status: completed
           inAppUpdatePriority: 5
           whatsNewDirectory: distribution/whatsnew
-          mappingFile: app/build/outputs/mapping/release/mapping.txt
-          debugSymbols: app/intermediates/merged_native_libs/release/out/lib
