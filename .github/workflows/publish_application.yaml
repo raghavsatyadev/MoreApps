@@ -25,6 +25,9 @@ jobs:
         env:
           DATA: ${{ secrets.GOOGLE_SERVICES_JSON }}
         run: echo $DATA > ./app/google-services.json
+      - name: Build with Gradle
+        id: build
+        run: ./gradlew build
       - name: Build Release AAB
         id: buildRelease
         run: ./gradlew bundleRelease
