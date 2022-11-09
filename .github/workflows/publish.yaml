@@ -1,4 +1,4 @@
-name: Publish
+name: Publish Library and App
 
 on:
   release:
@@ -18,8 +18,9 @@ jobs:
           java-version: 11
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-      - name: Release build
-        run: ./gradlew :moreapps:assembleRelease
+      - name: Build Release AAB
+        id: buildRelease
+        run: ./gradlew bundleRelease
       - name: Source jar and dokka
         run: ./gradlew androidSourcesJar javadocJar dokkaHtmlJar
       - name: Publish to MavenCentral
@@ -31,6 +32,15 @@ jobs:
           SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
           SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
           SONATYPE_STAGING_PROFILE_ID: ${{ secrets.SONATYPE_STAGING_PROFILE_ID }}
+      - name: Sign AAB
+        id: sign
+        uses: r0adkll/sign-android-release@v1
+        with:
+          releaseDirectory: app/build/outputs/bundle/release
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: ${{ secrets.KEYSTORE_ALIAS }}
+          keyStorePassword: ${{ secrets.KEYSTORE_PASS }}
+          keyPassword: ${{ secrets.KEY_PASS }}
       - name: Upload Android Release to Play Store
         uses: r0adkll/upload-google-play@v1.0.19
         with:
@@ -38,7 +48,7 @@ jobs:
           packageName: com.rocky.moreapps.example
           releaseFiles: app/build/outputs/bundle/release/app-release.aab
           track: beta
-          status: inProgress
+          status: complete
           inAppUpdatePriority: 2
           userFraction: 1
           whatsNewDirectory: distribution/whatsnew
