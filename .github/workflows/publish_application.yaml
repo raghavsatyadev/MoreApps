@@ -48,8 +48,7 @@ jobs:
           releaseFiles: app/build/outputs/bundle/release/app-release.aab
           track: beta
           status: complete
-          inAppUpdatePriority: 2
-          userFraction: 1
+          inAppUpdatePriority: 5
           whatsNewDirectory: distribution/whatsnew
           mappingFile: app/build/outputs/mapping/release/mapping.txt
           debugSymbols: app/intermediates/merged_native_libs/release/out/lib
