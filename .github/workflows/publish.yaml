@@ -2,7 +2,7 @@ name: Publish
 
 on:
   release:
-    types: [released]
+    types: [ released ]
 
 jobs:
   publish:
@@ -31,3 +31,16 @@ jobs:
           SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
           SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
           SONATYPE_STAGING_PROFILE_ID: ${{ secrets.SONATYPE_STAGING_PROFILE_ID }}
+      - name: Upload Android Release to Play Store
+        uses: r0adkll/upload-google-play@v1.0.19
+        with:
+          serviceAccountJsonPlainText: ${{ SERVICE_ACCOUNT_JSON }}
+          packageName: com.rocky.moreapps.example
+          releaseFiles: app/build/outputs/bundle/release/app-release.aab
+          track: beta
+          status: inProgress
+          inAppUpdatePriority: 2
+          userFraction: 1
+          whatsNewDirectory: distribution/whatsnew
+          mappingFile: app/build/outputs/mapping/release/mapping.txt
+          debugSymbols: app/intermediates/merged_native_libs/release/out/lib
