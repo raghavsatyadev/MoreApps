@@ -26,8 +26,6 @@ android {
         versionName libraryVersion
 
         vectorDrawables.useSupportLibrary = true
-
-        multiDexEnabled true
     }
 
     signingConfigs {
@@ -58,7 +56,6 @@ android {
         }
     }
     compileOptions {
-        coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
@@ -81,15 +78,11 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version")
 
     implementation "androidx.appcompat:appcompat:1.7.0-alpha01"
-    implementation "com.google.android.material:material:1.8.0-alpha01"
+    implementation "com.google.android.material:material:1.8.0-alpha02"
     implementation "androidx.constraintlayout:constraintlayout:2.2.0-alpha04"
     implementation "androidx.work:work-runtime:2.8.0-beta01"
 //    implementation "io.github.raghavsatyadev:moreapps:${libraryVersion}"
 
-    implementation platform("com.google.firebase:firebase-bom:30.4.1")
-    implementation "com.google.firebase:firebase-analytics-ktx"
-    implementation "com.google.firebase:firebase-dynamic-links-ktx:21.0.2"
-
-    implementation("androidx.multidex:multidex:2.0.1")
-    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.0.0"
+    implementation "com.google.firebase:firebase-analytics-ktx:21.2.0"
+    implementation "com.google.firebase:firebase-dynamic-links-ktx:21.1.0"
 }

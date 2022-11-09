@@ -21,7 +21,7 @@ jobs:
       - name: Release build
         run: ./gradlew :moreapps:assembleRelease
       - name: Source jar and dokka
-        run: ./gradlew androidSourcesJar javadocJar
+        run: ./gradlew androidSourcesJar javadocJar dokkaHtmlJar
       - name: Publish to MavenCentral
         run: ./gradlew publishReleasePublicationToSonatypeRepository --max-workers 1 closeAndReleaseSonatypeStagingRepository
         env:

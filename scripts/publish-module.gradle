@@ -23,9 +23,15 @@ task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
     archiveClassifier.set('javadoc')
     from dokkaJavadoc.outputDirectory
 }
+
+task dokkaHtmlJar(type: Jar, dependsOn: dokkaHtml) {
+    archiveClassifier.set('html-doc')
+    from dokkaHtml.outputDirectory
+}
 artifacts {
     archives androidSourcesJar
     archives javadocJar
+    archives dokkaHtmlJar
 }
 
 group = publishedGroupId
@@ -50,7 +56,7 @@ afterEvaluate {
 
                 artifact androidSourcesJar
                 artifact javadocJar
-
+                artifact dokkaHtmlJar
                 // Mostly self-explanatory metadata
                 pom {
                     name = artifact
