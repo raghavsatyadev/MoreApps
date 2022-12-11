@@ -1,11 +1,8 @@
 name: Build, Sign and Publish Application to Play Store
 
 on:
-  push:
-    branches:
-      - master
-  pull_request:
-    types: [ opened, synchronize, reopened ]
+  release:
+    types: [ released ]
 
 jobs:
   publish:
