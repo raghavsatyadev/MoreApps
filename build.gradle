@@ -2,7 +2,7 @@ buildscript {
     ext {
         APK_NAME = "MoreApps"
 
-        kotlin_version = "1.7.21"
+        kotlin_version = "1.8.0-RC"
         dokka_version = "1.7.20"
 
         TARGET_SDK = 33
@@ -40,7 +40,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath('com.android.tools.build:gradle:8.0.0-alpha08')
+        classpath('com.android.tools.build:gradle:8.0.0-alpha09')
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlin_version}")
         classpath("org.jetbrains.dokka:dokka-gradle-plugin:${dokka_version}")
         classpath("com.google.gms:google-services:4.3.14")

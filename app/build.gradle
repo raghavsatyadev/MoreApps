@@ -14,7 +14,7 @@ if (credsFile.exists()) {
 
 android {
     compileSdk TARGET_SDK
-    buildToolsVersion "33.0.0"
+    buildToolsVersion '33.0.1'
     namespace "com.rocky.moreapps.example"
     defaultConfig {
         applicationId "com.rocky.moreapps.example"
@@ -61,7 +61,7 @@ android {
         jvmTarget = "11"
         freeCompilerArgs += "-Xjvm-default=all"
     }
-
+    buildFeatures { buildConfig = true }
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
             renameOutputs(variant, output)
@@ -76,9 +76,9 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version")
 
     implementation "androidx.appcompat:appcompat:1.7.0-alpha01"
-    implementation "com.google.android.material:material:1.8.0-alpha02"
-    implementation "androidx.constraintlayout:constraintlayout:2.2.0-alpha04"
-    implementation "androidx.work:work-runtime:2.8.0-beta01"
+    implementation 'com.google.android.material:material:1.8.0-beta01'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.0-alpha05'
+    implementation 'androidx.work:work-runtime:2.8.0-rc01'
 //    implementation "io.github.raghavsatyadev:moreapps:${libraryVersion}"
 
     implementation "com.google.firebase:firebase-analytics-ktx:21.2.0"
