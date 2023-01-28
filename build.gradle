@@ -2,7 +2,7 @@ buildscript {
     ext {
         APK_NAME = "MoreApps"
 
-        kotlin_version = "1.8.0-RC"
+        kotlin_version = '1.8.0'
         dokka_version = "1.7.20"
 
         TARGET_SDK = 33
@@ -40,10 +40,10 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath('com.android.tools.build:gradle:8.0.0-alpha09')
+        classpath('com.android.tools.build:gradle:8.1.0-alpha02')
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlin_version}")
         classpath("org.jetbrains.dokka:dokka-gradle-plugin:${dokka_version}")
-        classpath("com.google.gms:google-services:4.3.14")
+        classpath("com.google.gms:google-services:4.3.15")
     }
 }
 plugins {
@@ -66,6 +66,6 @@ allprojects {
         mavenCentral()
     }
 }
-task clean(type: Delete) {
+tasks.register('clean') {
     delete rootProject.buildDir
 }
