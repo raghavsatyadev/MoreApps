@@ -36,7 +36,6 @@ buildscript {
     }
     repositories {
         google()
-//        jcenter()
         mavenCentral()
     }
     dependencies {
@@ -62,7 +61,6 @@ apply from: "${rootDir}/scripts/publish-root.gradle"
 allprojects {
     repositories {
         google()
-//        jcenter()
         mavenCentral()
     }
 }
