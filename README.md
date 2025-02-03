@@ -1,5 +1,4 @@
 [![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/I2I8ZPRJ)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=MoreApps&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=MoreApps)
 
 > **Warning** :  moving library to mavenCentral required it to change groupId. now it will be renamed to **io.github.raghavsatyadev.moreapps** from previous id **com.rocky.moreapps**
 
