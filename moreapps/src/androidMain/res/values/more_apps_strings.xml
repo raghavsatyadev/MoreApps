@@ -1,0 +1,4 @@
+<resources>
+  <string name="more_apps_channel_name">App updates</string>
+  <string name="more_apps_channel_description">Tells you when a new version of this app is available</string>
+</resources>

@@ -1,251 +1,174 @@
-[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/I2I8ZPRJ)
-
-> **Warning** :  moving library to mavenCentral required it to change groupId. now it will be renamed to **io.github.raghavsatyadev.moreapps** from previous id **com.rocky.moreapps**
-
 # MoreApps
 
-Showcase your other apps in a beautiful way. This library also includes force updater.
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.raghavsatyadev/moreapps)](https://central.sonatype.com/artifact/io.github.raghavsatyadev/moreapps)
+
+Show your other apps in a Material 3 Expressive dialog, and prompt users to update (or move to a
+new listing) from one JSON file you host anywhere.
+
+Built with Compose Multiplatform for **Android** and **Desktop (JVM)**.
+
+<img src="Resources/preview.png" width="30%" alt="More Apps dialog" />
 
 # Setup
 
-To use this library your **minSdkVersion** must be >= 19.
+Needs **minSdk 24** and Compose Multiplatform 1.13.
 
-**Current
-version:**  [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.raghavsatyadev/moreapps/badge.svg)](https://search.maven.org/artifact/io.github.raghavsatyadev/moreapps)
-
-In the **root** build.gradle add
-
-```groovy
-allprojects {
-    repositories {
-        mavenCentral()
-    }
-}
-```
-
-In the build.gradle of your app module add:
-
-```groovy
+```kotlin
+// build.gradle.kts
 dependencies {
-    implementation 'io.github.raghavsatyadev:moreapps:x.x.x'
+  implementation("io.github.raghavsatyadev:moreapps:3.0.0")
 }
 ```
 
-# Initial Setup
+The library brings its own Ktor client, Coil and an isolated Koin graph, so it doesn't touch
+your app's Koin setup or image loader.
 
-**Manifest.xml**
+# Initialize
 
-```xml
-<application>
- <provider	
-    android:name="androidx.work.impl.WorkManagerInitializer"	
-    android:authorities="${applicationId}.workmanager-init"	
-    android:exported="false"	
-    tools:node="remove"	
-    />	
-</application>
-```
-
-**Application Class**
+**Android** (`Application.onCreate`):
 
 ```kotlin
-class CoreApp : Application(), Provider {
-    override fun getWorkManagerConfiguration(): Configuration {
-        return Builder()
-            .setMinimumLoggingLevel(if (BuildConfig.DEBUG) Log.DEBUG else Log.ERROR)
-            .build()
-    }
+MoreApps.initialize(this, JSON_URL)
+
+// Optional: check in the background and post a notification when an update is out.
+// Needs POST_NOTIFICATIONS on Android 13+ (ask for it in your activity).
+MoreApps.schedulePeriodicCheck(this, smallIcon = R.drawable.ic_small_icon) // every 7 days
+```
+
+**Desktop** (`main`):
+
+```kotlin
+MoreApps.initialize(JSON_URL, packageName = "com.example.app", versionCode = 24)
+```
+
+# More Apps dialog
+
+```kotlin
+var show by remember { mutableStateOf(false) }
+if (show) MoreAppsDialog(onDismiss = { show = false })
+```
+
+Every option:
+
+```kotlin
+MoreAppsDialog(
+  onDismiss = { show = false },
+  title = "Our other apps",                              // default "More Apps"
+  hidePackages = setOf("com.appdroidtechnologies.whatscut"),
+  openInStore = true,                                    // Play Store app instead of the browser
+  onAppClick = { app -> analytics.log(app.packageName) },
+)
+```
+
+Colors, shapes and type come from your `MaterialTheme` (use `MaterialExpressiveTheme` for the
+expressive motion).
+
+# Update prompts
+
+Put this once near the root of your UI. On every start it shows whatever the JSON asks for:
+
+```kotlin
+UpdatePromptHost(onResult = { type -> /* e.g. hold the splash screen until this arrives */ })
+```
+
+Or drive it yourself:
+
+```kotlin
+val prompt = MoreApps.pendingPrompt()        // null when nothing is due
+if (prompt != null) {
+  MoreApps.markPromptShown(prompt)           // counts towards dialog_show_count
+  // UpdateDialog(prompt, onDismiss = { ... })
 }
+MoreApps.dialogToShow()                      // the raw decision, ignoring show limits
 ```
 
-**Build.Gradle App Module**
+Hard updates and hard redirects can't be dismissed and come back when the user returns without
+updating.
 
-```groovy
-dependencies {
-    implementation "androidx.work:work-runtime:2.8.0-beta01"
-}
-```
+# JSON format
 
-# Example (More Apps Dialog)
-
-**Basic**
-
-```kotlin
-MoreAppsBuilder(requireContext(), CoreApp.JSON_FILE_URL)
-    .buildAndShow(object : MoreAppsDialogListener {
-        override fun onClose() {
-            // on dialog close
-        }
-
-        override fun onAppClicked(appsModel: MoreAppsDetails) {
-            // on item click
-        }
-    })
-```
-
-**Customization**
-
-```kotlin
-MoreAppsBuilder(requireContext(), CoreApp.JSON_FILE_URL)
-    .removeApplicationFromList("com.appdroidtechnologies.whatscut") // to remove an application from the list, give package name here
-    .removeApplicationFromList(listOf("com.appdroidtechnologies.whatscut")) // to remove applications from the list, give package names here
-    .dialogTitle(string.more_apps) // custom dialog title
-    .dialogLayout(io.github.raghavsatyadev.moreapps.R.layout.more_apps_view) // custom dialog layout, read more instructions in it's javadoc
-    .dialogRowLayout(io.github.raghavsatyadev.moreapps.R.layout.row_more_apps) // custom list item layout, read more instructions in it's javadoc
-    .openAppsInPlayStore(true) // on clicking the item, should it open in the play store
-    .font(font.sans_bold) // custom font
-    .theme(
-        Color.parseColor("#F44336"),
-        Color.parseColor("#FFFFFF")
-    ) // custom theme color, read more in javadoc,
-    // default colorPrimary-colorOnPrimary of theme
-    .rowTitleColor(Color.parseColor("#000000")) // custom list item title color
-    .rowDescriptionColor(Color.parseColor("#888888")) // custom list item description color
-    .setPeriodicSettings(
-        15,
-        TimeUnit.MINUTES,  // set interval of detail updating and showing notifications as required, default is 7 days
-        mipmap.ic_launcher,
-        drawable.ic_small_icon
-    ) // launcher icon and small icon (small icon is optional, small icon should be of single color)
-    .buildAndShow(object : MoreAppsDialogListener {
-        override fun onClose() {
-            // on dialog close
-        }
-
-        override fun onAppClicked(appsModel: MoreAppsDetails) {
-            // on item click
-        }
-    })
-```
-
-# Example (Force Updater)
-
-**Application Class**
-
-```kotlin
-moreAppsDialog = MoreAppsBuilder(this, JSON_FILE_URL)
-    .setPeriodicSettings(
-        15,
-        MINUTES, // set interval of detail updating and showing notifications as required, default is 7 days
-        R.mipmap.ic_launcher,
-        R.drawable.ic_small_icon // launcher icon and small icon (small icon is optional, small icon should be of single color)
-    )
-    .build() //calling this method in application class would be recommended
-```
-
-**Calling Method (Writing in Launcher Activity's onCreate method is recommended)**
-
-```kotlin
-ForceUpdater.showDialogLive(
-        requireContext(), this, style.CustomDialog, object : MoreAppsLifecycleListener {
-        override fun onStart() {
-        // Activity or Fragment's onStart LifeCycle Method
-        }
-
-        override fun onStop() {
-        // Activity or Fragment's onStop LifeCycle Method
-        }
-
-        override fun showingDialog() {
-        // stop other work till this dialog is showing
-        }
-
-        override fun onComplete() {
-        // do other work
-        }
-        })
-```
-
-**Json File Format**
-
-***NOTE*** : redirect_details, soft_update_details, hard_update_details are only required for Force
-Updater.
+Host a JSON array anywhere. The update fields are only needed for the update prompts; anything
+missing falls back to a default.
 
 ```json
 [
   {
-    "image_link": "https://lh3.googleusercontent.com/DdGcPVh9kkUSdL2dKAUcGmejPXaNwnfbS5y5XtMFsXVST-GThQVzlwGgwwj7yOpII6-T=s180-rw",
+    "image_link": "https://example.com/icon.png",
     "name": "More Apps",
-    "rating": 5,
+    "rating": 4.5,
     "app_link": "https://play.google.com/store/apps/details?id=com.rocky.moreapps.example",
     "package_name": "com.rocky.moreapps.example",
-    "description": "Showcase your other apps in a beautiful way. This library also includes force updater.",
-    "min_version": 6,
-    "current_version": 7,
+    "description": "Showcase your other apps in a beautiful way.",
+    "min_version": 14,
+    "current_version": 15,
     "show_in_dialog": true,
     "redirect_details": {
       "enable": false,
       "hard_redirect": false,
       "dialog_title": "Redirect Notice",
-      "dialog_message": "We have uploaded our app to new location",
+      "dialog_message": "We have uploaded our app to a new location",
       "positive_button": "Redirect",
       "negative_button": "Cancel",
-      "app_link": "https://play.google.com/store/apps/details?id=com.rocky.moreapps.example"
+      "app_link": "https://play.google.com/store/apps/details?id=com.example.new"
     },
     "soft_update_details": {
       "enable": true,
       "dialog_show_count": 3,
       "notification_show_count": 3,
-      "dialog_title": "Update Required!",
-      "dialog_message": "Soft Update is required",
+      "dialog_title": "Update available",
+      "dialog_message": "A new version is out.",
       "positive_button": "Update",
-      "negative_button": "Cancel"
+      "negative_button": "Later"
     },
     "hard_update_details": {
       "enable": true,
-      "dialog_title": "Update Required!",
-      "dialog_message": "Hard Update is required",
+      "dialog_title": "Update required",
+      "dialog_message": "This version is no longer supported.",
       "positive_button": "Update"
     }
   }
 ]
 ```
 
-**Understanding JSON fields**
+| Field                                        | Meaning                                                                                            |
+|----------------------------------------------|----------------------------------------------------------------------------------------------------|
+| show_in_dialog                               | `false` leaves the app out of the More Apps dialog                                                 |
+| min_version                                  | installed versions below this get the hard update prompt                                          |
+| current_version                              | installed versions below this get the soft update prompt                                          |
+| redirect_details                             | send users to a new listing (e.g. after the app was removed from the Play Store)                   |
+| redirect_details->hard_redirect              | the user can't continue into the app                                                               |
+| redirect_details->app_link                   | the new listing                                                                                    |
+| soft_update_details->dialog_show_count       | how often the soft dialog shows per `current_version` (0 = every start); a new version resets it   |
+| soft_update_details->notification_show_count | the same for the background notification                                                           |
 
-| Field                                        | Description                                                                                                                            |
-|----------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|
-| show_in_dialog                               | if false this app will not show up in more apps dialog                                                                                 |
-| redirect_details                             | enable this to point users to download the app from new location (helpful when google removes the app from playstore)                  |
-| redirect_details->hard_redirect              | won't let the user go into the app                                                                                                     |
-| redirect_details->app_link                   | new location of APK                                                                                                                    |
-| soft_update_details                          | to show that there is a new version available for downloading                                                                          |
-| soft_update_details->dialog_show_count       | how many times the soft update dialog should show up for current update(updating current version in json will reset the counter)       |
-| soft_update_details->notification_show_count | how many times the soft update notification should show up for current update(updating current version in json will reset the counter) |
-| hard_update_details                          | to show that this update of the app is no longer useful, user has to download new update                                               |
+Example file: [Resources/more_apps.json](Resources/more_apps.json)
 
-File is available
-at : https://github.com/raghavsatyadev/MoreApps/blob/master/Resources/more_apps.json
+# Migrating from 2.x
 
-# Example Application
+- `MoreAppsBuilder(...).buildAndShow(...)` → `MoreAppsDialog(onDismiss = ...)`.
+- `ForceUpdater.showDialogLive(...)` → `UpdatePromptHost()`.
+- `ForceUpdater.dialogToShow(context, app)` → `MoreApps.dialogToShow()`.
+- `setPeriodicSettings(...)` → `MoreApps.schedulePeriodicCheck(...)`.
+- Custom layouts, fonts and colors are gone: style it through your `MaterialTheme`.
+- Remove the `WorkManagerInitializer` removal from your manifest and the
+  `Configuration.Provider` from your `Application`; they are no longer needed.
+- The soft-update dialog count carries over; the notification count starts again once.
 
-**Link** : https://play.google.com/store/apps/details?id=com.rocky.moreapps.example
+# Sample
 
-# Preview
+`sample/` holds the example app: `androidApp`, `desktopApp` and the shared `composeApp`.
 
-<img src="Resources/Option.png" width="30%" />
+```bash
+./gradlew :sample:androidApp:installDebug
+```
 
-This library uses
-
-- **SimpleRatingBar** :  https://github.com/FlyingPumba/SimpleRatingBar
-- **Glide** : https://github.com/bumptech/glide
-
-<div>Icons made by 
-<a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">
-Smashicons
-</a> from 
-<a href="https://www.flaticon.com/" title="Flaticon">
-www.flaticon.com
-</a>
-is licensed by 
-<a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">
-CC 3.0 BY
-</a>
-</div>
+```bash
+./gradlew :sample:desktopApp:run
+```
 
 # Licence
 
-Copyright 2022 Raghav Satyadev
+Copyright 2026 Raghav Satyadev
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

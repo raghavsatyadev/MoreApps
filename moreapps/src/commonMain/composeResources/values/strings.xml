@@ -1,0 +1,10 @@
+<resources>
+  <string name="more_apps_title">More Apps</string>
+  <string name="more_apps_close">Close</string>
+  <string name="more_apps_empty">No apps to show right now.</string>
+  <string name="more_apps_error">Couldn’t load the app list. Check your connection and try again.</string>
+  <string name="more_apps_retry">Retry</string>
+  <string name="more_apps_rating">Rated %1$s out of 5</string>
+  <string name="more_apps_update">Update</string>
+  <string name="more_apps_later">Later</string>
+</resources>

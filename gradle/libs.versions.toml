@@ -1,0 +1,123 @@
+# Version lookup date: 2026-10-23.
+# Rule: every entry is the newest published version (alpha/beta/rc/stable) on Maven Central, Google
+# Maven or the Gradle Plugin Portal on that date. Any step back is a "PIN" comment with the reason.
+# Gradle wrapper: 9.8.2 (newest stable).
+
+[versions]
+
+# Library identity (Maven Central coordinates stay io.github.raghavsatyadev:moreapps)
+libraryGroup = "io.github.raghavsatyadev"
+libraryArtifact = "moreapps"
+libraryVersion = "3.0.0"
+libraryNameSpace = "io.github.raghavsatyadev.moreapps"
+
+# Sample identity (kept so Play Store updates still match)
+sampleAppId = "com.rocky.moreapps.example"
+sampleNameSpace = "com.rocky.moreapps.example"
+sampleSharedNameSpace = "com.rocky.moreapps.example.shared"
+sampleVersionCode = "24"
+sampleVersionName = "3.0.0"
+
+# SDK versions (SDK 37 needs the 37.1 platform for Compose 1.13, hence compileSdkMinor)
+targetSdk = "37"
+# Compose 1.13 libraries declare minSdk 24.
+minSdk = "24"
+compileSdk = "37"
+compileSdkMinor = "1"
+buildTools = "36.1.0"
+
+# Plugin versions
+agp = "9.6.0-alpha01"
+# PIN: 2.5.0-Beta2 is newer, but a published library built with a pre-release Kotlin marks its
+# binaries as pre-release, and consumers on stable Kotlin cannot read them. Stay on newest stable.
+kotlin = "2.4.21"
+compose-multiplatform = "1.13.0-beta01"
+maven-publish = "0.37.0"
+sonarqube = "7.5.0.8588"
+
+# Compose / AndroidX
+activity = "1.14.0-alpha03"
+compose-material3-mp = "1.13.0-beta01"
+compose-icons-extended-mp = "1.7.3"
+lifecycle-mp = "2.11.0"
+collections-immutable = "0.5.2"
+work = "2.12.0"
+core = "1.19.1"
+
+# Kotlin libraries
+coroutines = "1.11.0"
+serialization = "1.12.0"
+
+# DI, networking, images
+koin = "4.2.2"
+ktor = "3.6.0"
+coil = "3.6.3"
+junit = "4.13.2"
+
+[libraries]
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
+kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "collections-immutable" }
+junit = { module = "junit:junit", version.ref = "junit" }
+
+# Compose Multiplatform
+compose-ui-mp = { module = "org.jetbrains.compose.ui:ui", version.ref = "compose-multiplatform" }
+compose-foundation-mp = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "compose-multiplatform" }
+compose-runtime-mp = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose-multiplatform" }
+compose-material3-mp = { module = "org.jetbrains.compose.material3:material3", version.ref = "compose-material3-mp" }
+compose-components-resources-mp = { module = "org.jetbrains.compose.components:components-resources", version.ref = "compose-multiplatform" }
+compose-ui-tooling-preview-mp = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "compose-multiplatform" }
+compose-icons-extended-mp = { module = "org.jetbrains.compose.material:material-icons-extended", version.ref = "compose-icons-extended-mp" }
+lifecycle-runtime-compose-mp = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle-mp" }
+lifecycle-viewmodel-compose-mp = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle-mp" }
+
+# Android
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity" }
+androidx-core = { module = "androidx.core:core-ktx", version.ref = "core" }
+androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "work" }
+
+# Koin
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-compose-mp = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
+koin-compose-viewmodel-mp = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+
+# Ktor client
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
+
+# Images
+coil-compose-mp = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
+coil-network-ktor-mp = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
+maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "maven-publish" }
+sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
+
+[bundles]
+compose-mp = [
+    "compose-ui-mp",
+    "compose-foundation-mp",
+    "compose-runtime-mp",
+    "compose-material3-mp",
+    "compose-components-resources-mp",
+    "compose-ui-tooling-preview-mp",
+    "compose-icons-extended-mp",
+]
+ktor-client = [
+    "ktor-client-core",
+    "ktor-client-content-negotiation",
+    "ktor-serialization-kotlinx-json",
+]

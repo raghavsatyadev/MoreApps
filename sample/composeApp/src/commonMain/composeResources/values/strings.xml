@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_title">MoreApps sample</string>
+    <string name="tab_more_apps">More Apps</string>
+    <string name="tab_updater">Updater</string>
+
+    <string name="custom_title">Customized</string>
+    <string name="custom_body">Own title, hides one package and reports taps back to the app.</string>
+    <string name="custom_dialog_title">Our other apps</string>
+    <string name="default_title">Default</string>
+    <string name="default_body">One line: MoreAppsDialog(onDismiss = …).</string>
+    <string name="open_in_store">Open in the Play Store app</string>
+    <string name="show_dialog">Show dialog</string>
+    <string name="clicked_app">Opening %1$s</string>
+
+    <string name="status_title">This app in the JSON</string>
+    <string name="status_installed">Installed version: %1$s</string>
+    <string name="status_latest">Latest version: %1$s</string>
+    <string name="status_min">Minimum version: %1$s</string>
+    <string name="status_decision">Prompt the JSON asks for: %1$s</string>
+    <string name="status_missing">The JSON has no entry for this package.</string>
+    <string name="status_loading">Loading…</string>
+    <string name="refresh">Refresh</string>
+    <string name="preview_title">Preview each prompt</string>
+    <string name="preview_body">Uses this app’s texts from the JSON. Hard prompts can’t be closed, so the preview closes itself after a few seconds.</string>
+    <string name="preview_soft_update">Soft update</string>
+    <string name="preview_hard_update">Hard update</string>
+    <string name="preview_soft_redirect">Soft redirect</string>
+    <string name="preview_hard_redirect">Hard redirect</string>
+</resources>
